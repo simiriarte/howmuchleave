@@ -62,6 +62,18 @@ function fishIcon(className, withSuitcase = false) {
   svg.append(use);
   return svg;
 }
+// The little suitcase that marks each potential trip
+function suitcaseIcon() {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", "0 0 48 57"); // the symbol itself crops to the suitcase
+  svg.setAttribute("class", "suitcase-icon");
+  svg.setAttribute("aria-hidden", "true");
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", "#suitcase");
+  svg.append(use);
+  return svg;
+}
+
 // Colour combos for swimming fish, all from the painting's palette
 // (buff hen, yellow feet, salmon speckles, white hen, black hen, comb red, tail teal)
 const FISH_COLOURS = [
@@ -340,7 +352,7 @@ function renderTrips() {
       else td.append(content);
       tr.append(td);
     };
-    cell("fish-cell", fishIcon("fish"));
+    cell("fish-cell", suitcaseIcon());
     const info = document.createElement("div");
     const nm = document.createElement("div");
     nm.textContent = t.name || "Trip";
