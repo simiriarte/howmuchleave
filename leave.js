@@ -68,10 +68,20 @@
   function holidayName(s) {
     return federalHolidays(Number(s.slice(0, 4))).get(s) || null;
   }
+  // Abbey's unit gets the Friday after Thanksgiving off (a family day).
+  // Kept separate from federal holidays so those stay exactly the official list.
+  function familyDayName(s) {
+    const thanksgiving = nthWeekday(Number(s.slice(0, 4)), 11, 4, 4);
+    return s === addDays(thanksgiving, 1) ? "Day after Thanksgiving" : null;
+  }
+  // Any day off that isn't a weekend: federal holiday or family day
+  function dayOffName(s) {
+    return holidayName(s) || familyDayName(s);
+  }
   function isNonDutyDay(s) {
     const dow = toDate(s).getUTCDay();
     if (dow === 0 || dow === 6) return true;
-    return holidayName(s) !== null;
+    return dayOffName(s) !== null;
   }
 
   // ---- the leave rules ----
@@ -119,42 +129,6 @@
     return balance;
   }
 
-  // The next 4 days in a row off that cost only 1 day of leave (a 3-day holiday
-  // weekend plus one day). Returns { firstOff, lastOff, leaveDay, holiday } or null.
-  function nextFourDayWeekend(after) {
-    for (let i = 1; i <= 400; i++) {
-      const start = addDays(after, i);
-      const end = addDays(start, 3);
-      const charged = chargedDays(start, end);
-      if (charged.length !== 1) continue;
-      // the other three days must all be weekends/holidays, and one must be a holiday
-      let holiday = null;
-      let allOff = true;
-      for (let d = start; d <= end; d = addDays(d, 1)) {
-        if (d === charged[0]) continue;
-        if (!isNonDutyDay(d)) allOff = false;
-        holiday = holiday || holidayName(d);
-      }
-      if (allOff && holiday) return { firstOff: start, lastOff: end, leaveDay: charged[0], holiday };
-    }
-    return null;
-  }
-
-  // The next holiday weekend that's exactly 3 days off with no leave
-  // (e.g. Sat to Mon for a Monday holiday). Returns { firstOff, lastOff, holiday } or null.
-  function nextThreeDayWeekend(after) {
-    for (let i = 1; i <= 400; i++) {
-      const start = addDays(after, i);
-      const end = addDays(start, 2);
-      if (!isNonDutyDay(addDays(start, -1)) && !isNonDutyDay(addDays(end, 1))
-          && isNonDutyDay(start) && isNonDutyDay(addDays(start, 1)) && isNonDutyDay(end)) {
-        const holiday = holidayName(start) || holidayName(addDays(start, 1)) || holidayName(end);
-        if (holiday) return { firstOff: start, lastOff: end, holiday };
-      }
-    }
-    return null;
-  }
-
   // The next `count` long weekends: 3 or more days off in a row that include a
   // federal holiday and use no leave. One still in progress today counts.
   // Returns [{ firstOff, lastOff, holiday }].
@@ -175,7 +149,7 @@
     return found;
   }
 
-  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextThreeDayWeekend, nextFourDayWeekend, nextLongWeekends };
+  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, familyDayName, dayOffName, chargedDays, monthEndsBetween, balanceOn, nextLongWeekends };
   if (typeof module !== "undefined") module.exports = api;
   else root.Leave = api;
 })(this);

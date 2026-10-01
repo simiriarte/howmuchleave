@@ -51,7 +51,7 @@
       btn.textContent = d;
       let aria = label(date);
       if (Leave.isNonDutyDay(date)) btn.classList.add("off");
-      const hol = Leave.holidayName(date);
+      const hol = Leave.dayOffName(date);
       if (hol) { btn.classList.add("holiday"); btn.title = hol; aria += `, ${hol}`; }
       if (date.slice(5) === "10-02") {
         const f = document.createElementNS("http://www.w3.org/2000/svg", "svg");

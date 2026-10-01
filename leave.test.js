@@ -40,19 +40,18 @@ assert.strictEqual(L.holidayName("2026-11-26"), "Thanksgiving");
 assert.strictEqual(L.holidayName("2026-07-03"), "Independence Day", "observed Friday");
 assert.strictEqual(L.holidayName("2026-12-24"), null);
 
-// Next 4-day weekend for 1 day of leave
-assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-01"), { firstOff: "2026-10-09", lastOff: "2026-10-12", leaveDay: "2026-10-09", holiday: "Columbus Day" });
-assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-12"), { firstOff: "2026-11-26", lastOff: "2026-11-29", leaveDay: "2026-11-27", holiday: "Thanksgiving" });
-
-// Next 3-day weekend (no leave)
-assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-01"), { firstOff: "2026-10-10", lastOff: "2026-10-12", holiday: "Columbus Day" });
-assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-12"), { firstOff: "2026-12-25", lastOff: "2026-12-27", holiday: "Christmas" }, "Veterans Day (Wed) and Thanksgiving (Thu) aren't 3-day weekends");
+// Family day: the Friday after Thanksgiving is off
+assert.strictEqual(L.familyDayName("2026-11-27"), "Day after Thanksgiving");
+assert.strictEqual(L.familyDayName("2027-11-26"), "Day after Thanksgiving");
+assert.ok(L.isNonDutyDay("2026-11-27"));
+assert.strictEqual(L.holidayName("2026-11-27"), null, "not a federal holiday");
+assert.strictEqual(n("2026-11-23", "2026-11-29"), 3, "Thanksgiving week Mon-Sun: only Mon-Wed use leave");
 
 // Next 3 long weekends
 assert.deepStrictEqual(L.nextLongWeekends("2026-10-01", 3), [
   { firstOff: "2026-10-10", lastOff: "2026-10-12", holiday: "Columbus Day" },
+  { firstOff: "2026-11-26", lastOff: "2026-11-29", holiday: "Thanksgiving" },
   { firstOff: "2026-12-25", lastOff: "2026-12-27", holiday: "Christmas" },
-  { firstOff: "2027-01-01", lastOff: "2027-01-03", holiday: "New Year's Day" },
 ]);
 assert.strictEqual(L.nextLongWeekends("2026-10-11", 1)[0].firstOff, "2026-10-10", "a long weekend in progress still shows");
 

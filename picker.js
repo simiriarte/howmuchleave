@@ -52,7 +52,7 @@
       b.textContent = d;
       b.setAttribute("aria-label", label(date));
       if (Leave.isNonDutyDay(date)) b.classList.add("off");
-      const hol = Leave.holidayName(date);
+      const hol = Leave.dayOffName(date);
       if (hol) { b.classList.add("holiday"); b.title = hol; b.setAttribute("aria-label", `${label(date)}, ${hol}`); }
       if (date.slice(5) === "10-02") {
         const f = document.createElementNS("http://www.w3.org/2000/svg", "svg");
