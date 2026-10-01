@@ -221,7 +221,7 @@
     td.trip-del { width: 28px; text-align: right; padding-right: 0; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
 
-    footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; }
+    footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; font-size: 0.85rem; }
 
     dialog {
       background: var(--char);
@@ -312,8 +312,9 @@
     <!-- Top row: where she stands -->
     <div class="tiles">
       <div class="tile hero">
-        <div class="tile-label">Today</div>
+        <div class="tile-label">Today, you have</div>
         <div class="tile-value" id="today-balance"></div>
+        <div class="tile-label" id="today-unit"></div>
       </div>
       <div class="tile">
         <div class="tile-label" id="next-date"></div>
@@ -376,6 +377,6 @@
 </main>
 
 <script src="leave.js?v=3"></script>
-<script src="app.js?v=3"></script>
+<script src="app.js?v=4"></script>
 </body>
 </html>

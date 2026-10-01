@@ -117,7 +117,8 @@ function render() {
   const today = Leave.todayStr();
 
   const now = Leave.balanceOn(today, settings, trips);
-  $("today-balance").innerHTML = `${fmtNum(now)} <small>${dayWord(now)}</small>`;
+  $("today-balance").textContent = fmtNum(now);
+  $("today-unit").textContent = `${dayWord(now)} of leave`;
   $("next-date").textContent = shortDate(nextMonthEnd(today));
 
   // Leave already booked from today on
