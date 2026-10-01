@@ -1,5 +1,5 @@
 // The planner's always-on calendar. Tap a first day off, then a last day off;
-// the days between fill in as bubbles. Booked leave shows as salmon dots.
+// the days between fill in as bubbles. Potential trips show as salmon dots.
 // Writes into the hidden #trip-first / #trip-last inputs and fires "input" on
 // #trip-last, so app.js's renderTrip() does the math.
 
@@ -66,7 +66,7 @@
         aria += ", Abbey's birthday";
       }
       if (date === today) btn.classList.add("today");
-      if (booked.has(date)) { btn.classList.add("booked"); aria += ", booked"; }
+      if (booked.has(date)) { btn.classList.add("booked"); aria += ", potential trip"; }
       if (a && date >= a && date <= b) {
         if (date === a || date === b) btn.classList.add("selected");
         else btn.classList.add(charged.has(date) ? "range" : "range-free");

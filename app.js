@@ -245,7 +245,7 @@ function renderTrips() {
     cell("fish-cell", fishIcon("fish"));
     const info = document.createElement("div");
     const nm = document.createElement("div");
-    nm.textContent = t.name || "Leave";
+    nm.textContent = t.name || "Trip";
     const dates = document.createElement("div");
     dates.className = "trip-dates";
     dates.textContent = t.firstOff === t.lastOff ? shortDate(t.firstOff) : `${shortDate(t.firstOff)} to ${shortDate(t.lastOff)}`;
@@ -257,7 +257,7 @@ function renderTrips() {
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", () => {
-      if (!confirm(`Remove "${t.name || "Leave"}"? Its days go back into your balance.`)) return;
+      if (!confirm(`Remove "${t.name || "Trip"}"? Its days go back into your balance.`)) return;
       state.trips = state.trips.filter((x) => x.id !== t.id);
       save();
       render();
