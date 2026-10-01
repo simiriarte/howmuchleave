@@ -119,12 +119,9 @@ function render() {
   const now = Leave.balanceOn(today, settings, trips);
   $("today-balance").textContent = fmtNum(now);
   $("today-unit").textContent = `${dayWord(now)} of leave`;
-  $("next-date").textContent = shortDate(nextMonthEnd(today));
-
-  // Leave already booked from today on
-  let ahead = 0;
-  for (const t of trips) ahead += Leave.chargedDays(t.firstOff, t.lastOff).filter((d) => d >= today).length;
-  $("booked-total").innerHTML = `${ahead} <small>${dayWord(ahead)}</small>`;
+  // "By [date]" starts on the next month-end, so she sees her next +2.5
+  if (!$("by-date").value) $("by-date").value = nextMonthEnd(today);
+  renderBy();
 
   $("les-note").textContent = `Starting point: ${fmtNum(settings.balance)} days on your LES as of ${fmtDate(settings.asOf)}.`;
   const ageDays = (new Date(today) - new Date(settings.asOf)) / 86400000;
@@ -132,6 +129,13 @@ function render() {
 
   renderTrip();
   renderTrips();
+}
+
+function renderBy() {
+  const date = $("by-date").value;
+  const bal = date ? Leave.balanceOn(date, state.settings, state.trips) : null;
+  $("by-balance").textContent = bal === null ? "–" : fmtNum(bal);
+  $("by-unit").textContent = bal === null ? "pick a later date" : `${dayWord(bal)} of leave`;
 }
 
 function setPlan(uses, before, after) {
@@ -209,6 +213,7 @@ function renderTrips() {
   }
 }
 
+$("by-date").addEventListener("input", renderBy);
 $("open-info").addEventListener("click", () => $("info").showModal());
 $("trip-first").addEventListener("input", () => {
   // Jump the end date forward so the calendar opens near the start date
