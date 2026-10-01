@@ -380,8 +380,7 @@ function renderTrips() {
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", async () => {
-      const question = t.name ? `Let "${t.name}" swim away?` : "Let this trip swim away?";
-      if (!(await ask(question, { ok: "remove", cancel: "leave it", suitcase: true }))) return;
+      if (!(await ask("Cancel this trip?", { ok: "cancel", cancel: "leave it", suitcase: true }))) return;
       state.trips = state.trips.filter((x) => x.id !== t.id);
       save();
       render();
