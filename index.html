@@ -236,7 +236,9 @@
     /* Wider screens: a real dashboard. Tiles across the top,
        planner on the left, booked leave on the right. Phones keep the stack. */
     @media (min-width: 800px) {
-      body:not(.setup-mode) main { max-width: 1040px; padding-left: 28px; padding-right: 28px; }
+      body:not(.setup-mode) main { max-width: 1040px; padding-left: 28px; padding-right: 28px; padding-top: 28px; }
+      /* Header sits top left, over the left column, with room below it */
+      body:not(.setup-mode) header { justify-content: flex-start; margin-bottom: 36px; }
       /* Four equal columns: Today and each panel take two, so every edge lines up */
       #app:not([hidden]) {
         display: grid;
