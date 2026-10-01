@@ -8,14 +8,14 @@
   <style>
     /* Palette: pulled from the chicken painting (Abbey's birthday print, 2025). */
     :root {
-      --grass: #4A6F28;     /* the painting's green: background */
+      --pond: #1E4A5E;      /* tail-feather teal, deepened: background */
       --hen: #F1ECE2;       /* white hen: main text, inputs */
       --char: #34333A;      /* black hen: panels */
       --peach: #DDB27E;     /* buff hen: today card */
       --salmon: #C6896A;    /* speckled feathers: decoration only */
       --comb: #B83A3C;      /* comb red: warnings */
       --feet: #E2CB3A;      /* yellow feet: headings on panels, buttons */
-      --teal: #1E4A5E;      /* tail feathers: decoration only */
+      --teal: #3A8296;      /* lighter tail teal so the fish and buttons show on the pond */
       --soft: #CFC8B8;      /* quieter cream for labels on panels */
       --line: rgba(241, 236, 226, 0.14);
     }
@@ -23,7 +23,7 @@
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--grass);
+      background: var(--pond);
       color: var(--hen);
       line-height: 1.45;
       overflow-x: hidden;
@@ -138,7 +138,7 @@
 <!-- Cut-paper fish, in the style of the chicken painting. Faces left, like the hens. -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="fish" viewBox="0 0 120 64">
-    <polygon points="94,32 118,8 111,32 118,58" fill="#1E4A5E"/>
+    <polygon points="94,32 118,8 111,32 118,58" fill="#3A8296"/>
     <polygon points="100,32 114,16 109,32 114,48" fill="#34333A"/>
     <polygon points="46,12 57,1 72,5 70,14" fill="#B83A3C"/>
     <polygon points="6,34 20,19 46,11 76,14 96,28 97,38 80,51 50,58 21,51" fill="#DDB27E"/>
