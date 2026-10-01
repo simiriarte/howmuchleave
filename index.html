@@ -312,10 +312,12 @@
     button.le-box {
       flex: 1; min-width: 0; margin: 0; padding: 9px 12px;
       display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
-      background: rgba(241, 236, 226, 0.07); color: var(--hen); font-weight: 400; text-align: left;
-      border-bottom: 3px solid transparent;
+      background: rgba(241, 236, 226, 0.05); color: var(--hen); font-weight: 400; text-align: left;
+      transition: background 0.2s, box-shadow 0.2s;
     }
-    button.le-box.active { border-bottom-color: var(--feet); background: rgba(241, 236, 226, 0.12); }
+    /* the box the next tap fills: a shade lighter with a thin soft outline */
+    button.le-box.active { background: rgba(241, 236, 226, 0.11); box-shadow: inset 0 0 0 1px rgba(241, 236, 226, 0.4); }
+    button.le-box.active .le-date.empty { color: #B5AFA2; }
     .le-date { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .le-date.empty { color: #8E897C; font-weight: 400; }
     button.le-clear { align-self: center; padding: 6px; color: var(--soft); text-decoration: none; }
