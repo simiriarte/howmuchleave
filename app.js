@@ -236,13 +236,14 @@ function setPlan(uses, after) {
 function renderLeaveBoxes(first, last) {
   const target = PlanCal.target;
   const endChosen = first && last && !(target === "end" && first === last);
-  const put = (id, value) => {
+  // empty boxes show their name as a placeholder; filled ones show the date
+  const put = (id, value, placeholder) => {
     const el = $(id);
-    el.textContent = value || "pick a day";
+    el.textContent = value || placeholder;
     el.classList.toggle("empty", !value);
   };
-  put("le-start-date", first ? dayDate(first) : "");
-  put("le-end-date", endChosen ? dayDate(last) : "");
+  put("le-start-date", first ? dayDate(first) : "", "Leave start");
+  put("le-end-date", endChosen ? dayDate(last) : "", "Leave end");
   $("le-start").classList.toggle("active", target === "start");
   $("le-end").classList.toggle("active", target === "end");
 }

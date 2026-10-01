@@ -310,13 +310,12 @@
     /* Leave start | Leave end boxes */
     .le-fields { display: flex; gap: 8px; align-items: stretch; }
     button.le-box {
-      flex: 1; min-width: 0; margin: 0; padding: 6px 10px;
+      flex: 1; min-width: 0; margin: 0; padding: 9px 12px;
       display: flex; flex-direction: column; align-items: flex-start; gap: 1px;
       background: rgba(241, 236, 226, 0.07); color: var(--hen); font-weight: 400; text-align: left;
       border-bottom: 3px solid transparent;
     }
     button.le-box.active { border-bottom-color: var(--feet); background: rgba(241, 236, 226, 0.12); }
-    .le-label { font-size: 0.72rem; color: var(--soft); text-transform: uppercase; letter-spacing: 0.04em; }
     .le-date { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; }
     .le-date.empty { color: #8E897C; font-weight: 400; }
     button.le-clear { align-self: center; padding: 6px; color: var(--soft); text-decoration: none; }
@@ -456,7 +455,7 @@
       .pc-grid { gap: 1px; }
       .pc-grid .pk-day { height: 30px; width: 30px; }
       .pc-head { margin-bottom: 2px; }
-      button.le-box { padding: 3px 8px; }
+      button.le-box { padding: 7px 10px; }
       .tiles.small { margin-top: 6px; }
       .book-row { margin-top: 6px; }
       /* the tiles already say "free" / "needs advance leave", so skip the extra line on phones */
@@ -607,8 +606,8 @@
       <h2>Plan a trip or staycation</h2>
       <!-- Leave start / Leave end, like a flight search; the highlighted box is what the next tap fills -->
       <div class="le-fields">
-        <button type="button" class="le-box" id="le-start"><span class="le-label">Leave start</span><span class="le-date" id="le-start-date"></span></button>
-        <button type="button" class="le-box" id="le-end"><span class="le-label">Leave end</span><span class="le-date" id="le-end-date"></span></button>
+        <button type="button" class="le-box" id="le-start" aria-label="Leave start"><span class="le-date" id="le-start-date"></span></button>
+        <button type="button" class="le-box" id="le-end" aria-label="Leave end"><span class="le-date" id="le-end-date"></span></button>
         <button type="button" class="link le-clear" id="trip-clear" aria-label="Clear dates" hidden><svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8"/></svg></button>
       </div>
       <div class="pc">
@@ -690,6 +689,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=36"></script>
+<script src="app.js?v=37"></script>
 </body>
 </html>
