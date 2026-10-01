@@ -194,24 +194,17 @@ function renderLongWeekend() {
   const today = Leave.todayStr();
   const w3 = Leave.nextThreeDayWeekend(today); // free 3-day holiday weekend
   const w4 = Leave.nextFourDayWeekend(today);  // 4 days off for 1 leave day
+  // Dates on top, holiday name underneath. Tapping plans exactly the dates shown.
   const rows = [];
   if (w4 && (!w3 || w4.holiday !== w3.holiday) && (!w3 || w4.firstOff < w3.firstOff)) {
-    rows.push({ title: w4.holiday, line: `Take ${dayDate(w4.leaveDay)} off and get 4 days, ${shortDate(w4.firstOff)} to ${shortDate(w4.lastOff)}.`, plan: w4 });
+    rows.push({ title: `${dayDate(w4.firstOff)} to ${dayDate(w4.lastOff)}`, line: w4.holiday, plan: w4 });
   }
-  if (w3) {
-    let line = `${dayDate(w3.firstOff)} to ${dayDate(w3.lastOff)}, no leave needed.`;
-    let plan = w3;
-    if (w4 && w4.holiday === w3.holiday) {
-      line += ` Take ${dayDate(w4.leaveDay)} off to make it 4 days.`;
-      plan = w4;
-    }
-    rows.push({ title: `${w3.holiday} weekend`, line, plan });
-  }
+  if (w3) rows.push({ title: `${dayDate(w3.firstOff)} to ${dayDate(w3.lastOff)}`, line: w3.holiday, plan: w3 });
   for (const r of rows) {
     const btn = document.createElement("button");
     btn.type = "button";
     btn.className = "lw-row";
-    btn.setAttribute("aria-label", `${r.title}. ${r.line} Plan it.`);
+    btn.setAttribute("aria-label", `${r.title}, ${r.line}. Plan it.`);
     const hook = document.createElement("span");
     hook.className = "pk-hook big";
     hook.setAttribute("aria-hidden", "true");
