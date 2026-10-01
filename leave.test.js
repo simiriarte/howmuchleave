@@ -35,4 +35,13 @@ assert.strictEqual(L.balanceOn("2026-10-31", settings, trips), 7.5, "10 - 5 + 2.
 assert.strictEqual(L.balanceOn("2026-10-31", settings, trips, "a"), 12.5, "skipping the trip");
 assert.strictEqual(L.balanceOn("2026-09-01", settings, trips), null, "before the LES date");
 
+// Holiday names
+assert.strictEqual(L.holidayName("2026-11-26"), "Thanksgiving");
+assert.strictEqual(L.holidayName("2026-07-03"), "Independence Day", "observed Friday");
+assert.strictEqual(L.holidayName("2026-12-24"), null);
+
+// Next 4-day weekend for 1 day of leave
+assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-01"), { firstOff: "2026-10-09", lastOff: "2026-10-12", leaveDay: "2026-10-09", holiday: "Columbus Day" });
+assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-12"), { firstOff: "2026-11-26", lastOff: "2026-11-29", leaveDay: "2026-11-27", holiday: "Thanksgiving" });
+
 console.log("All leave tests passed");

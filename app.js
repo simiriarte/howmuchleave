@@ -69,7 +69,7 @@ function nextMonthEnd(today) {
 function greet() {
   const today = Leave.todayStr();
   if (today.slice(5) === "10-02") {
-    $("hello").textContent = "Happy birthday, Abbey 🎂";
+    $("hello").textContent = "Happy birthday, Abbey";
     $("hello-sub").textContent = "No more guessing how much leave you have. Love you.";
   }
 }
@@ -158,7 +158,20 @@ function renderTrip() {
   setPlan("–", "–", "–");
   $("trip-clear").hidden = !first;
   note.textContent = "";
-  if (!first || !last) return;
+  if (!first || !last) {
+    // Nothing picked: suggest the next 4-day weekend that costs 1 day of leave
+    const w = Leave.nextFourDayWeekend(Leave.todayStr());
+    if (w) {
+      note.textContent = `Next 4-day weekend: ${shortDate(w.firstOff)} to ${shortDate(w.lastOff)} (${w.holiday}) for 1 day of leave. `;
+      const go = document.createElement("button");
+      go.type = "button";
+      go.className = "link";
+      go.textContent = "plan it";
+      go.addEventListener("click", () => PlanCal.select(w.firstOff, w.lastOff));
+      note.append(go);
+    }
+    return;
+  }
   if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
 
   const used = Leave.chargedDays(first, last).length;
@@ -166,7 +179,7 @@ function renderTrip() {
   const after = Leave.balanceOn(last, state.settings, state.trips) - used;
   setPlan(`${used}`, fmtNum(before), fmtNum(after));
   if (used === 0) {
-    note.textContent = "All weekend or holiday, so it's free. 🎉";
+    note.textContent = "All weekend or holiday, so it's free.";
     return;
   }
   if (after < 0) {
@@ -207,7 +220,7 @@ function renderTrips() {
     cell("trip-days", `${used}d`);
     const del = document.createElement("button");
     del.className = "link";
-    del.textContent = "✕";
+    del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", () => {
       if (!confirm(`Remove "${t.name || "Leave"}"? Its days go back into your balance.`)) return;

@@ -45,29 +45,33 @@
     return toStr(dt);
   }
   const holidayCache = {};
+  // Federal holidays for a year, as a map of observed date -> name
   function federalHolidays(year) {
     if (!holidayCache[year]) {
-      holidayCache[year] = new Set([
-        observed(year, 1, 1), // New Year's Day
-        nthWeekday(year, 1, 1, 3), // MLK Day
-        nthWeekday(year, 2, 1, 3), // Presidents Day
-        lastWeekday(year, 5, 1), // Memorial Day
-        observed(year, 6, 19), // Juneteenth
-        observed(year, 7, 4), // Independence Day
-        nthWeekday(year, 9, 1, 1), // Labor Day
-        nthWeekday(year, 10, 1, 2), // Columbus Day
-        observed(year, 11, 11), // Veterans Day
-        nthWeekday(year, 11, 4, 4), // Thanksgiving
-        observed(year, 12, 25), // Christmas
-        observed(year + 1, 1, 1), // next New Year's can be observed Dec 31
+      holidayCache[year] = new Map([
+        [observed(year, 1, 1), "New Year's Day"],
+        [nthWeekday(year, 1, 1, 3), "Martin Luther King Jr. Day"],
+        [nthWeekday(year, 2, 1, 3), "Presidents Day"],
+        [lastWeekday(year, 5, 1), "Memorial Day"],
+        [observed(year, 6, 19), "Juneteenth"],
+        [observed(year, 7, 4), "Independence Day"],
+        [nthWeekday(year, 9, 1, 1), "Labor Day"],
+        [nthWeekday(year, 10, 1, 2), "Columbus Day"],
+        [observed(year, 11, 11), "Veterans Day"],
+        [nthWeekday(year, 11, 4, 4), "Thanksgiving"],
+        [observed(year, 12, 25), "Christmas"],
+        [observed(year + 1, 1, 1), "New Year's Day"], // can be observed Dec 31
       ]);
     }
     return holidayCache[year];
   }
+  function holidayName(s) {
+    return federalHolidays(Number(s.slice(0, 4))).get(s) || null;
+  }
   function isNonDutyDay(s) {
     const dow = toDate(s).getUTCDay();
     if (dow === 0 || dow === 6) return true;
-    return federalHolidays(Number(s.slice(0, 4))).has(s);
+    return holidayName(s) !== null;
   }
 
   // ---- the leave rules ----
@@ -115,7 +119,28 @@
     return balance;
   }
 
-  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, chargedDays, monthEndsBetween, balanceOn };
+  // The next 4 days in a row off that cost only 1 day of leave (a 3-day holiday
+  // weekend plus one day). Returns { firstOff, lastOff, leaveDay, holiday } or null.
+  function nextFourDayWeekend(after) {
+    for (let i = 1; i <= 400; i++) {
+      const start = addDays(after, i);
+      const end = addDays(start, 3);
+      const charged = chargedDays(start, end);
+      if (charged.length !== 1) continue;
+      // the other three days must all be weekends/holidays, and one must be a holiday
+      let holiday = null;
+      let allOff = true;
+      for (let d = start; d <= end; d = addDays(d, 1)) {
+        if (d === charged[0]) continue;
+        if (!isNonDutyDay(d)) allOff = false;
+        holiday = holiday || holidayName(d);
+      }
+      if (allOff && holiday) return { firstOff: start, lastOff: end, leaveDay: charged[0], holiday };
+    }
+    return null;
+  }
+
+  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextFourDayWeekend };
   if (typeof module !== "undefined") module.exports = api;
   else root.Leave = api;
 })(this);

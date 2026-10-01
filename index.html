@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>How much leave?</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 64'%3E%3Cpolygon points='94,32 118,8 111,32 118,58' fill='%233A8296'/%3E%3Cpolygon points='46,12 57,1 72,5 70,14' fill='%23B83A3C'/%3E%3Cpolygon points='6,34 20,19 46,11 76,14 96,28 97,38 80,51 50,58 21,51' fill='%23DDB27E'/%3E%3Cpolygon points='40,15 70,13 89,27 85,42 62,48 45,38' fill='%23C6896A'/%3E%3Cpolygon points='12,39 38,44 66,52 49,57 23,51' fill='%23F1ECE2'/%3E%3Ccircle cx='19' cy='31' r='3.4' fill='%23F1ECE2'/%3E%3Ccircle cx='18.4' cy='31' r='1.7' fill='%2334333A'/%3E%3C/svg%3E">
   <style>
     /* Bagel Fat One (SIL Open Font License), saved in the repo so it loads fast and offline */
     @font-face {
@@ -216,6 +216,19 @@
       transition: border-color 0.15s, background 0.15s;
     }
     .pk-day.off { color: #9A9486; }
+    /* Holidays get a little cut-paper starfish in the corner */
+    .pk-day { position: relative; }
+    .pk-day.holiday::after {
+      content: "";
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 16px;
+      height: 16px;
+      background: var(--salmon);
+      clip-path: polygon(50% 0%, 61% 36%, 98% 36%, 68% 58%, 79% 94%, 50% 72%, 21% 94%, 32% 58%, 2% 36%, 39% 36%);
+      transform: rotate(-12deg);
+    }
     .pk-day.today { border: 1.5px dotted var(--feet); }
     .pk-day:hover:not(:disabled) { border-color: rgba(241, 236, 226, 0.45); background: rgba(241, 236, 226, 0.06); }
     .pk-day:disabled { opacity: 0.25; cursor: default; }
@@ -241,6 +254,7 @@
       0% { transform: translate(0, 0) scale(0.6); opacity: 1; }
       100% { transform: translate(var(--drift), -70px) scale(1.1); opacity: 0; }
     }
+    .pk-star { display: inline-block; width: 11px; height: 11px; background: var(--salmon); clip-path: polygon(50% 0%, 61% 36%, 98% 36%, 68% 58%, 79% 94%, 50% 72%, 21% 94%, 32% 58%, 2% 36%, 39% 36%); vertical-align: -1px; }
     .pk-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; color: var(--soft); }
     @media (prefers-reduced-motion: reduce) { .pk-day.pop { animation: none; } }
     .tile.hero .tile-value, .tile.by .tile-value { font-size: 2rem; }
@@ -534,13 +548,13 @@
   <div class="pk-week" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
   <div class="pk-grid" id="pk-grid"></div>
   <div class="pk-foot">
-    <span class="pk-key">dim = weekend or holiday</span>
+    <span class="pk-key">dim = weekend, <span class="pk-star" aria-hidden="true"></span> = holiday</span>
     <button type="button" class="link" id="pk-today">today</button>
   </div>
 </dialog>
-<script src="leave.js?v=3"></script>
-<script src="picker.js?v=2"></script>
-<script src="plancal.js?v=1"></script>
-<script src="app.js?v=11"></script>
+<script src="leave.js?v=4"></script>
+<script src="picker.js?v=3"></script>
+<script src="plancal.js?v=2"></script>
+<script src="app.js?v=12"></script>
 </body>
 </html>

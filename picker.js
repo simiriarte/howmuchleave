@@ -52,6 +52,8 @@
       b.textContent = d;
       b.setAttribute("aria-label", label(date));
       if (Leave.isNonDutyDay(date)) b.classList.add("off");
+      const hol = Leave.holidayName(date);
+      if (hol) { b.classList.add("holiday"); b.title = hol; b.setAttribute("aria-label", `${label(date)}, ${hol}`); }
       if (date === today) b.classList.add("today");
       if (date === current.input.value) {
         b.classList.add("selected");

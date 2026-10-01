@@ -51,6 +51,8 @@
       btn.textContent = d;
       let aria = label(date);
       if (Leave.isNonDutyDay(date)) btn.classList.add("off");
+      const hol = Leave.holidayName(date);
+      if (hol) { btn.classList.add("holiday"); btn.title = hol; aria += `, ${hol}`; }
       if (date === today) btn.classList.add("today");
       if (booked.has(date)) { btn.classList.add("booked"); aria += ", booked"; }
       if (a && date >= a && date <= b) {
@@ -93,5 +95,14 @@
     draw,
     get waitingForEnd() { return waitingForEnd; },
     clear() { first.value = ""; last.value = ""; waitingForEnd = false; draw(); },
+    select(a, b) {
+      first.value = a;
+      last.value = b;
+      waitingForEnd = false;
+      viewYear = Number(a.slice(0, 4));
+      viewMonth = Number(a.slice(5, 7)) - 1;
+      last.dispatchEvent(new Event("input"));
+      draw();
+    },
   };
 })();
