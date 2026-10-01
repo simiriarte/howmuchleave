@@ -199,7 +199,7 @@
 
     /* ---- The calendar ---- */
     dialog.picker { padding: 16px 16px 12px; width: min(340px, 92vw); overflow: visible; }
-    .pk-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .pk-head { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 10px; }
     #pk-title { font-family: "Bagel Fat One", -apple-system, sans-serif; font-size: 1.3rem; }
     .pk-nav { margin: 0; padding: 4px 12px 6px; font-size: 1.3rem; line-height: 1; background: var(--feet); color: var(--char); clip-path: polygon(6% 8%, 96% 0, 100% 90%, 0 100%); }
     .pk-week, .pk-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
@@ -263,7 +263,9 @@
     section.plan, section.booked { padding: 14px; margin-bottom: 10px; }
     section.plan h2, section.booked h2 { margin-bottom: 8px; }
     /* Planner calendar (shares the day styles with the pop-up calendar) */
-    .pc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    /* arrows sit beside the month name; fixed title width so they don't jump between short and long month names */
+    .pc-head { display: flex; align-items: center; justify-content: center; gap: 14px; margin-bottom: 6px; }
+    #pc-title, #pk-title { width: 9.2em; text-align: center; }
     #pc-title { font-family: "Bagel Fat One", -apple-system, sans-serif; font-size: 1.15rem; }
     .pc-grid { gap: 2px; }
     .pc-grid .pk-day { aspect-ratio: auto; height: 36px; width: 36px; justify-self: center; font-size: 0.92rem; }
