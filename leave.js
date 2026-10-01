@@ -155,7 +155,27 @@
     return null;
   }
 
-  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextThreeDayWeekend, nextFourDayWeekend };
+  // The next `count` long weekends: 3 or more days off in a row that include a
+  // federal holiday and use no leave. One still in progress today counts.
+  // Returns [{ firstOff, lastOff, holiday }].
+  function nextLongWeekends(today, count) {
+    const found = [];
+    let d = addDays(today, -4);
+    const stop = addDays(today, 800);
+    while (found.length < count && d <= stop) {
+      if (!isNonDutyDay(d)) { d = addDays(d, 1); continue; }
+      // a run of days off starts here
+      const start = d;
+      let holiday = null;
+      while (isNonDutyDay(d)) { holiday = holiday || holidayName(d); d = addDays(d, 1); }
+      const end = addDays(d, -1);
+      const length = chargedDays(start, end).length === 0 ? Math.round((toDate(end) - toDate(start)) / 86400000) + 1 : 0;
+      if (holiday && length >= 3 && end >= today) found.push({ firstOff: start, lastOff: end, holiday });
+    }
+    return found;
+  }
+
+  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextThreeDayWeekend, nextFourDayWeekend, nextLongWeekends };
   if (typeof module !== "undefined") module.exports = api;
   else root.Leave = api;
 })(this);

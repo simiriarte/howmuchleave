@@ -199,15 +199,12 @@ function dayDate(s) {
 function renderLongWeekend() {
   const box = $("long-weekend");
   box.innerHTML = "";
-  const today = Leave.todayStr();
-  const w3 = Leave.nextThreeDayWeekend(today); // free 3-day holiday weekend
-  const w4 = Leave.nextFourDayWeekend(today);  // 4 days off for 1 leave day
-  // Dates on top, holiday name underneath. Tapping plans exactly the dates shown.
-  const rows = [];
-  if (w4 && (!w3 || w4.holiday !== w3.holiday) && (!w3 || w4.firstOff < w3.firstOff)) {
-    rows.push({ title: `${dayDate(w4.firstOff)} to ${dayDate(w4.lastOff)}`, line: w4.holiday, plan: w4 });
-  }
-  if (w3) rows.push({ title: `${dayDate(w3.firstOff)} to ${dayDate(w3.lastOff)}`, line: w3.holiday, plan: w3 });
+  // Next 3 long weekends: dates on top, holiday name underneath. Tap to plan it.
+  const rows = Leave.nextLongWeekends(Leave.todayStr(), 3).map((w) => ({
+    title: `${dayDate(w.firstOff)} to ${dayDate(w.lastOff)}`,
+    line: w.holiday,
+    plan: w,
+  }));
   for (const r of rows) {
     const btn = document.createElement("button");
     btn.type = "button";

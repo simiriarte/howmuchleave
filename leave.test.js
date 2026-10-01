@@ -48,4 +48,24 @@ assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-12"), { firstOff: "2026-11-
 assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-01"), { firstOff: "2026-10-10", lastOff: "2026-10-12", holiday: "Columbus Day" });
 assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-12"), { firstOff: "2026-12-25", lastOff: "2026-12-27", holiday: "Christmas" }, "Veterans Day (Wed) and Thanksgiving (Thu) aren't 3-day weekends");
 
+// Next 3 long weekends
+assert.deepStrictEqual(L.nextLongWeekends("2026-10-01", 3), [
+  { firstOff: "2026-10-10", lastOff: "2026-10-12", holiday: "Columbus Day" },
+  { firstOff: "2026-12-25", lastOff: "2026-12-27", holiday: "Christmas" },
+  { firstOff: "2027-01-01", lastOff: "2027-01-03", holiday: "New Year's Day" },
+]);
+assert.strictEqual(L.nextLongWeekends("2026-10-11", 1)[0].firstOff, "2026-10-10", "a long weekend in progress still shows");
+
+// Every federal holiday 2026-2028 matches OPM's official list exactly
+// (opm.gov/policy-data-oversight/pay-leave/federal-holidays, checked 2026-10-01)
+const opm = {
+  "2026-01-01": "New Year's Day", "2026-01-19": "Martin Luther King Jr. Day", "2026-02-16": "Presidents Day", "2026-05-25": "Memorial Day", "2026-06-19": "Juneteenth", "2026-07-03": "Independence Day", "2026-09-07": "Labor Day", "2026-10-12": "Columbus Day", "2026-11-11": "Veterans Day", "2026-11-26": "Thanksgiving", "2026-12-25": "Christmas",
+  "2027-01-01": "New Year's Day", "2027-01-18": "Martin Luther King Jr. Day", "2027-02-15": "Presidents Day", "2027-05-31": "Memorial Day", "2027-06-18": "Juneteenth", "2027-07-05": "Independence Day", "2027-09-06": "Labor Day", "2027-10-11": "Columbus Day", "2027-11-11": "Veterans Day", "2027-11-25": "Thanksgiving", "2027-12-24": "Christmas", "2027-12-31": "New Year's Day",
+  "2028-01-17": "Martin Luther King Jr. Day", "2028-02-21": "Presidents Day", "2028-05-29": "Memorial Day", "2028-06-19": "Juneteenth", "2028-07-04": "Independence Day", "2028-09-04": "Labor Day", "2028-10-09": "Columbus Day", "2028-11-10": "Veterans Day", "2028-11-23": "Thanksgiving", "2028-12-25": "Christmas",
+};
+for (const [d, n] of Object.entries(opm)) assert.strictEqual(L.holidayName(d), n, `OPM: ${d} should be ${n}`);
+for (let d = "2026-01-01"; d <= "2028-12-31"; d = L.addDays(d, 1)) {
+  if (L.holidayName(d)) assert.ok(opm[d], `${d} is not on OPM's list`);
+}
+
 console.log("All leave tests passed");
