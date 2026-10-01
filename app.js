@@ -224,7 +224,7 @@ function renderTrip() {
   note.textContent = "";
   renderLeaveBoxes(first, last);
   if (!first || !last) return;
-  if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
+  if (first <= state.settings.asOf) { note.textContent = `Pick days after ${shortDate(state.settings.asOf)}, your LES date.`; return; }
 
   const used = Leave.chargedDays(first, last).length;
   const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, takenTrips());

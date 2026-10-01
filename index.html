@@ -112,7 +112,6 @@
       text-decoration: underline;
       font-weight: 500;
     }
-    .empty { color: var(--soft); margin: 10px 0 0; }
     [hidden] { display: none !important; }
 
     /* The seahorse hides just past the planner's left edge: a small window sits
@@ -402,8 +401,13 @@
       .pc { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
       .pc-head { margin-bottom: 10px; }
       .pk-week { margin-bottom: 4px; }
-      .pc-grid { row-gap: 4px; }
-      .pc-grid .pk-day { height: 36px; width: 36px; }
+      /* Calendar rows share the space that's left: up to 40px each when there's
+         room, smaller when the window is short, so it never spills into the
+         boxes above or the tiles below. Days stay round and at most 36px. */
+      .pc-grid { flex: 0 1 260px; min-height: 0; grid-auto-rows: minmax(0, 1fr); row-gap: 2px; }
+      .pc-grid .pk-day { height: 100%; width: auto; max-height: 36px; aspect-ratio: 1; align-self: center; }
+      .pc-head { flex: none; }
+      .le-fields { flex: none; margin-bottom: 4px; }
       section.booked { min-height: 0; }
       section.plan, section.booked { padding: 20px; margin-bottom: 14px; }
       .tile { padding: 16px 18px; }
@@ -425,8 +429,6 @@
       section.plan, section.booked { padding: 14px 18px; margin-bottom: 10px; }
       section.plan { gap: 10px; }
       .pc-head { margin-bottom: 4px; }
-      .pc-grid { row-gap: 1px; }
-      .pc-grid .pk-day { height: 32px; width: 32px; }
     }
 
     /* Phones: stack the inputs, and tighten the top so everything fits
@@ -669,6 +671,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=30"></script>
+<script src="app.js?v=31"></script>
 </body>
 </html>
