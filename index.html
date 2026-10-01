@@ -6,50 +6,44 @@
   <title>How much leave?</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
   <style>
-    /* Palette: Sanzo Wada, A Dictionary of Color Combinations, no. 319.
-       This app's own look, not Stuff That Sticks branding. */
+    /* Palette: pulled from the chicken painting (Abbey's birthday print, 2025). */
     :root {
-      --apricot: #F2C40F;   /* Apricot Yellow: headings, numbers, today card */
-      --yorange: #E08A1E;   /* Yellow Orange: buttons (with dark text) */
-      --sienna: #8C4F1F;    /* Raw Sienna: warnings */
-      --cossack: #3F6327;   /* Cossack Green: the background */
-      --deep: #2E4A1C;      /* darker Cossack for the panels */
-      --cream: #F6F1E4;
-      --soft: #E3DCC6;      /* quieter cream for labels and notes */
-      --ink: #2B2A22;
-      --line: rgba(246, 241, 228, 0.14);
+      --grass: #4A6F28;     /* the painting's green: background */
+      --hen: #F1ECE2;       /* white hen: main text, inputs */
+      --char: #34333A;      /* black hen: panels */
+      --peach: #DDB27E;     /* buff hen: today card */
+      --salmon: #C6896A;    /* speckled feathers: decoration only */
+      --comb: #B83A3C;      /* comb red: warnings */
+      --feet: #E2CB3A;      /* yellow feet: headings on panels, buttons */
+      --teal: #1E4A5E;      /* tail feathers: decoration only */
+      --soft: #CFC8B8;      /* quieter cream for labels on panels */
+      --line: rgba(241, 236, 226, 0.14);
     }
     * { box-sizing: border-box; border-radius: 0; }  /* square corners everywhere, incl. iPhone form defaults */
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--cossack);
-      color: var(--cream);
+      background: var(--grass);
+      color: var(--hen);
       line-height: 1.45;
+      overflow-x: hidden;
     }
     /* Start content about a third of the way down instead of hugging the top */
     main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 48px; }
     header { text-align: center; margin-bottom: 28px; }
-    h1 { font-size: 1.8rem; margin: 0 0 4px; color: var(--apricot); }
-    h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--apricot); }
+    .emblem { width: 120px; height: auto; display: block; margin: 0 auto 14px; }
+    h1 { font-size: 1.8rem; margin: 0 0 4px; color: var(--hen); }
+    h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--feet); }
     .sub { color: var(--soft); margin: 0 0 20px; }
-    header .sub { margin: 0; }
-
-    /* The color-block composition from the book, on its own little page */
-    .page { display: inline-block; background: var(--cream); padding: 12px 12px; margin-bottom: 18px; }
-    .blocks { display: grid; grid-template-columns: 14px 28px 28px 14px; grid-template-rows: 20px 18px 20px; width: 84px; }
-    .blocks span:nth-child(1) { grid-column: 2 / 4; grid-row: 1; background: var(--apricot); }
-    .blocks span:nth-child(2) { grid-column: 1 / 3; grid-row: 2; background: var(--yorange); }
-    .blocks span:nth-child(3) { grid-column: 3 / 5; grid-row: 2; background: var(--sienna); }
-    .blocks span:nth-child(4) { grid-column: 2 / 4; grid-row: 3; background: var(--cossack); }
+    header .sub { margin: 0; color: var(--hen); }
 
     section {
-      background: var(--deep);
+      background: var(--char);
       padding: 18px;
       margin-bottom: 16px;
     }
-    section.hero { background: var(--apricot); color: var(--ink); text-align: center; }
-    section.hero h2, section.hero .sub { color: var(--ink); }
+    section.hero { background: var(--peach); color: var(--char); text-align: center; }
+    section.hero h2, section.hero .sub { color: var(--char); }
     .big { font-size: 3.6rem; font-weight: 700; line-height: 1; margin: 6px 0; }
     .big small { font-size: 1.1rem; font-weight: 500; }
     label { display: block; font-size: 0.9rem; color: var(--soft); margin: 10px 0 4px; }
@@ -58,11 +52,11 @@
       font: inherit;
       padding: 10px 12px;
       border: 0;
-      background: var(--cream);
-      color: var(--ink);
+      background: var(--hen);
+      color: var(--char);
       color-scheme: light;
     }
-    input:focus-visible, button:focus-visible { outline: 3px solid var(--apricot); outline-offset: 2px; }
+    input:focus-visible, button:focus-visible { outline: 3px solid var(--feet); outline-offset: 2px; }
     .row { display: flex; gap: 10px; }
     .row > div { flex: 1; min-width: 0; }
     button {
@@ -70,38 +64,67 @@
       font-weight: 600;
       border: 0;
       padding: 11px 16px;
-      background: var(--yorange);
-      color: var(--ink);
+      background: var(--feet);
+      color: var(--char);
       cursor: pointer;
       margin-top: 14px;
     }
     button.link {
       background: none;
-      color: var(--cream);
+      color: var(--hen);
       padding: 0;
       margin: 0;
       text-decoration: underline;
       font-weight: 500;
     }
     .result { margin-top: 14px; font-size: 1.05rem; }
-    .result strong { font-size: 1.25rem; color: var(--apricot); }
-    .result.warn { background: var(--sienna); color: var(--cream); padding: 12px 14px; }
-    .result.warn strong { color: var(--cream); }
+    .result strong { font-size: 1.25rem; color: var(--feet); }
+    .result.warn { background: var(--comb); color: var(--hen); padding: 12px 14px; }
+    .result.warn strong { color: var(--hen); }
     ul { list-style: none; padding: 0; margin: 0; }
-    li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
+    li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
     li:first-child { border-top: 0; }
+    li .trip-text { flex: 1; min-width: 0; }
+    li .fish { width: 34px; flex: none; }
     li .when { color: var(--soft); font-size: 0.9rem; }
     li button { background: none; color: var(--soft); padding: 4px 8px; margin: 0; font-weight: 400; }
     .empty { color: var(--soft); margin: 0; }
-    footer { color: var(--soft); font-size: 0.85rem; padding: 0 4px; }
+    footer { color: var(--hen); font-size: 0.85rem; padding: 0 4px; }
     footer p { margin: 0 0 8px; }
     [hidden] { display: none !important; }
+
+    /* A fish swims across the screen when she books leave */
+    .swimmer { position: fixed; left: 100vw; width: 90px; pointer-events: none; z-index: 10; animation: swim 3.2s ease-in-out forwards; }
+    @keyframes swim {
+      0%   { transform: translate(0, 0); }
+      25%  { transform: translate(-35vw, -14px); }
+      50%  { transform: translate(-70vw, 8px); }
+      75%  { transform: translate(-105vw, -10px); }
+      100% { transform: translate(calc(-100vw - 140px), 0); }
+    }
+    @media (prefers-reduced-motion: reduce) { .swimmer { display: none; } }
   </style>
 </head>
 <body>
+<!-- Cut-paper fish, in the style of the chicken painting. Faces left, like the hens. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="fish" viewBox="0 0 120 64">
+    <polygon points="94,32 118,8 111,32 118,58" fill="#1E4A5E"/>
+    <polygon points="100,32 114,16 109,32 114,48" fill="#34333A"/>
+    <polygon points="46,12 57,1 72,5 70,14" fill="#B83A3C"/>
+    <polygon points="6,34 20,19 46,11 76,14 96,28 97,38 80,51 50,58 21,51" fill="#DDB27E"/>
+    <polygon points="40,15 70,13 89,27 85,42 62,48 45,38" fill="#C6896A"/>
+    <polygon points="52,20 58,26 64,20 70,26 76,22 80,30 74,34 68,30 62,36 56,30 50,34 48,26" fill="#DDB27E" opacity=".55"/>
+    <polygon points="12,39 38,44 66,52 49,57 23,51" fill="#F1ECE2"/>
+    <polygon points="38,39 52,47 41,51" fill="#E2CB3A"/>
+    <polygon points="62,52 72,62 76,51" fill="#B83A3C"/>
+    <circle cx="19" cy="31" r="3.4" fill="#F1ECE2"/>
+    <circle cx="18.4" cy="31" r="1.7" fill="#34333A"/>
+  </symbol>
+</svg>
 <main>
   <header>
-    <div class="page" aria-hidden="true"><div class="blocks"><span></span><span></span><span></span><span></span></div></div>
+    <svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
     <h1 id="hello">Hi Abbey</h1>
     <p class="sub" id="hello-sub">How much leave do you have?</p>
   </header>
@@ -161,7 +184,7 @@
     <section>
       <h2>Booked leave</h2>
       <ul id="trips"></ul>
-      <p class="empty" id="trips-empty">Nothing booked yet.</p>
+      <p class="empty" id="trips-empty">Nothing booked yet. The pond is quiet.</p>
     </section>
 
     <footer>

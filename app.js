@@ -15,6 +15,25 @@ function save() {
 }
 let state = load();
 
+// ---- fish ----
+const SVG_NS = "http://www.w3.org/2000/svg";
+function fishIcon(className) {
+  const svg = document.createElementNS(SVG_NS, "svg");
+  svg.setAttribute("viewBox", "0 0 120 64");
+  svg.setAttribute("class", className);
+  svg.setAttribute("aria-hidden", "true");
+  const use = document.createElementNS(SVG_NS, "use");
+  use.setAttribute("href", "#fish");
+  svg.append(use);
+  return svg;
+}
+function swimFish() {
+  const f = fishIcon("swimmer");
+  f.style.top = `${20 + Math.random() * 50}vh`;
+  f.addEventListener("animationend", () => f.remove());
+  document.body.append(f);
+}
+
 // ---- formatting ----
 const dayWord = (n) => (Math.abs(n) === 1 ? "day" : "days");
 const fmtNum = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
@@ -131,6 +150,7 @@ function renderTrips() {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
     const li = document.createElement("li");
     const text = document.createElement("div");
+    text.className = "trip-text";
     const name = document.createElement("div");
     name.textContent = `${t.name || "Leave"} · ${used} ${dayWord(used)}`;
     const when = document.createElement("div");
@@ -146,7 +166,7 @@ function renderTrips() {
       save();
       render();
     });
-    li.append(text, del);
+    li.append(fishIcon("fish"), text, del);
     list.append(li);
   }
 }
@@ -170,6 +190,7 @@ $("trip-save-btn").addEventListener("click", () => {
   $("trip-last").value = "";
   $("trip-name").value = "";
   render();
+  swimFish();
 });
 
 greet();
