@@ -41,6 +41,12 @@
     main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 190px; }  /* bottom room so the footer ends above the seaweed */
     header { text-align: center; margin-bottom: 28px; }
     .emblem { width: 120px; height: auto; display: block; margin: 0 auto 14px; }
+    /* The header fish is a button: tap it and a school of fish swims by */
+    button.fish-btn { display: block; margin: 0; padding: 0; background: none; cursor: pointer; flex: none; }
+    button.fish-btn:hover .emblem { transform: rotate(-6deg); }
+    .emblem { transition: transform 0.2s; }
+    button.fish-btn.wiggle .emblem { animation: wiggle 0.5s ease-in-out; }
+    @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(-6deg); } }
     h1 { font-family: "Bagel Fat One", -apple-system, sans-serif; font-weight: 400; font-size: 2.4rem; line-height: 1.1; margin: 0 0 6px; color: var(--hen); }
     h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--feet); }
     .sub { color: var(--soft); margin: 0 0 20px; }
@@ -524,7 +530,7 @@
 </div>
 <main>
   <header>
-    <svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
+    <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg></button>
     <h1 id="hello">Hi Abbey</h1>
     <p class="sub" id="hello-sub">How much leave do you have?</p>
   </header>
@@ -672,6 +678,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=33"></script>
+<script src="app.js?v=34"></script>
 </body>
 </html>

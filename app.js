@@ -84,6 +84,30 @@ function blowBubble() {
 }
 if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(blowBubble, 900);
 
+// Tap the header fish: a school of fish (different sizes, speeds, heights) swims by.
+// A couple of them are off on trips and carry suitcases.
+function swimSchool() {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  const count = 9 + Math.floor(Math.random() * 5);
+  for (let i = 0; i < count; i++) {
+    setTimeout(() => {
+      const f = fishIcon("swimmer", Math.random() < 0.18);
+      f.style.top = `${8 + Math.random() * 78}vh`;
+      f.style.width = `${38 + Math.random() * 70}px`;
+      f.style.animationDuration = `${2.4 + Math.random() * 2.6}s`;
+      f.addEventListener("animationend", () => f.remove());
+      document.body.append(f);
+    }, i * (90 + Math.random() * 160));
+  }
+}
+document.getElementById("fish-btn").addEventListener("click", (e) => {
+  const btn = e.currentTarget;
+  btn.classList.remove("wiggle");
+  void btn.offsetWidth; // restart the wiggle
+  btn.classList.add("wiggle");
+  swimSchool();
+});
+
 // ---- formatting ----
 const dayWord = (n) => (Math.abs(n) === 1 ? "day" : "days");
 const fmtNum = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));
