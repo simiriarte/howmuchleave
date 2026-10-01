@@ -18,9 +18,9 @@ Built as a birthday gift, October 2026.
 - Heading font: [Bagel Fat One](https://fonts.google.com/specimen/Bagel+Fat+One), SIL Open Font License.
 - Colours: from the chicken painting printed for Abbey's 2025 birthday.
 
-## Sync between devices (pond codes)
+## Sync between devices (ocean codes)
 
-Everything is kept in the browser first. If she turns on **sync**, the app makes a pond code
+Everything is kept in the browser first. If she turns on **sync**, the app makes an ocean code
 (like `coral-tuna-kelp-reef-42`); typing it on another device links them. Every save goes to
 a tiny private store on AWS and the newest copy wins when the app is opened or refocused.
 
@@ -30,4 +30,4 @@ a tiny private store on AWS and the newest copy wins when the app is opened or r
   - IAM role `howmuchleave-sync-role` (Get/Put on that one table + its own logs)
   - Function URL with CORS limited to `https://simiriarte.github.io` (and localhost for testing)
 - Redeploy the function: `cd sync && zip -q fn.zip index.mjs && aws lambda update-function-code --function-name howmuchleave-sync --zip-file fileb://fn.zip`
-- The pond code is the only key. Anyone who has it can see the trips, so keep it private.
+- The ocean code is the only key. Anyone who has it can see the trips, so keep it private.

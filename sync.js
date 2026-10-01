@@ -1,6 +1,6 @@
-// Sync between devices with a "pond code".
+// Sync between devices with an "ocean code".
 // The app still keeps everything in this browser (so it works offline and loads
-// instantly); when a pond code is set, every save is also sent to a tiny private
+// instantly); when an ocean code is set, every save is also sent to a tiny private
 // store on AWS, and opening the app pulls the newest copy. Newest save wins.
 
 (function () {
@@ -83,7 +83,7 @@
     if (code) {
       $("sync-code").textContent = code;
       $("sync-status").textContent = pending
-        ? "Couldn't reach the pond. It'll catch up next time you open the app."
+        ? "Couldn't reach the ocean. It'll catch up next time you open the app."
         : lastSynced ? "In sync." : "Checking...";
     }
   }
@@ -122,14 +122,14 @@
     openSync();
   });
 
-  // Join an existing pond (used from the sync pop-up and from the setup screen)
+  // Join an existing ocean (used from the sync pop-up and from the setup screen)
   async function join(rawCode) {
     const code = rawCode.trim().toLowerCase().replace(/\s+/g, "-");
     const msg = $("join-msg");
-    msg.textContent = "Looking for that pond...";
+    msg.textContent = "Looking for that ocean...";
     try {
       const res = await fetch(`${URL_}?code=${encodeURIComponent(code)}`);
-      if (res.status === 404 || res.status === 400) { msg.textContent = "No pond with that code. Check the spelling?"; return; }
+      if (res.status === 404 || res.status === 400) { msg.textContent = "No ocean with that code. Check the spelling?"; return; }
       if (!res.ok) throw new Error(res.status);
       const remote = await res.json();
       localStorage.setItem(POND_KEY, code);
@@ -139,7 +139,7 @@
       dlg.close();
       render();
     } catch {
-      msg.textContent = "Couldn't reach the pond. Check the internet and try again.";
+      msg.textContent = "Couldn't reach the ocean. Check the internet and try again.";
     }
   }
 

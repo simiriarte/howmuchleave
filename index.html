@@ -22,7 +22,7 @@
       --salmon: #C6896A;    /* speckled feathers: decoration only */
       --comb: #B83A3C;      /* comb red: warnings */
       --feet: #E2CB3A;      /* yellow feet: headings on panels, buttons */
-      --teal: #3A8296;      /* lighter tail teal so the fish and buttons show on the pond */
+      --teal: #3A8296;      /* lighter tail teal so the fish and buttons show on the ocean */
       --soft: #CFC8B8;      /* quieter cream for labels on panels */
       --line: rgba(241, 236, 226, 0.14);
       --silver: linear-gradient(160deg, #F2F3F4 0%, #C3C8CD 45%, #8E959B 100%);  /* hook: light-to-dark grey reads as metal */
@@ -603,7 +603,7 @@
       </div>
     </div>
     <button class="cut" id="setup-save">Enter</button>
-    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your pond code</button></p>
+    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your ocean code</button></p>
   </section>
 
   <div id="app" hidden>
@@ -715,24 +715,24 @@
   </div>
 </dialog>
 
-<!-- Sync between devices with a pond code (see sync.js) -->
+<!-- Sync between devices with an ocean code (see sync.js) -->
 <dialog id="sync-dlg" class="ask sync">
   <svg class="ask-fish" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
-  <h2>Sync your pond</h2>
+  <h2>Sync your ocean</h2>
   <div id="sync-off">
     <p>Keep your balance and trips the same on your phone and computer.</p>
     <div class="ask-buttons">
       <button type="button" class="cut" id="sync-start">start syncing</button>
-      <button type="button" class="link" id="sync-join-show">I have a pond code</button>
+      <button type="button" class="link" id="sync-join-show">I have an ocean code</button>
     </div>
     <form id="join-form" class="join-form" hidden>
-      <input id="join-code" type="text" placeholder="coral-tuna-kelp-reef-42" aria-label="Pond code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <input id="join-code" type="text" placeholder="coral-tuna-kelp-reef-42" aria-label="Ocean code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
       <button type="submit" class="cut">join</button>
     </form>
     <p class="note" id="join-msg"></p>
   </div>
   <div id="sync-on" hidden>
-    <p>Your pond code. Type it on your other device to match them up.</p>
+    <p>Your ocean code. Type it on your other device to match them up.</p>
     <p class="pond-code"><strong id="sync-code"></strong> <button type="button" class="link" id="sync-copy">copy</button></p>
     <p class="note" id="sync-status"></p>
     <p class="sub">Keep it to yourself. It's the key to your trips.</p>
@@ -759,6 +759,6 @@
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
 <script src="app.js?v=43"></script>
-<script src="sync.js?v=1"></script>
+<script src="sync.js?v=2"></script>
 </body>
 </html>
