@@ -183,9 +183,8 @@ function renderBy() {
   $("by-unit").textContent = bal === null ? "pick a later date" : `${dayWord(bal)} of leave`;
 }
 
-function setPlan(uses, before, after) {
+function setPlan(uses, after) {
   $("plan-uses").textContent = uses;
-  $("plan-before").textContent = before;
   $("plan-after").textContent = after;
 }
 
@@ -219,7 +218,9 @@ function renderTrip() {
   DatePicker.sync();
   setPlanReady(false);
   $("plan-after-tile").classList.remove("warn");
-  setPlan("–", "–", "–");
+  $("plan-after-label").textContent = "After";
+  note.dataset.kind = "";
+  setPlan("–", "–");
   $("trip-clear").hidden = !first;
   note.textContent = "";
   renderLeaveBoxes(first, last);
@@ -227,15 +228,17 @@ function renderTrip() {
   if (first <= state.settings.asOf) { note.textContent = `Pick days after ${shortDate(state.settings.asOf)}, your LES date.`; return; }
 
   const used = Leave.chargedDays(first, last).length;
-  const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, takenTrips());
   const after = Leave.balanceOn(last, state.settings, takenTrips()) - used;
-  setPlan(`${used}`, fmtNum(before), fmtNum(after));
+  setPlan(`${used}`, fmtNum(after));
   if (used === 0) {
+    note.dataset.kind = "free";
     note.textContent = "All weekend or holiday, so it's free.";
     return;
   }
   if (after < 0) {
     $("plan-after-tile").classList.add("warn");
+    $("plan-after-label").textContent = "Needs advance leave";
+    note.dataset.kind = "warn";
     note.textContent = `That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
   }
   setPlanReady(true);

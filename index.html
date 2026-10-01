@@ -295,7 +295,7 @@
     .pk-day.range-free { border: 1.5px dashed rgba(241, 236, 226, 0.45); }
     #trip-clear { font-size: 0.85rem; color: var(--soft); }
     .tabs { display: none; }
-    .tiles.small { grid-template-columns: 1fr 1fr 1fr; margin: 10px 0 0; }
+    .tiles.small { grid-template-columns: 1fr 1fr; margin: 10px 0 0; }
     .tiles.small .tile { background: rgba(241, 236, 226, 0.07); padding: 8px 10px; }
     .tiles.small .tile-value { font-size: 1.3rem; color: var(--feet); }
     .tiles.small .tile.warn { background: var(--comb); }
@@ -454,6 +454,8 @@
       button.le-box { padding: 3px 8px; }
       .tiles.small { margin-top: 6px; }
       .book-row { margin-top: 6px; }
+      /* the tiles already say "free" / "needs advance leave", so skip the extra line on phones */
+      .note[data-kind="warn"], .note[data-kind="free"] { display: none; }
       /* phones: stack "Uses 4 days" over "8.5 days left" so trip names keep room */
       .t-sep { display: none; }
       .t-uses, .t-left { display: block; }
@@ -604,8 +606,7 @@
       <input id="trip-last" type="hidden">
       <div class="tiles small">
         <div class="tile"><div class="tile-label">Uses</div><div class="tile-value" id="plan-uses">–</div></div>
-        <div class="tile"><div class="tile-label">Before</div><div class="tile-value" id="plan-before">–</div></div>
-        <div class="tile" id="plan-after-tile"><div class="tile-label">After</div><div class="tile-value" id="plan-after">–</div></div>
+        <div class="tile" id="plan-after-tile"><div class="tile-label" id="plan-after-label">After</div><div class="tile-value" id="plan-after">–</div></div>
       </div>
       <p class="note" id="trip-result"></p>
       <div class="book-row" id="trip-save">
@@ -671,6 +672,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=31"></script>
+<script src="app.js?v=33"></script>
 </body>
 </html>
