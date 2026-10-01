@@ -10,3 +10,8 @@ Built as a birthday gift, October 2026.
 - Every calendar day from the first day off through the last day off counts, weekends and holidays included.
 - Weekends and holidays at the very start or very end of a trip don't count. So Mon–Fri off costs 5 days, but Fri + Mon off costs 4, because Sat and Sun fall in between.
 - The official number is always the one on her LES / LeaveWeb. This app gives an estimate.
+
+## Credits
+
+- Heading font: [Bagel Fat One](https://fonts.google.com/specimen/Bagel+Fat+One), SIL Open Font License.
+- Colours: from the chicken painting printed for Abbey's 2025 birthday.

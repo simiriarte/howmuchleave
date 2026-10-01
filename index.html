@@ -6,6 +6,13 @@
   <title>How much leave?</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
   <style>
+    /* Bagel Fat One (SIL Open Font License), saved in the repo so it loads fast and offline */
+    @font-face {
+      font-family: "Bagel Fat One";
+      src: url("fonts/bagel-fat-one-latin.woff2") format("woff2");
+      font-weight: 400;
+      font-display: swap;
+    }
     /* Palette: pulled from the chicken painting (Abbey's birthday print, 2025). */
     :root {
       --pond: #1E4A5E;      /* tail-feather teal, deepened: background */
@@ -32,7 +39,7 @@
     main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 190px; }  /* bottom room so the footer ends above the seaweed */
     header { text-align: center; margin-bottom: 28px; }
     .emblem { width: 120px; height: auto; display: block; margin: 0 auto 14px; }
-    h1 { font-size: 1.8rem; margin: 0 0 4px; color: var(--hen); }
+    h1 { font-family: "Bagel Fat One", -apple-system, sans-serif; font-weight: 400; font-size: 2.4rem; line-height: 1.1; margin: 0 0 6px; color: var(--hen); }
     h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--feet); }
     .sub { color: var(--soft); margin: 0 0 20px; }
     header .sub { margin: 0; color: var(--hen); }
