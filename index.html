@@ -153,6 +153,8 @@
       75%  { transform: translate(8px, -84vh); }
       100% { transform: translate(0, -112vh); opacity: 0; }
     }
+    .sea-front { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
+    @media (min-width: 800px) { body:not(.setup-mode) .sea-front { display: block; } }
     @media (prefers-reduced-motion: reduce) {
       .weed { animation: none; }
       .bubble { display: none; }
@@ -318,11 +320,11 @@
          windows (up to 44px) and shrink on short ones instead of spilling. */
       section.plan { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
       section.plan > *, section.plan .tiles.small, section.plan .note, section.plan .book-row { margin: 0; }
-      .pc { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+      .pc { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; }
       .pc-head { margin-bottom: 10px; }
       .pk-week { margin-bottom: 4px; }
-      .pc-grid { flex: 1; min-height: 0; grid-auto-rows: minmax(30px, 1fr); row-gap: 4px; align-items: center; }
-      .pc-grid .pk-day { height: 100%; width: auto; max-height: 44px; aspect-ratio: 1; }
+      .pc-grid { row-gap: 4px; }
+      .pc-grid .pk-day { height: 36px; width: 36px; }
       section.booked { min-height: 0; }
       section.plan, section.booked { padding: 20px; margin-bottom: 14px; }
       .tile { padding: 16px 18px; }
@@ -344,6 +346,8 @@
       section.plan, section.booked { padding: 14px 18px; margin-bottom: 10px; }
       section.plan { gap: 10px; }
       .pc-head { margin-bottom: 4px; }
+      .pc-grid { row-gap: 1px; }
+      .pc-grid .pk-day { height: 32px; width: 32px; }
     }
 
     /* Phones: stack the inputs, and tighten the top so everything fits
@@ -411,6 +415,14 @@
   <svg class="weed" style="left:78%;width:32px;height:140px;animation-duration:5.8s;animation-delay:-2.5s" fill="#4A6F28"><use href="#weed-a"/></svg>
   <svg class="weed" style="left:85%;width:26px;height:110px;animation-duration:4.5s;animation-delay:-0.5s" fill="#2E4A1C"><use href="#weed-b"/></svg>
   <svg class="weed" style="left:92%;width:30px;height:160px;animation-duration:6.2s;animation-delay:-3.5s" fill="#3B5A22"><use href="#weed-a"/></svg>
+</div>
+<!-- A few blades in front of the Booked leave box (wide screens only); clicks pass through -->
+<div class="sea-front" aria-hidden="true">
+  <svg class="weed" style="left:calc(50% + 175px);width:40px;height:230px;animation-duration:6.4s;animation-delay:-1s" fill="#3B5A22"><use href="#weed-a"/></svg>
+  <svg class="weed" style="left:calc(50% + 215px);width:30px;height:160px;animation-duration:4.9s;animation-delay:-2.2s" fill="#4A6F28"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:calc(50% + 300px);width:34px;height:200px;animation-duration:5.6s;animation-delay:-0.4s" fill="#2E4A1C"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:calc(50% + 385px);width:44px;height:260px;animation-duration:6.8s;animation-delay:-3s" fill="#4A6F28"><use href="#weed-a"/></svg>
+  <svg class="weed" style="left:calc(50% + 430px);width:28px;height:150px;animation-duration:4.6s;animation-delay:-1.6s" fill="#3B5A22"><use href="#weed-b"/></svg>
 </div>
 <main>
   <header>
