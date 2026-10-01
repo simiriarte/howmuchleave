@@ -344,6 +344,7 @@ function renderTrips() {
   const body = $("trips");
   body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
+  $("trips-empty").hidden = trips.length > 0;
 
   for (const t of trips) {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
