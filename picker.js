@@ -54,6 +54,18 @@
       if (Leave.isNonDutyDay(date)) b.classList.add("off");
       const hol = Leave.holidayName(date);
       if (hol) { b.classList.add("holiday"); b.title = hol; b.setAttribute("aria-label", `${label(date)}, ${hol}`); }
+      if (date.slice(5) === "10-02") {
+        const f = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        f.setAttribute("viewBox", "0 0 120 64");
+        f.setAttribute("class", "bday");
+        f.setAttribute("aria-hidden", "true");
+        const u = document.createElementNS("http://www.w3.org/2000/svg", "use");
+        u.setAttribute("href", "#fish");
+        f.append(u);
+        b.append(f);
+        b.title = "Abbey's birthday";
+        b.setAttribute("aria-label", `${label(date)}, Abbey's birthday`);
+      }
       if (date === today) b.classList.add("today");
       if (date === current.input.value) {
         b.classList.add("selected");

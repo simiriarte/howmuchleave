@@ -131,6 +131,7 @@ function render() {
   PlanCal.trips = trips;
   PlanCal.draw();
   renderTrip();
+  renderLongWeekend();
   renderTrips();
   DatePicker.sync();
 }
@@ -180,44 +181,58 @@ function renderTrip() {
   $("trip-save").hidden = false;
 }
 
+// "Fri Oct 9"
+function dayDate(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" }).replace(",", "");
+}
+
+// Next Long Weekend: written out as sentences, tap to plan it
+function renderLongWeekend() {
+  const box = $("long-weekend");
+  box.innerHTML = "";
+  const today = Leave.todayStr();
+  const w3 = Leave.nextThreeDayWeekend(today); // free 3-day holiday weekend
+  const w4 = Leave.nextFourDayWeekend(today);  // 4 days off for 1 leave day
+  const rows = [];
+  if (w4 && (!w3 || w4.holiday !== w3.holiday) && (!w3 || w4.firstOff < w3.firstOff)) {
+    rows.push({ title: w4.holiday, line: `Take ${dayDate(w4.leaveDay)} off and get 4 days, ${shortDate(w4.firstOff)} to ${shortDate(w4.lastOff)}.`, plan: w4 });
+  }
+  if (w3) {
+    let line = `${dayDate(w3.firstOff)} to ${dayDate(w3.lastOff)}, no leave needed.`;
+    let plan = w3;
+    if (w4 && w4.holiday === w3.holiday) {
+      line += ` Take ${dayDate(w4.leaveDay)} off to make it 4 days.`;
+      plan = w4;
+    }
+    rows.push({ title: `${w3.holiday} weekend`, line, plan });
+  }
+  for (const r of rows) {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "lw-row";
+    btn.setAttribute("aria-label", `${r.title}. ${r.line} Plan it.`);
+    const hook = document.createElement("span");
+    hook.className = "pk-hook big";
+    hook.setAttribute("aria-hidden", "true");
+    const text = document.createElement("span");
+    const t = document.createElement("div");
+    t.className = "lw-title";
+    t.textContent = r.title;
+    const l = document.createElement("div");
+    l.className = "lw-line";
+    l.textContent = r.line;
+    text.append(t, l);
+    btn.append(hook, text);
+    btn.addEventListener("click", () => { PlanCal.select(r.plan.firstOff, r.plan.lastOff); showTab("plan"); });
+    box.append(btn);
+  }
+}
+
 function renderTrips() {
   const body = $("trips");
   body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
-
-  // Upcoming long weekends, above her trips. Tap one to fill it in on the planner.
-  const today = Leave.todayStr();
-  const w3 = Leave.nextThreeDayWeekend(today);
-  const w4 = Leave.nextFourDayWeekend(today);
-  for (const [title, w, cost] of [["Next 3-day weekend", w3, 0], ["Next 4-day weekend", w4, 1]]) {
-    if (!w) continue;
-    const tr = document.createElement("tr");
-    tr.className = "upcoming";
-    tr.tabIndex = 0;
-    tr.setAttribute("role", "button");
-    tr.setAttribute("aria-label", `${title}: ${w.holiday}, ${shortDate(w.firstOff)} to ${shortDate(w.lastOff)}, ${cost} days of leave. Plan it.`);
-    const star = document.createElement("td");
-    star.className = "fish-cell";
-    star.innerHTML = '<span class="pk-hook big" aria-hidden="true"></span>';
-    const info = document.createElement("td");
-    info.className = "trip-name";
-    const t1 = document.createElement("div");
-    t1.textContent = title;
-    const t2 = document.createElement("div");
-    t2.className = "trip-dates";
-    t2.textContent = `${w.holiday}, ${shortDate(w.firstOff)} to ${shortDate(w.lastOff)}`;
-    info.append(t1, t2);
-    const days = document.createElement("td");
-    days.className = "trip-days";
-    days.textContent = cost === 0 ? "free" : `${cost} ${dayWord(cost)}`;
-    const spacer = document.createElement("td");
-    spacer.className = "trip-del";
-    tr.append(star, info, days, spacer);
-    const plan = () => { PlanCal.select(w.firstOff, w.lastOff); showTab("plan"); };
-    tr.addEventListener("click", plan);
-    tr.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); plan(); } });
-    body.append(tr);
-  }
 
   for (const t of trips) {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
@@ -238,7 +253,7 @@ function renderTrips() {
     dates.textContent = t.firstOff === t.lastOff ? shortDate(t.firstOff) : `${shortDate(t.firstOff)} to ${shortDate(t.lastOff)}`;
     info.append(nm, dates);
     cell("trip-name", info);
-    cell("trip-days", `${used} ${dayWord(used)}`);
+    cell("trip-days", `${used} ${dayWord(used)} of leave`);
     const del = document.createElement("button");
     del.className = "link";
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';

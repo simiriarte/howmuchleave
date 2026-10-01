@@ -319,10 +319,21 @@
     td.trip-name .trip-dates { color: var(--soft); font-size: 0.82rem; }
     td.trip-days { text-align: right; white-space: nowrap; font-weight: 600; }
     td.trip-del { width: 28px; text-align: right; padding-right: 0; }
-    tr.upcoming { cursor: pointer; }
-    tr.upcoming td.trip-name div:first-child { color: var(--feet); }
-    tr.upcoming:hover td { background: rgba(241, 236, 226, 0.05); }
-    .pk-hook.big { width: 14px; height: 21px; display: block; margin: 0 auto; }
+    /* Next Long Weekend: plain-sentence rows; tap one to fill it in on the planner */
+    #long-weekend { margin-bottom: 14px; }
+    button.lw-row {
+      display: flex; gap: 12px; align-items: flex-start; width: 100%;
+      margin: 0; padding: 6px 0; background: none; color: var(--hen);
+      font-weight: 400; text-align: left;
+    }
+    button.lw-row + button.lw-row { border-top: 1px solid var(--line); }
+    button.lw-row:hover { background: rgba(241, 236, 226, 0.05); }
+    .lw-title { font-weight: 600; }
+    .lw-line { color: var(--soft); font-size: 0.88rem; }
+    .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
+    .booked-title { margin-top: 4px; }
+    /* Her birthday: a tiny fish in the corner of Oct 2 */
+    .pk-day .bday { position: absolute; top: -5px; right: -9px; width: 20px; height: 11px; pointer-events: none; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
 
     footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; font-size: 0.85rem; }
@@ -407,7 +418,6 @@
       .tabs button[aria-selected="true"] { background: var(--char); color: var(--feet); }
       body[data-tab="plan"] section.booked, body[data-tab="booked"] section.plan { display: none; }
       section.plan h2 { display: none; }  /* the tab already says "plan" */
-      section.booked h2 { display: none; }
       .pc-grid { gap: 1px; }
       .pc-grid .pk-day { height: 32px; width: 32px; }
       .pc-head { margin-bottom: 2px; }
@@ -554,7 +564,9 @@
 
     <!-- Booked leave as a table; scrolls inside itself if it gets long -->
     <section class="booked">
-      <h2>Booked leave</h2>
+      <h2>Next Long Weekend</h2>
+      <div id="long-weekend"></div>
+      <h2 class="booked-title">Booked leave</h2>
       <div class="table-wrap">
         <table>
           <tbody id="trips"></tbody>
@@ -593,8 +605,8 @@
   </div>
 </dialog>
 <script src="leave.js?v=5"></script>
-<script src="picker.js?v=3"></script>
-<script src="plancal.js?v=2"></script>
-<script src="app.js?v=16"></script>
+<script src="picker.js?v=4"></script>
+<script src="plancal.js?v=3"></script>
+<script src="app.js?v=18"></script>
 </body>
 </html>
