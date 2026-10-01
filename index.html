@@ -246,9 +246,18 @@
 
     section.plan, section.booked { padding: 14px; margin-bottom: 10px; }
     section.plan h2, section.booked h2 { margin-bottom: 8px; }
-    .date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
-    .date-row label { width: 44px; margin: 0; flex: none; }
-    .date-row .date-field { flex: 1; min-height: 40px; padding: 8px 10px; }
+    /* Planner calendar (shares the day styles with the pop-up calendar) */
+    .pc-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    #pc-title { font-family: "Bagel Fat One", -apple-system, sans-serif; font-size: 1.15rem; }
+    .pc-grid { gap: 2px; }
+    .pc-grid .pk-day { aspect-ratio: auto; height: 36px; width: 36px; justify-self: center; font-size: 0.92rem; }
+    /* booked leave: a salmon dot behind the number */
+    .pk-day.booked { background: rgba(198, 137, 106, 0.45); color: var(--hen); }
+    /* days inside the plan: a smaller rim bubble; free weekend/holiday edges get a dashed rim */
+    .pk-day.range { border: 1.5px solid rgba(241, 236, 226, 0.7); background: rgba(58, 130, 150, 0.25); }
+    .pk-day.range-free { border: 1.5px dashed rgba(241, 236, 226, 0.45); }
+    #trip-clear { font-size: 0.85rem; color: var(--soft); }
+    .tabs { display: none; }
     .tiles.small { grid-template-columns: 1fr 1fr 1fr; margin: 10px 0 0; }
     .tiles.small .tile { background: rgba(241, 236, 226, 0.07); padding: 8px 10px; }
     .tiles.small .tile-value { font-size: 1.3rem; color: var(--feet); }
@@ -325,6 +334,21 @@
       section { padding: 16px; }
       #setup p { margin: 0 0 10px; }
       body.setup-mode main { padding-bottom: 16px; }
+      /* plan | booked switch */
+      .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+      .tabs button { margin: 0; padding: 5px; background: rgba(52, 51, 58, 0.6); color: var(--soft); font-family: "Bagel Fat One", -apple-system, sans-serif; font-weight: 400; }
+      .tabs button[aria-selected="true"] { background: var(--char); color: var(--feet); }
+      body[data-tab="plan"] section.booked, body[data-tab="booked"] section.plan { display: none; }
+      section.plan h2 { display: none; }  /* the tab already says "plan" */
+      section.booked h2 { display: none; }
+      .pc-grid { gap: 1px; }
+      .pc-grid .pk-day { height: 32px; width: 32px; }
+      .pc-head { margin-bottom: 2px; }
+      .tiles.small .tile { padding: 6px 10px; }
+      body:not(.setup-mode) .emblem { width: 52px; }
+      body:not(.setup-mode) h1 { font-size: 1.7rem; }
+      body:not(.setup-mode) header { margin-bottom: 10px; }
+      #app > .tiles .tile { padding: 8px 12px; }
       .wide-only { display: none; }  /* keeps the By line on one line so both big numbers line up */  /* no seaweed room needed: keeps setup to one screen */
     }
   </style>
@@ -406,25 +430,30 @@
       </div>
     </div>
 
-    <!-- Plan: pick dates, see the cost -->
+    <!-- Phones only: switch between planning and the booked list -->
+    <div class="tabs" role="tablist">
+      <button type="button" role="tab" id="tab-plan" aria-selected="true">plan</button>
+      <button type="button" role="tab" id="tab-booked" aria-selected="false">booked</button>
+    </div>
+
+    <!-- Plan: tap days on the calendar, see the cost -->
     <section class="plan">
       <h2>Plan a trip or staycation</h2>
-      <div class="date-row">
-        <label for="trip-first-btn">From</label>
-        <button type="button" class="date-field" id="trip-first-btn" data-date-for="trip-first" data-then="trip-last-btn">pick a date</button>
-        <input id="trip-first" type="hidden">
+      <div class="pc-head">
+        <button type="button" class="pk-nav" id="pc-prev" aria-label="Previous month">‹</button>
+        <div id="pc-title"></div>
+        <button type="button" class="pk-nav" id="pc-next" aria-label="Next month">›</button>
       </div>
-      <div class="date-row">
-        <label for="trip-last-btn">To</label>
-        <button type="button" class="date-field" id="trip-last-btn" data-date-for="trip-last" data-min-from="trip-first">pick a date</button>
-        <input id="trip-last" type="hidden">
-      </div>
+      <div class="pk-week" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+      <div class="pk-grid pc-grid" id="pc-grid"></div>
+      <input id="trip-first" type="hidden">
+      <input id="trip-last" type="hidden">
       <div class="tiles small">
         <div class="tile"><div class="tile-label">Uses</div><div class="tile-value" id="plan-uses">–</div></div>
         <div class="tile"><div class="tile-label">Before</div><div class="tile-value" id="plan-before">–</div></div>
         <div class="tile" id="plan-after-tile"><div class="tile-label">After</div><div class="tile-value" id="plan-after">–</div></div>
       </div>
-      <p class="note" id="trip-result"></p>
+      <p class="note"><span id="trip-result"></span> <button type="button" class="link" id="trip-clear" hidden>clear</button></p>
       <div class="book-row" id="trip-save" hidden>
         <input id="trip-name" type="text" placeholder="Name it (optional)" aria-label="Name it (optional)">
         <button class="cut" id="trip-save-btn">Book it</button>
@@ -474,6 +503,7 @@
 </dialog>
 <script src="leave.js?v=3"></script>
 <script src="picker.js?v=2"></script>
-<script src="app.js?v=9"></script>
+<script src="plancal.js?v=1"></script>
+<script src="app.js?v=10"></script>
 </body>
 </html>

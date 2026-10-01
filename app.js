@@ -128,6 +128,8 @@ function render() {
   const ageDays = (new Date(today) - new Date(settings.asOf)) / 86400000;
   if (ageDays > 120) $("les-note").textContent += " It's been a few months, worth checking it still matches your LES.";
 
+  PlanCal.trips = trips;
+  PlanCal.draw();
   renderTrip();
   renderTrips();
   DatePicker.sync();
@@ -154,10 +156,10 @@ function renderTrip() {
   $("trip-save").hidden = true;
   $("plan-after-tile").classList.remove("warn");
   setPlan("–", "–", "–");
-  note.textContent = "Pick dates to see what it costs.";
+  $("trip-clear").hidden = !first;
+  note.textContent = "Tap your first day off, then your last.";
   if (!first || !last) return;
-  if (last < first) { note.textContent = "The To date is before the From date."; return; }
-  if (first <= state.settings.asOf) { note.textContent = "Pick dates after your LES date."; return; }
+  if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
 
   const used = Leave.chargedDays(first, last).length;
   const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, state.trips);
@@ -170,8 +172,10 @@ function renderTrip() {
   if (after < 0) {
     $("plan-after-tile").classList.add("warn");
     note.textContent = `That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
+  } else if (PlanCal.waitingForEnd) {
+    note.textContent = "Now tap your last day off, or book just this day.";
   } else {
-    note.textContent = `${fmtDate(first)} to ${fmtDate(last)}`;
+    note.textContent = `${shortDate(first)} to ${shortDate(last)}`;
   }
   $("trip-save").hidden = false;
 }
@@ -217,12 +221,18 @@ function renderTrips() {
 }
 
 $("by-date").addEventListener("input", renderBy);
+$("trip-clear").addEventListener("click", () => { PlanCal.clear(); renderTrip(); });
+
+// Phones: plan | booked switch (on wide screens both show and the tabs are hidden)
+function showTab(name) {
+  document.body.dataset.tab = name;
+  $("tab-plan").setAttribute("aria-selected", String(name === "plan"));
+  $("tab-booked").setAttribute("aria-selected", String(name === "booked"));
+}
+$("tab-plan").addEventListener("click", () => showTab("plan"));
+$("tab-booked").addEventListener("click", () => showTab("booked"));
+showTab("plan");
 $("open-info").addEventListener("click", () => $("info").showModal());
-$("trip-first").addEventListener("input", () => {
-  // Jump the end date forward so the calendar opens near the start date
-  if (!$("trip-last").value || $("trip-last").value < $("trip-first").value) $("trip-last").value = $("trip-first").value;
-  renderTrip();
-});
 $("trip-last").addEventListener("input", renderTrip);
 $("trip-save-btn").addEventListener("click", () => {
   state.trips.push({
@@ -232,8 +242,7 @@ $("trip-save-btn").addEventListener("click", () => {
     lastOff: $("trip-last").value,
   });
   save();
-  $("trip-first").value = "";
-  $("trip-last").value = "";
+  PlanCal.clear();
   $("trip-name").value = "";
   render();
   swimFish();
