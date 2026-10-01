@@ -16,8 +16,11 @@ function save() {
 // Cute pop-up in place of the browser's confirm/alert.
 // ask("Question?", { ok: "remove", cancel: "keep it" }) resolves true/false.
 // Leave out `cancel` for a plain note with one button.
-function ask(message, { ok = "ok", cancel = null } = {}) {
+function ask(message, { ok = "ok", cancel = null, suitcase = false } = {}) {
   const dlg = document.getElementById("ask");
+  // (toggleAttribute, because .hidden doesn't work on <svg> elements)
+  dlg.querySelector(".ask-fish:not(.trip)").toggleAttribute("hidden", suitcase);
+  dlg.querySelector(".ask-fish.trip").toggleAttribute("hidden", !suitcase);
   document.getElementById("ask-msg").textContent = message;
   const okBtn = document.getElementById("ask-ok");
   const cancelBtn = document.getElementById("ask-cancel");
@@ -49,18 +52,19 @@ let state = load();
 
 // ---- fish ----
 const SVG_NS = "http://www.w3.org/2000/svg";
-function fishIcon(className) {
+function fishIcon(className, withSuitcase = false) {
   const svg = document.createElementNS(SVG_NS, "svg");
-  svg.setAttribute("viewBox", "0 0 120 64");
+  svg.setAttribute("viewBox", withSuitcase ? "0 0 120 96" : "0 0 120 64");
   svg.setAttribute("class", className);
   svg.setAttribute("aria-hidden", "true");
   const use = document.createElementNS(SVG_NS, "use");
-  use.setAttribute("href", "#fish");
+  use.setAttribute("href", withSuitcase ? "#fish-trip" : "#fish");
   svg.append(use);
   return svg;
 }
-function swimFish() {
-  const f = fishIcon("swimmer");
+// A fish swims across the screen; with a suitcase when it's off on a trip
+function swimFish(withSuitcase = false) {
+  const f = fishIcon("swimmer", withSuitcase);
   f.style.top = `${20 + Math.random() * 50}vh`;
   f.addEventListener("animationend", () => f.remove());
   document.body.append(f);
@@ -306,11 +310,11 @@ function renderTrips() {
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", async () => {
-      if (!(await ask(`Let "${t.name || "this trip"}" swim away?`, { ok: "remove", cancel: "keep it" }))) return;
+      if (!(await ask(`Let "${t.name || "this trip"}" swim away?`, { ok: "remove", cancel: "keep it", suitcase: true }))) return;
       state.trips = state.trips.filter((x) => x.id !== t.id);
       save();
       render();
-      swimFish();
+      swimFish(true);
     });
     cell("trip-del", del);
     body.append(tr);
@@ -342,7 +346,7 @@ $("trip-save-btn").addEventListener("click", () => {
   PlanCal.clear();
   $("trip-name").value = "";
   render();
-  swimFish();
+  swimFish(true);
 });
 
 // Every 20 to 45 seconds the seahorse peeks out from behind the planner
