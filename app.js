@@ -34,6 +34,20 @@ function swimFish() {
   document.body.append(f);
 }
 
+// Bubbles drift up from the bottom, a few at a time
+function blowBubble() {
+  if (document.hidden) return;
+  const b = document.createElement("div");
+  b.className = "bubble";
+  const size = 5 + Math.random() * 12;
+  b.style.width = b.style.height = `${size}px`;
+  b.style.left = `${Math.random() * 100}%`;
+  b.style.animationDuration = `${7 + Math.random() * 6}s`;
+  b.addEventListener("animationend", () => b.remove());
+  document.querySelector(".sea").append(b);
+}
+if (!matchMedia("(prefers-reduced-motion: reduce)").matches) setInterval(blowBubble, 900);
+
 // ---- formatting ----
 const dayWord = (n) => (Math.abs(n) === 1 ? "day" : "days");
 const fmtNum = (n) => (Number.isInteger(n) ? String(n) : n.toFixed(1));

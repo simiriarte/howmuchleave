@@ -29,7 +29,7 @@
       overflow-x: hidden;
     }
     /* Start content about a third of the way down instead of hugging the top */
-    main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 48px; }
+    main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 190px; }  /* bottom room so the footer ends above the seaweed */
     header { text-align: center; margin-bottom: 28px; }
     .emblem { width: 120px; height: auto; display: block; margin: 0 auto 14px; }
     h1 { font-size: 1.8rem; margin: 0 0 4px; color: var(--hen); }
@@ -132,6 +132,40 @@
       100% { transform: translate(calc(-100vw - 140px), 0); }
     }
     @media (prefers-reduced-motion: reduce) { .swimmer { display: none; } }
+    /* Underwater: seaweed swaying along the bottom, bubbles rising behind everything.
+       Seaweed colours are dark enough that cream text stays readable on top of them. */
+    main { position: relative; z-index: 1; }
+    .sea { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+    .weed {
+      position: absolute;
+      bottom: -6px;
+      transform-origin: 50% 100%;
+      animation: sway 5s ease-in-out infinite alternate;
+    }
+    @keyframes sway {
+      from { transform: rotate(-5deg) skewX(-4deg); }
+      to   { transform: rotate(5deg) skewX(4deg); }
+    }
+    .bubble {
+      position: absolute;
+      bottom: -24px;
+      border: 1.5px solid rgba(241, 236, 226, 0.55);
+      background: rgba(241, 236, 226, 0.08);
+      border-radius: 50%;  /* the one round thing: bubbles */
+      animation: rise linear forwards;
+    }
+    @keyframes rise {
+      0%   { transform: translate(0, 0); opacity: 0; }
+      8%   { opacity: 1; }
+      25%  { transform: translate(8px, -28vh); }
+      50%  { transform: translate(-8px, -56vh); }
+      75%  { transform: translate(8px, -84vh); }
+      100% { transform: translate(0, -112vh); opacity: 0; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .weed { animation: none; }
+      .bubble { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -151,6 +185,25 @@
     <circle cx="18.4" cy="31" r="1.7" fill="#34333A"/>
   </symbol>
 </svg>
+<!-- Seaweed: cut-paper blades in the painting's greens -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="weed-a" viewBox="0 0 30 150" preserveAspectRatio="none">
+    <polygon points="12,150 19,150 23,124 27,98 20,72 25,46 19,20 15,0 10,22 5,48 12,74 5,100 9,126"/>
+  </symbol>
+  <symbol id="weed-b" viewBox="0 0 30 150" preserveAspectRatio="none">
+    <polygon points="13,150 18,150 16,128 25,112 18,96 26,78 17,60 24,40 16,22 20,0 11,18 6,40 13,58 4,76 12,94 3,110 11,128"/>
+  </symbol>
+</svg>
+<div class="sea" aria-hidden="true">
+  <svg class="weed" style="left:2%;width:34px;height:150px;animation-duration:5.5s" fill="#3B5A22"><use href="#weed-a"/></svg>
+  <svg class="weed" style="left:8%;width:26px;height:105px;animation-duration:4.2s;animation-delay:-1s" fill="#4A6F28"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:15%;width:30px;height:130px;animation-duration:6s;animation-delay:-2s" fill="#2E4A1C"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:36%;width:24px;height:80px;animation-duration:4.8s;animation-delay:-3s" fill="#4A6F28"><use href="#weed-a"/></svg>
+  <svg class="weed" style="left:58%;width:28px;height:95px;animation-duration:5.2s;animation-delay:-1.5s" fill="#3B5A22"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:78%;width:32px;height:140px;animation-duration:5.8s;animation-delay:-2.5s" fill="#4A6F28"><use href="#weed-a"/></svg>
+  <svg class="weed" style="left:85%;width:26px;height:110px;animation-duration:4.5s;animation-delay:-0.5s" fill="#2E4A1C"><use href="#weed-b"/></svg>
+  <svg class="weed" style="left:92%;width:30px;height:160px;animation-duration:6.2s;animation-delay:-3.5s" fill="#3B5A22"><use href="#weed-a"/></svg>
+</div>
 <main>
   <header>
     <svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
