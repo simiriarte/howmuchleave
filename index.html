@@ -19,7 +19,7 @@
       --ink: #2B2A22;
       --line: rgba(246, 241, 228, 0.14);
     }
-    * { box-sizing: border-box; }
+    * { box-sizing: border-box; border-radius: 0; }  /* square corners everywhere, incl. iPhone form defaults */
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -36,7 +36,7 @@
     header .sub { margin: 0; }
 
     /* The color-block composition from the book, on its own little page */
-    .page { display: inline-block; background: var(--cream); padding: 12px 12px; border-radius: 4px; margin-bottom: 18px; }
+    .page { display: inline-block; background: var(--cream); padding: 12px 12px; margin-bottom: 18px; }
     .blocks { display: grid; grid-template-columns: 14px 28px 28px 14px; grid-template-rows: 20px 18px 20px; width: 84px; }
     .blocks span:nth-child(1) { grid-column: 2 / 4; grid-row: 1; background: var(--apricot); }
     .blocks span:nth-child(2) { grid-column: 1 / 3; grid-row: 2; background: var(--yorange); }
@@ -45,7 +45,6 @@
 
     section {
       background: var(--deep);
-      border-radius: 14px;
       padding: 18px;
       margin-bottom: 16px;
     }
@@ -59,7 +58,6 @@
       font: inherit;
       padding: 10px 12px;
       border: 0;
-      border-radius: 10px;
       background: var(--cream);
       color: var(--ink);
       color-scheme: light;
@@ -71,7 +69,6 @@
       font: inherit;
       font-weight: 600;
       border: 0;
-      border-radius: 10px;
       padding: 11px 16px;
       background: var(--yorange);
       color: var(--ink);
@@ -88,7 +85,7 @@
     }
     .result { margin-top: 14px; font-size: 1.05rem; }
     .result strong { font-size: 1.25rem; color: var(--apricot); }
-    .result.warn { background: var(--sienna); color: var(--cream); padding: 12px 14px; border-radius: 10px; }
+    .result.warn { background: var(--sienna); color: var(--cream); padding: 12px 14px; }
     .result.warn strong { color: var(--cream); }
     ul { list-style: none; padding: 0; margin: 0; }
     li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
