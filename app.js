@@ -117,7 +117,7 @@ function render() {
   const { settings, trips } = state;
   const today = Leave.todayStr();
 
-  const now = Leave.balanceOn(today, settings, trips);
+  const now = Leave.balanceOn(today, settings, takenTrips());
   $("today-balance").textContent = fmtNum(now);
   $("today-unit").textContent = `${dayWord(now)} of leave`;
   // "By [date]" starts on the next month-end, so she sees her next +2.5
@@ -136,22 +136,20 @@ function render() {
   DatePicker.sync();
 }
 
-// Two numbers: the big one leaves out potential trips that haven't happened yet;
-// the small line (only when it differs) shows what's left if she takes them.
-function renderBy() {
-  const date = $("by-date").value;
+// Potential trips don't change any balance until their days have passed.
+// Days already behind her count as taken, so Today stays right after a trip.
+function takenTrips() {
   const today = Leave.todayStr();
-  // trip days already behind her count as taken; future ones are only potential
-  const taken = state.trips
+  return state.trips
     .filter((t) => t.firstOff <= today)
     .map((t) => ({ ...t, lastOff: t.lastOff < today ? t.lastOff : today }));
-  const base = date ? Leave.balanceOn(date, state.settings, taken) : null;
-  const withTrips = date ? Leave.balanceOn(date, state.settings, state.trips) : null;
-  $("by-balance").textContent = base === null ? "–" : fmtNum(base);
-  $("by-unit").textContent = base === null ? "pick a later date" : `${dayWord(base)} of leave`;
-  const diff = base !== null && withTrips !== base;
-  $("by-with-trips").hidden = !diff;
-  if (diff) $("by-with-trips").innerHTML = `${fmtNum(withTrips)} <span class="wide-only">if you take your potential trips</span><span class="phone-only">with trips</span>`;
+}
+
+function renderBy() {
+  const date = $("by-date").value;
+  const bal = date ? Leave.balanceOn(date, state.settings, takenTrips()) : null;
+  $("by-balance").textContent = bal === null ? "–" : fmtNum(bal);
+  $("by-unit").textContent = bal === null ? "pick a later date" : `${dayWord(bal)} of leave`;
 }
 
 function setPlan(uses, before, after) {
@@ -182,8 +180,8 @@ function renderTrip() {
   if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
 
   const used = Leave.chargedDays(first, last).length;
-  const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, state.trips);
-  const after = Leave.balanceOn(last, state.settings, state.trips) - used;
+  const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, takenTrips());
+  const after = Leave.balanceOn(last, state.settings, takenTrips()) - used;
   setPlan(`${used}`, fmtNum(before), fmtNum(after));
   if (used === 0) {
     note.textContent = "All weekend or holiday, so it's free.";
@@ -262,7 +260,20 @@ function renderTrips() {
     dates.textContent = t.firstOff === t.lastOff ? shortDate(t.firstOff) : `${shortDate(t.firstOff)} to ${shortDate(t.lastOff)}`;
     info.append(nm, dates);
     cell("trip-name", info);
-    cell("trip-days", `${used} ${dayWord(used)} of leave`);
+    // what it uses, and what she'd have right after it (judged on its own)
+    const endBal = Leave.balanceOn(t.lastOff, state.settings, takenTrips());
+    const summary = document.createElement("span");
+    const u = document.createElement("span");
+    u.className = "t-uses";
+    u.textContent = `Uses ${used} ${dayWord(used)}`;
+    const sep = document.createElement("span");
+    sep.className = "t-sep";
+    sep.textContent = " | ";
+    const l = document.createElement("span");
+    l.className = "t-left";
+    l.textContent = endBal === null ? "" : `${fmtNum(endBal - used)} ${dayWord(endBal - used)} left`;
+    summary.append(u, sep, l);
+    cell("trip-days", summary);
     const del = document.createElement("button");
     del.className = "link";
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';

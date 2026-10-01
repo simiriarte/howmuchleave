@@ -336,8 +336,9 @@
     .lw-line { color: var(--soft); font-size: 0.88rem; font-style: italic; }
     .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
     .booked-title { margin-top: 4px; }
-    .by-with { font-style: italic; color: var(--feet); margin-top: 2px; }
-    .phone-only { display: none; }
+    td.trip-days { font-weight: 500; }
+    .t-uses { font-weight: 700; }
+    .t-sep { color: var(--soft); }
     /* Her birthday: a tiny fish in the corner of Oct 2 */
     .pk-day .bday { position: absolute; top: -5px; right: -9px; width: 20px; height: 11px; pointer-events: none; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
@@ -427,8 +428,10 @@
       .pc-grid { gap: 1px; }
       .pc-grid .pk-day { height: 30px; width: 30px; }
       .pc-head { margin-bottom: 2px; }
-      .phone-only { display: inline; }
-      .by-with { margin-top: 0; }
+      /* phones: stack "Uses 4 days" over "8.5 days left" so trip names keep room */
+      .t-sep { display: none; }
+      .t-uses, .t-left { display: block; }
+      td.trip-days { font-size: 0.85rem; line-height: 1.3; }
       .tiles.small .tile { padding: 6px 10px; }
       body:not(.setup-mode) .emblem { width: 52px; }
       body:not(.setup-mode) h1 { font-size: 1.7rem; }
@@ -520,7 +523,6 @@
         <div class="tile-label">By <button type="button" class="date-chip" data-date-for="by-date"><span class="dp-label"></span> ▾</button><input id="by-date" type="hidden"><span class="wide-only">, you'll have</span></div>
         <div class="tile-value" id="by-balance"></div>
         <div class="tile-label" id="by-unit"></div>
-        <div class="tile-label by-with" id="by-with-trips" hidden></div>
       </div>
     </div>
 
@@ -592,6 +594,7 @@
       <h2>How it counts</h2>
       <p>Weekends and holidays at the start or end of your time off are free. Ones in the middle count.</p>
       <p>The Friday after Thanksgiving counts as a day off (family day). Other base family days aren't included, so time off next to one may cost a day less.</p>
+      <p>Potential trips don't change your balances. Each one shows what it uses and what you'd have left right after it, on its own. Once a trip's dates have passed, those days count as taken.</p>
       <p>This is an estimate. LeaveWeb and your LES are the official numbers.</p>
       <p id="les-note"></p>
       <form method="dialog"><button class="cut">got it</button></form>
@@ -616,6 +619,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=5"></script>
-<script src="app.js?v=25"></script>
+<script src="app.js?v=26"></script>
 </body>
 </html>
