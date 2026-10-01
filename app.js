@@ -261,7 +261,7 @@ function renderTrip() {
   DatePicker.sync();
   setPlanReady(false);
   $("plan-after-tile").classList.remove("warn");
-  $("plan-after-label").textContent = "After";
+  $("plan-after-label").textContent = "Left";
   note.dataset.kind = "";
   setPlan("–", "–");
   $("trip-clear").hidden = !first;
