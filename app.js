@@ -107,6 +107,11 @@ function shortDate(s) {
   return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
+function shortDateYear(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+}
+
 function render() {
   if (!state.settings) return showSetup();
   document.body.classList.remove("setup-mode");
@@ -133,6 +138,7 @@ function render() {
 
 function renderBy() {
   const date = $("by-date").value;
+  $("by-text").textContent = date ? shortDateYear(date) : "pick a date";
   const bal = date ? Leave.balanceOn(date, state.settings, state.trips) : null;
   $("by-balance").textContent = bal === null ? "–" : fmtNum(bal);
   $("by-unit").textContent = bal === null ? "pick a later date" : `${dayWord(bal)} of leave`;
@@ -214,6 +220,8 @@ function renderTrips() {
 }
 
 $("by-date").addEventListener("input", renderBy);
+// On computers, clicking the hidden box doesn't always open the calendar, so ask for it directly
+$("by-date").addEventListener("click", (e) => { try { e.target.showPicker(); } catch {} });
 $("open-info").addEventListener("click", () => $("info").showModal());
 $("trip-first").addEventListener("input", () => {
   // Jump the end date forward so the calendar opens near the start date
