@@ -442,7 +442,7 @@
     @media (max-width: 520px) {
       .row { flex-direction: column; gap: 0; }
       main { padding-top: 58px; }  /* clears the clock and battery icons that sit over the page in iPhone Safari */
-      .emblem { width: 84px; margin-bottom: 6px; }
+      .emblem { width: 72px; margin-bottom: 0; }
       h1 { font-size: 2.1rem; }
       header { margin-bottom: 18px; }
       section { padding: 16px; }
@@ -467,7 +467,7 @@
       .t-uses, .t-left { display: block; }
       td.trip-days { font-size: 0.85rem; line-height: 1.3; }
       .tiles.small .tile { padding: 6px 10px; }
-      body:not(.setup-mode) .emblem { width: 52px; }
+      body:not(.setup-mode) .emblem { width: 50px; margin: -4px 0 -9px; }  /* suitcase hangs into the gap below */
       body:not(.setup-mode) h1 { font-size: 1.7rem; }
       body:not(.setup-mode) header { margin-bottom: 10px; justify-content: flex-start; }  /* fish + "Hi Abbey" sit left, lined up with the tiles */
       #app > .tiles .tile { padding: 8px 12px; }
@@ -491,14 +491,24 @@
     <circle cx="19" cy="31" r="3.4" fill="#F1ECE2"/>
     <circle cx="18.4" cy="31" r="1.7" fill="#34333A"/>
   </symbol>
-  <!-- The same fish carrying a suitcase, for trips. Handle goes up under the fin. -->
+  <!-- The same fish pulling a rolling suitcase. The handle loops up around the
+       fish's belly; the fin wraps over the grip, so it's carrying it. -->
   <symbol id="fish-trip" viewBox="0 0 120 96">
-    <path d="M40 60 V52 H53 V60" fill="none" stroke="#C3C8CD" stroke-width="3" stroke-linejoin="round"/>
-    <polygon points="31,59 61,56 63,84 33,87" fill="#B83A3C"/>
-    <polygon points="38,58.5 42,58 44,86 40,86.5" fill="#7E2628"/>
-    <polygon points="51,57 55,56.7 57,84.5 53,85" fill="#7E2628"/>
-    <polygon points="34,68 41,66.5 42,73 35,74.5" fill="#F1ECE2"/>
+    <polygon points="25,59 66,58 67,85 26,86" fill="#C6896A"/>
+    <polygon points="31,58.8 35,58.7 35.6,85.8 31.6,85.9" fill="#8C4F1F"/>
+    <polygon points="56,58.3 60,58.2 60.6,85.2 56.6,85.3" fill="#8C4F1F"/>
+    <polygon points="25,59 30,59 25,64" fill="#34333A"/>
+    <polygon points="61,58.1 66,58 66.1,63" fill="#34333A"/>
+    <polygon points="26,81 26,86 31,86" fill="#34333A"/>
+    <polygon points="67,80 67,85 62,85.1" fill="#34333A"/>
+    <polygon points="40,66 47,65.4 47.6,71 40.6,71.6" fill="#F1ECE2"/>
+    <circle cx="32" cy="89" r="3.6" fill="#1E1D22" stroke="#8E959B" stroke-width="1.2"/><circle cx="32" cy="89" r="1.2" fill="#C3C8CD"/>
+    <circle cx="60" cy="88.6" r="3.6" fill="#1E1D22" stroke="#8E959B" stroke-width="1.2"/><circle cx="60" cy="88.6" r="1.2" fill="#C3C8CD"/>
     <use href="#fish" x="0" y="0" width="120" height="64"/>
+    <rect x="39.5" y="43" width="2.4" height="16" fill="#C3C8CD"/>
+    <rect x="51.5" y="43" width="2.4" height="16" fill="#C3C8CD"/>
+    <rect x="37.5" y="40.5" width="18" height="4" fill="#34333A"/>
+    <polygon points="38,39 52,47 41,51" fill="#E2CB3A"/>
   </symbol>
 </svg>
 <!-- Seaweed: cut-paper blades in the painting's greens -->
@@ -530,7 +540,7 @@
 </div>
 <main>
   <header>
-    <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg></button>
+    <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 96" aria-hidden="true"><use href="#fish-trip"/></svg></button>
     <h1 id="hello">Hi Abbey</h1>
     <p class="sub" id="hello-sub">How much leave do you have?</p>
   </header>
