@@ -63,6 +63,9 @@
       color: var(--char);
       color-scheme: light;
     }
+    /* iPhone date boxes ignore width:100% and spill out of the card without these */
+    input[type="date"] { display: block; min-width: 0; max-width: 100%; min-height: 44px; }
+    input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     input:focus-visible, button:focus-visible { outline: 3px solid var(--feet); outline-offset: 2px; }
     .row { display: flex; gap: 10px; }
     .row > div { flex: 1; min-width: 0; }
@@ -173,6 +176,18 @@
     @media (prefers-reduced-motion: reduce) {
       .weed { animation: none; }
       .bubble { display: none; }
+    }
+
+    /* Phones: stack the inputs, and tighten the top so everything fits
+       on the first screen with the seaweed still showing underneath */
+    @media (max-width: 520px) {
+      .row { flex-direction: column; gap: 0; }
+      main { padding-top: 58px; }  /* clears the clock and battery icons that sit over the page in iPhone Safari */
+      .emblem { width: 84px; margin-bottom: 6px; }
+      h1 { font-size: 2.1rem; }
+      header { margin-bottom: 18px; }
+      section { padding: 16px; }
+      #setup p { margin: 0 0 10px; }
     }
   </style>
 </head>
