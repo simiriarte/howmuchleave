@@ -157,7 +157,7 @@ function renderTrip() {
   $("plan-after-tile").classList.remove("warn");
   setPlan("–", "–", "–");
   $("trip-clear").hidden = !first;
-  note.textContent = "Tap your first day off, then your last.";
+  note.textContent = "";
   if (!first || !last) return;
   if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
 
