@@ -6,27 +6,41 @@
   <title>How much leave?</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌴</text></svg>">
   <style>
+    /* Palette: Sanzo Wada, A Dictionary of Color Combinations, no. 319 */
     :root {
-      --bg: #fdf8f0;
-      --card: #ffffff;
-      --ink: #1f2a2e;
-      --muted: #55616a;
-      --accent: #1d6b63;
-      --warn: #a3381f;
-      --line: #e8e0d2;
+      --apricot: #F2C40F;   /* Apricot Yellow */
+      --yorange: #E08A1E;   /* Yellow Orange (decorative only, too light for text) */
+      --sienna: #8C4F1F;    /* Raw Sienna */
+      --cossack: #3F6327;   /* Cossack Green */
+      --paper: #F6F1E4;
+      --card: #FFFFFF;
+      --ink: #2B2A22;
+      --muted: #5E5A4E;
+      --line: #E6DECB;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg);
+      background: var(--paper);
       color: var(--ink);
       line-height: 1.45;
     }
-    main { max-width: 480px; margin: 0 auto; padding: 24px 18px 48px; }
-    h1 { font-size: 1.6rem; margin: 0 0 4px; }
-    h2 { font-size: 1.1rem; margin: 0 0 12px; }
+    /* Start content about a third of the way down instead of hugging the top */
+    main { max-width: 480px; margin: 0 auto; padding: clamp(40px, 14vh, 140px) 18px 48px; }
+    header { text-align: center; margin-bottom: 28px; }
+    h1 { font-size: 1.7rem; margin: 0 0 4px; color: var(--cossack); }
+    h2 { font-size: 1.1rem; margin: 0 0 12px; color: var(--cossack); }
     .sub { color: var(--muted); margin: 0 0 20px; }
+    header .sub { margin: 0; }
+
+    /* The color-block composition from the book, as a little emblem */
+    .blocks { display: grid; grid-template-columns: 14px 28px 28px 14px; grid-template-rows: 20px 18px 20px; width: 84px; margin: 0 auto 18px; }
+    .blocks span:nth-child(1) { grid-column: 2 / 4; grid-row: 1; background: var(--apricot); }
+    .blocks span:nth-child(2) { grid-column: 1 / 3; grid-row: 2; background: var(--yorange); }
+    .blocks span:nth-child(3) { grid-column: 3 / 5; grid-row: 2; background: var(--sienna); }
+    .blocks span:nth-child(4) { grid-column: 2 / 4; grid-row: 3; background: var(--cossack); }
+
     section {
       background: var(--card);
       border: 1px solid var(--line);
@@ -34,18 +48,21 @@
       padding: 18px;
       margin-bottom: 16px;
     }
-    .big { font-size: 3.4rem; font-weight: 700; line-height: 1; margin: 4px 0; }
-    .big small { font-size: 1.1rem; font-weight: 500; color: var(--muted); }
+    section.hero { background: var(--apricot); border-color: var(--apricot); text-align: center; }
+    section.hero h2, section.hero .sub { color: var(--ink); }
+    .big { font-size: 3.6rem; font-weight: 700; line-height: 1; margin: 6px 0; color: var(--ink); }
+    .big small { font-size: 1.1rem; font-weight: 500; }
     label { display: block; font-size: 0.9rem; color: var(--muted); margin: 10px 0 4px; }
     input {
       width: 100%;
       font: inherit;
       padding: 10px 12px;
-      border: 1px solid #c9bfae;
+      border: 1px solid #8F8670;
       border-radius: 10px;
       background: #fff;
       color: var(--ink);
     }
+    input:focus-visible, button:focus-visible { outline: 3px solid var(--sienna); outline-offset: 2px; }
     .row { display: flex; gap: 10px; }
     .row > div { flex: 1; min-width: 0; }
     button {
@@ -54,22 +71,22 @@
       border: 0;
       border-radius: 10px;
       padding: 11px 16px;
-      background: var(--accent);
-      color: #fff;
+      background: var(--cossack);
+      color: var(--paper);
       cursor: pointer;
       margin-top: 14px;
     }
     button.link {
       background: none;
-      color: var(--accent);
+      color: var(--cossack);
       padding: 0;
       margin: 0;
       text-decoration: underline;
       font-weight: 500;
     }
     .result { margin-top: 14px; font-size: 1.05rem; }
-    .result strong { font-size: 1.25rem; }
-    .warn { color: var(--warn); }
+    .result strong { font-size: 1.25rem; color: var(--cossack); }
+    .warn, .warn strong { color: var(--sienna); }
     ul { list-style: none; padding: 0; margin: 0; }
     li { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 10px 0; border-top: 1px solid var(--line); }
     li:first-child { border-top: 0; }
@@ -83,8 +100,11 @@
 </head>
 <body>
 <main>
-  <h1 id="hello">Hi Abbey</h1>
-  <p class="sub" id="hello-sub">How much leave do you have?</p>
+  <header>
+    <div class="blocks" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+    <h1 id="hello">Hi Abbey</h1>
+    <p class="sub" id="hello-sub">How much leave do you have?</p>
+  </header>
 
   <!-- One-time setup: the starting number from her LES -->
   <section id="setup" hidden>
@@ -105,7 +125,7 @@
   </section>
 
   <div id="app" hidden>
-    <section>
+    <section class="hero">
       <h2>Today you have</h2>
       <div class="big" id="today-balance"></div>
       <p class="sub" id="today-next" style="margin:0"></p>
