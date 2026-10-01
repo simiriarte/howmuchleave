@@ -76,6 +76,7 @@ function greet() {
 
 // ---- setup ----
 function showSetup() {
+  document.body.classList.add("setup-mode");
   $("setup").hidden = false;
   $("app").hidden = true;
   if (state.settings) {
@@ -103,6 +104,7 @@ $("redo-setup").addEventListener("click", showSetup);
 // ---- main screen ----
 function render() {
   if (!state.settings) return showSetup();
+  document.body.classList.remove("setup-mode");
   $("setup").hidden = true;
   $("app").hidden = false;
 

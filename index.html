@@ -64,7 +64,15 @@
       color-scheme: light;
     }
     /* iPhone date boxes ignore width:100% and spill out of the card without these */
-    input[type="date"] { display: block; min-width: 0; max-width: 100%; min-height: 44px; }
+    input[type="date"] {
+      display: block;
+      min-width: 0;
+      max-width: 100%;
+      min-height: 44px;
+      -webkit-appearance: none;  /* iPhone sizes its native date box to its own text and ignores width */
+      appearance: none;
+      line-height: 1.45;
+    }
     input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     input:focus-visible, button:focus-visible { outline: 3px solid var(--feet); outline-offset: 2px; }
     .row { display: flex; gap: 10px; }
@@ -188,6 +196,7 @@
       header { margin-bottom: 18px; }
       section { padding: 16px; }
       #setup p { margin: 0 0 10px; }
+      body.setup-mode main { padding-bottom: 16px; }  /* no seaweed room needed: keeps setup to one screen */
     }
   </style>
 </head>
@@ -301,7 +310,7 @@
   </div>
 </main>
 
-<script src="leave.js"></script>
-<script src="app.js"></script>
+<script src="leave.js?v=2"></script>
+<script src="app.js?v=2"></script>
 </body>
 </html>
