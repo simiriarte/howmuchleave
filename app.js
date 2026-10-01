@@ -136,11 +136,22 @@ function render() {
   DatePicker.sync();
 }
 
+// Two numbers: the big one leaves out potential trips that haven't happened yet;
+// the small line (only when it differs) shows what's left if she takes them.
 function renderBy() {
   const date = $("by-date").value;
-  const bal = date ? Leave.balanceOn(date, state.settings, state.trips) : null;
-  $("by-balance").textContent = bal === null ? "–" : fmtNum(bal);
-  $("by-unit").textContent = bal === null ? "pick a later date" : `${dayWord(bal)} of leave`;
+  const today = Leave.todayStr();
+  // trip days already behind her count as taken; future ones are only potential
+  const taken = state.trips
+    .filter((t) => t.firstOff <= today)
+    .map((t) => ({ ...t, lastOff: t.lastOff < today ? t.lastOff : today }));
+  const base = date ? Leave.balanceOn(date, state.settings, taken) : null;
+  const withTrips = date ? Leave.balanceOn(date, state.settings, state.trips) : null;
+  $("by-balance").textContent = base === null ? "–" : fmtNum(base);
+  $("by-unit").textContent = base === null ? "pick a later date" : `${dayWord(base)} of leave`;
+  const diff = base !== null && withTrips !== base;
+  $("by-with-trips").hidden = !diff;
+  if (diff) $("by-with-trips").innerHTML = `${fmtNum(withTrips)} <span class="wide-only">if you take your potential trips</span><span class="phone-only">with trips</span>`;
 }
 
 function setPlan(uses, before, after) {

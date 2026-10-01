@@ -336,6 +336,8 @@
     .lw-line { color: var(--soft); font-size: 0.88rem; font-style: italic; }
     .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
     .booked-title { margin-top: 4px; }
+    .by-with { font-style: italic; color: var(--feet); margin-top: 2px; }
+    .phone-only { display: none; }
     /* Her birthday: a tiny fish in the corner of Oct 2 */
     .pk-day .bday { position: absolute; top: -5px; right: -9px; width: 20px; height: 11px; pointer-events: none; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
@@ -417,14 +419,16 @@
       #setup p { margin: 0 0 10px; }
       body.setup-mode main { padding-bottom: 16px; }
       /* plan | booked switch */
-      .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+      .tabs { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 6px; }
       .tabs button { margin: 0; padding: 5px; background: rgba(52, 51, 58, 0.6); color: var(--soft); font-family: "Bagel Fat One", -apple-system, sans-serif; font-weight: 400; }
       .tabs button[aria-selected="true"] { background: var(--char); color: var(--feet); }
       body[data-tab="plan"] section.booked, body[data-tab="booked"] section.plan { display: none; }
       section.plan h2 { display: none; }  /* the tab already says "plan" */
       .pc-grid { gap: 1px; }
-      .pc-grid .pk-day { height: 32px; width: 32px; }
+      .pc-grid .pk-day { height: 30px; width: 30px; }
       .pc-head { margin-bottom: 2px; }
+      .phone-only { display: inline; }
+      .by-with { margin-top: 0; }
       .tiles.small .tile { padding: 6px 10px; }
       body:not(.setup-mode) .emblem { width: 52px; }
       body:not(.setup-mode) h1 { font-size: 1.7rem; }
@@ -516,6 +520,7 @@
         <div class="tile-label">By <button type="button" class="date-chip" data-date-for="by-date"><span class="dp-label"></span> ▾</button><input id="by-date" type="hidden"><span class="wide-only">, you'll have</span></div>
         <div class="tile-value" id="by-balance"></div>
         <div class="tile-label" id="by-unit"></div>
+        <div class="tile-label by-with" id="by-with-trips" hidden></div>
       </div>
     </div>
 
@@ -611,6 +616,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=5"></script>
-<script src="app.js?v=23"></script>
+<script src="app.js?v=25"></script>
 </body>
 </html>
