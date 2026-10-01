@@ -13,10 +13,37 @@ function load() {
 function save() {
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
 }
+// Cute pop-up in place of the browser's confirm/alert.
+// ask("Question?", { ok: "remove", cancel: "keep it" }) resolves true/false.
+// Leave out `cancel` for a plain note with one button.
+function ask(message, { ok = "ok", cancel = null } = {}) {
+  const dlg = document.getElementById("ask");
+  document.getElementById("ask-msg").textContent = message;
+  const okBtn = document.getElementById("ask-ok");
+  const cancelBtn = document.getElementById("ask-cancel");
+  okBtn.textContent = ok;
+  cancelBtn.textContent = cancel || "";
+  cancelBtn.hidden = !cancel;
+  return new Promise((resolve) => {
+    const done = (answer) => {
+      okBtn.onclick = cancelBtn.onclick = dlg.onclose = null;
+      if (dlg.open) dlg.close();
+      resolve(answer);
+    };
+    okBtn.onclick = () => done(true);
+    cancelBtn.onclick = () => done(false);
+    dlg.onclose = () => done(false); // Escape key
+    dlg.showModal();
+    (cancel ? cancelBtn : okBtn).focus();
+  });
+}
+
 // Visiting the page with ?reset wipes this device's data (for testing)
 if (new URLSearchParams(location.search).has("reset")) {
-  if (confirm("Erase the balance and all booked leave on this device?")) localStorage.removeItem(STORE_KEY);
   history.replaceState(null, "", location.pathname);
+  ask("Erase the balance and all trips on this device?", { ok: "erase", cancel: "keep it" }).then((yes) => {
+    if (yes) { localStorage.removeItem(STORE_KEY); location.reload(); }
+  });
 }
 let state = load();
 
@@ -89,11 +116,11 @@ $("setup-save").addEventListener("click", () => {
   const balance = parseFloat($("setup-balance").value);
   const asOf = $("setup-date").value;
   if (Number.isNaN(balance) || !asOf) {
-    alert("Fill in both the balance and the date.");
+    ask("Fill in both the balance and the date.", { ok: "got it" });
     return;
   }
   if (asOf > Leave.todayStr()) {
-    alert("The LES date can't be in the future.");
+    ask("The LES date can't be in the future.", { ok: "got it" });
     return;
   }
   state.settings = { balance, asOf };
@@ -278,11 +305,12 @@ function renderTrips() {
     del.className = "link";
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
-    del.addEventListener("click", () => {
-      if (!confirm(`Remove "${t.name || "Trip"}"? Its days go back into your balance.`)) return;
+    del.addEventListener("click", async () => {
+      if (!(await ask(`Let "${t.name || "this trip"}" swim away?`, { ok: "remove", cancel: "keep it" }))) return;
       state.trips = state.trips.filter((x) => x.id !== t.id);
       save();
       render();
+      swimFish();
     });
     cell("trip-del", del);
     body.append(tr);

@@ -354,6 +354,13 @@
     }
     dialog::backdrop { background: rgba(15, 30, 38, 0.7); }
     dialog p { margin: 0 0 10px; }
+    dialog.ask { width: min(320px, 88vw); text-align: center; padding: 22px 22px 18px; }
+    .ask-fish { width: 70px; display: block; margin: 0 auto 10px; animation: bob 2.4s ease-in-out infinite; }
+    @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-4px) rotate(3deg); } }
+    #ask-msg { font-size: 1.05rem; margin: 0 0 6px; }
+    .ask-buttons { display: flex; justify-content: center; align-items: center; gap: 22px; }
+    .ask-buttons .link { font-size: 0.95rem; color: var(--soft); }
+    @media (prefers-reduced-motion: reduce) { .ask-fish { animation: none; } }
 
     /* Wider screens: a real dashboard. Tiles across the top,
        planner on the left, booked leave on the right. Phones keep the stack. */
@@ -602,6 +609,16 @@
   </div>
 </main>
 
+<!-- Our own pop-up for questions and notes (replaces the browser's alert/confirm) -->
+<dialog id="ask" class="ask">
+  <svg class="ask-fish" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
+  <p id="ask-msg"></p>
+  <div class="ask-buttons">
+    <button type="button" class="link" id="ask-cancel">keep it</button>
+    <button type="button" class="cut" id="ask-ok">remove</button>
+  </div>
+</dialog>
+
 <!-- Our own calendar (see picker.js) -->
 <dialog id="picker" class="picker" aria-label="Pick a date">
   <div class="pk-head">
@@ -619,6 +636,6 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=5"></script>
-<script src="app.js?v=26"></script>
+<script src="app.js?v=27"></script>
 </body>
 </html>
