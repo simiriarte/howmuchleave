@@ -102,6 +102,11 @@ $("setup-save").addEventListener("click", () => {
 $("redo-setup").addEventListener("click", showSetup);
 
 // ---- main screen ----
+function shortDate(s) {
+  const [y, m, d] = s.split("-").map(Number);
+  return new Date(y, m - 1, d).toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
+
 function render() {
   if (!state.settings) return showSetup();
   document.body.classList.remove("setup-mode");
@@ -113,72 +118,83 @@ function render() {
 
   const now = Leave.balanceOn(today, settings, trips);
   $("today-balance").innerHTML = `${fmtNum(now)} <small>${dayWord(now)}</small>`;
-  const monthEnd = nextMonthEnd(today);
-  $("today-next").textContent = `+2.5 more on ${fmtDate(monthEnd)}`;
+  $("next-date").textContent = shortDate(nextMonthEnd(today));
+
+  // Leave already booked from today on
+  let ahead = 0;
+  for (const t of trips) ahead += Leave.chargedDays(t.firstOff, t.lastOff).filter((d) => d >= today).length;
+  $("booked-total").innerHTML = `${ahead} <small>${dayWord(ahead)}</small>`;
 
   $("les-note").textContent = `Starting point: ${fmtNum(settings.balance)} days on your LES as of ${fmtDate(settings.asOf)}.`;
   const ageDays = (new Date(today) - new Date(settings.asOf)) / 86400000;
   if (ageDays > 120) $("les-note").textContent += " It's been a few months, worth checking it still matches your LES.";
 
-  renderFuture();
   renderTrip();
   renderTrips();
 }
 
-function renderFuture() {
-  const date = $("future-date").value;
-  const out = $("future-result");
-  if (!date) { out.textContent = ""; return; }
-  const bal = Leave.balanceOn(date, state.settings, state.trips);
-  if (bal === null) { out.textContent = "Pick a date after your LES date."; return; }
-  out.innerHTML = `On ${fmtDate(date)} you'll have <strong>${fmtNum(bal)} ${dayWord(bal)}</strong>.`;
-  out.classList.toggle("warn", bal < 0);
+function setPlan(uses, before, after) {
+  $("plan-uses").textContent = uses;
+  $("plan-before").textContent = before;
+  $("plan-after").textContent = after;
 }
 
 function renderTrip() {
   const first = $("trip-first").value;
   const last = $("trip-last").value;
-  const out = $("trip-result");
+  const note = $("trip-result");
   $("trip-save").hidden = true;
-  out.classList.remove("warn");
-  if (!first || !last) { out.textContent = ""; return; }
-  if (last < first) { out.textContent = "The last day off is before the first one."; return; }
-  if (first <= state.settings.asOf) { out.textContent = "Pick dates after your LES date."; return; }
+  $("plan-after-tile").classList.remove("warn");
+  setPlan("–", "–", "–");
+  note.textContent = "Pick dates to see what it costs.";
+  if (!first || !last) return;
+  if (last < first) { note.textContent = "The To date is before the From date."; return; }
+  if (first <= state.settings.asOf) { note.textContent = "Pick dates after your LES date."; return; }
 
   const used = Leave.chargedDays(first, last).length;
-  if (used === 0) {
-    out.textContent = "That's all weekend or holiday, so it costs no leave. 🎉";
-    return;
-  }
   const before = Leave.balanceOn(Leave.addDays(first, -1), state.settings, state.trips);
   const after = Leave.balanceOn(last, state.settings, state.trips) - used;
-  let html = `That trip uses <strong>${used} ${dayWord(used)}</strong> of leave.<br>` +
-    `You'll have ${fmtNum(before)} going in and <strong>${fmtNum(after)}</strong> after.`;
-  if (after < 0) {
-    html += `<br>That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
-    out.classList.add("warn");
+  setPlan(`${used}`, fmtNum(before), fmtNum(after));
+  if (used === 0) {
+    note.textContent = "All weekend or holiday, so it's free. 🎉";
+    return;
   }
-  out.innerHTML = html;
+  if (after < 0) {
+    $("plan-after-tile").classList.add("warn");
+    note.textContent = `That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
+  } else {
+    note.textContent = `${fmtDate(first)} to ${fmtDate(last)}`;
+  }
   $("trip-save").hidden = false;
 }
 
 function renderTrips() {
-  const list = $("trips");
-  list.innerHTML = "";
+  const body = $("trips");
+  body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
   $("trips-empty").hidden = trips.length > 0;
   for (const t of trips) {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
-    const li = document.createElement("li");
-    const text = document.createElement("div");
-    text.className = "trip-text";
-    const name = document.createElement("div");
-    name.textContent = `${t.name || "Leave"} · ${used} ${dayWord(used)}`;
-    const when = document.createElement("div");
-    when.className = "when";
-    when.textContent = `${fmtDate(t.firstOff)} to ${fmtDate(t.lastOff)}`;
-    text.append(name, when);
+    const tr = document.createElement("tr");
+    const cell = (cls, content) => {
+      const td = document.createElement("td");
+      td.className = cls;
+      if (typeof content === "string") td.textContent = content;
+      else td.append(content);
+      tr.append(td);
+    };
+    cell("fish-cell", fishIcon("fish"));
+    const info = document.createElement("div");
+    const nm = document.createElement("div");
+    nm.textContent = t.name || "Leave";
+    const dates = document.createElement("div");
+    dates.className = "trip-dates";
+    dates.textContent = t.firstOff === t.lastOff ? shortDate(t.firstOff) : `${shortDate(t.firstOff)} to ${shortDate(t.lastOff)}`;
+    info.append(nm, dates);
+    cell("trip-name", info);
+    cell("trip-days", `${used}d`);
     const del = document.createElement("button");
+    del.className = "link";
     del.textContent = "✕";
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", () => {
@@ -187,12 +203,12 @@ function renderTrips() {
       save();
       render();
     });
-    li.append(fishIcon("fish"), text, del);
-    list.append(li);
+    cell("trip-del", del);
+    body.append(tr);
   }
 }
 
-$("future-date").addEventListener("input", renderFuture);
+$("open-info").addEventListener("click", () => $("info").showModal());
 $("trip-first").addEventListener("input", () => {
   // Jump the end date forward so the calendar opens near the start date
   if (!$("trip-last").value || $("trip-last").value < $("trip-first").value) $("trip-last").value = $("trip-first").value;

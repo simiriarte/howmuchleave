@@ -49,10 +49,6 @@
       padding: 18px;
       margin-bottom: 16px;
     }
-    section.hero { background: var(--peach); color: var(--char); text-align: center; }
-    section.hero h2, section.hero .sub { color: var(--char); }
-    .big { font-size: 3.6rem; font-weight: 700; line-height: 1; margin: 6px 0; }
-    .big small { font-size: 1.1rem; font-weight: 500; }
     label { display: block; font-size: 0.9rem; color: var(--soft); margin: 10px 0 4px; }
     input {
       width: 100%;
@@ -125,20 +121,7 @@
       text-decoration: underline;
       font-weight: 500;
     }
-    .result { margin-top: 14px; font-size: 1.05rem; }
-    .result strong { font-size: 1.25rem; color: var(--feet); }
-    .result.warn { background: var(--comb); color: var(--hen); padding: 12px 14px; }
-    .result.warn strong { color: var(--hen); }
-    ul { list-style: none; padding: 0; margin: 0; }
-    li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-top: 1px solid var(--line); }
-    li:first-child { border-top: 0; }
-    li .trip-text { flex: 1; min-width: 0; }
-    li .fish { width: 34px; flex: none; }
-    li .when { color: var(--soft); font-size: 0.9rem; }
-    li button { background: none; color: var(--soft); padding: 4px 8px; margin: 0; font-weight: 400; }
     .empty { color: var(--soft); margin: 0; }
-    footer { color: var(--hen); font-size: 0.85rem; padding: 0 4px; }
-    footer p { margin: 0 0 8px; }
     [hidden] { display: none !important; }
 
     /* A fish swims across the screen when she books leave */
@@ -185,6 +168,70 @@
       .weed { animation: none; }
       .bubble { display: none; }
     }
+
+    /* ---- Dashboard: the main screen fits one screen, no page scrolling ---- */
+    body:not(.setup-mode) main {
+      height: 100svh;
+      display: flex;
+      flex-direction: column;
+      padding-bottom: 14px;
+    }
+    body:not(.setup-mode) header { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 14px; text-align: left; }
+    body:not(.setup-mode) .emblem { width: 64px; margin: 0; }
+    body:not(.setup-mode) h1 { font-size: 1.9rem; margin: 0; }
+    body:not(.setup-mode) header .sub { display: none; }
+    #app:not([hidden]) { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+
+    .tiles { display: grid; grid-template-columns: 1.3fr 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+    .tile { background: var(--char); padding: 10px 12px; }
+    .tile.hero { background: var(--peach); color: var(--char); }
+    .tile-label { font-size: 0.8rem; color: var(--soft); }
+    .tile.hero .tile-label { color: var(--char); }
+    .tile-value { font-size: 1.6rem; font-weight: 700; line-height: 1.15; white-space: nowrap; }
+    .tile.hero .tile-value { font-size: 2rem; }
+    .tile-value small { font-size: 0.85rem; font-weight: 500; }
+
+    section.plan, section.booked { padding: 14px; margin-bottom: 10px; }
+    section.plan h2, section.booked h2 { margin-bottom: 8px; }
+    .date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .date-row label { width: 44px; margin: 0; flex: none; }
+    .date-row input { flex: 1; min-height: 40px; padding: 8px 10px; }
+    .tiles.small { grid-template-columns: 1fr 1fr 1fr; margin: 10px 0 0; }
+    .tiles.small .tile { background: rgba(241, 236, 226, 0.07); padding: 8px 10px; }
+    .tiles.small .tile-value { font-size: 1.3rem; color: var(--feet); }
+    .tiles.small .tile.warn { background: var(--comb); }
+    .tiles.small .tile.warn .tile-value, .tiles.small .tile.warn .tile-label { color: var(--hen); }
+    .note { margin: 8px 0 0; font-size: 0.85rem; color: var(--soft); min-height: 1.2em; }
+    .book-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+    .book-row input { flex: 1; min-width: 0; }
+    .book-row button { margin: 0; flex: none; }
+
+    section.booked { flex: 1; min-height: 90px; display: flex; flex-direction: column; }
+    .table-wrap { flex: 1; min-height: 0; overflow-y: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.92rem; }
+    td { padding: 7px 4px; border-top: 1px solid var(--line); vertical-align: middle; }
+    tr:first-child td { border-top: 0; }
+    td.fish-cell { width: 30px; padding-left: 0; }
+    td.fish-cell svg { width: 28px; display: block; }
+    /* name and dates on one line each, cut off with "…" if too long */
+    td.trip-name { width: 100%; max-width: 0; }
+    td.trip-name div { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    td.trip-name .trip-dates { color: var(--soft); font-size: 0.82rem; }
+    td.trip-days { text-align: right; white-space: nowrap; font-weight: 600; }
+    td.trip-del { width: 28px; text-align: right; padding-right: 0; }
+    td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
+
+    footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; }
+
+    dialog {
+      background: var(--char);
+      color: var(--hen);
+      border: 0;
+      padding: 20px;
+      max-width: min(420px, 90vw);
+    }
+    dialog::backdrop { background: rgba(15, 30, 38, 0.7); }
+    dialog p { margin: 0 0 10px; }
 
     /* Phones: stack the inputs, and tighten the top so everything fits
        on the first screen with the seaweed still showing underneath */
@@ -262,55 +309,73 @@
   </section>
 
   <div id="app" hidden>
-    <section class="hero">
-      <h2>Today you have</h2>
-      <div class="big" id="today-balance"></div>
-      <p class="sub" id="today-next" style="margin:0"></p>
-    </section>
+    <!-- Top row: where she stands -->
+    <div class="tiles">
+      <div class="tile hero">
+        <div class="tile-label">Today</div>
+        <div class="tile-value" id="today-balance"></div>
+      </div>
+      <div class="tile">
+        <div class="tile-label" id="next-date"></div>
+        <div class="tile-value">+2.5</div>
+      </div>
+      <div class="tile">
+        <div class="tile-label">Booked</div>
+        <div class="tile-value" id="booked-total"></div>
+      </div>
+    </div>
 
-    <section>
-      <h2>How much will I have on…</h2>
-      <label for="future-date">Pick a date</label>
-      <input id="future-date" type="date">
-      <div class="result" id="future-result"></div>
-    </section>
-
-    <section>
+    <!-- Plan: pick dates, see the cost -->
+    <section class="plan">
       <h2>Plan a trip or staycation</h2>
-      <div class="row">
-        <div>
-          <label for="trip-first">First day off work</label>
-          <input id="trip-first" type="date">
-        </div>
-        <div>
-          <label for="trip-last">Last day off work</label>
-          <input id="trip-last" type="date">
-        </div>
+      <div class="date-row">
+        <label for="trip-first">From</label>
+        <input id="trip-first" type="date">
       </div>
-      <div class="result" id="trip-result"></div>
-      <div id="trip-save" hidden>
-        <label for="trip-name">Name it (optional)</label>
-        <input id="trip-name" type="text" placeholder="Christmas at home">
-        <button class="cut" id="trip-save-btn">Book this leave</button>
+      <div class="date-row">
+        <label for="trip-last">To</label>
+        <input id="trip-last" type="date">
+      </div>
+      <div class="tiles small">
+        <div class="tile"><div class="tile-label">Uses</div><div class="tile-value" id="plan-uses">–</div></div>
+        <div class="tile"><div class="tile-label">Before</div><div class="tile-value" id="plan-before">–</div></div>
+        <div class="tile" id="plan-after-tile"><div class="tile-label">After</div><div class="tile-value" id="plan-after">–</div></div>
+      </div>
+      <p class="note" id="trip-result"></p>
+      <div class="book-row" id="trip-save" hidden>
+        <input id="trip-name" type="text" placeholder="Name it (optional)" aria-label="Name it (optional)">
+        <button class="cut" id="trip-save-btn">Book it</button>
       </div>
     </section>
 
-    <section>
+    <!-- Booked leave as a table; scrolls inside itself if it gets long -->
+    <section class="booked">
       <h2>Booked leave</h2>
-      <ul id="trips"></ul>
-      <p class="empty" id="trips-empty">Nothing booked yet. The pond is quiet.</p>
+      <div class="table-wrap">
+        <table>
+          <tbody id="trips"></tbody>
+        </table>
+        <p class="empty" id="trips-empty">Nothing booked yet. The pond is quiet.</p>
+      </div>
     </section>
 
     <footer>
-      <p>Weekends and holidays at the start or end of a trip are free. Ones in the middle count. Base family days aren't included, so a trip next to one may cost a day less.</p>
+      <button class="link" id="open-info">how it counts</button>
+      <button class="link" id="redo-setup">update LES balance</button>
+    </footer>
+
+    <dialog id="info">
+      <h2>How it counts</h2>
+      <p>Weekends and holidays at the start or end of your time off are free. Ones in the middle count.</p>
+      <p>Base family days aren't included, so time off next to one may cost a day less.</p>
       <p>This is an estimate. LeaveWeb and your LES are the official numbers.</p>
       <p id="les-note"></p>
-      <p><button class="link" id="redo-setup">Update my LES balance</button></p>
-    </footer>
+      <form method="dialog"><button class="cut">got it</button></form>
+    </dialog>
   </div>
 </main>
 
-<script src="leave.js?v=2"></script>
-<script src="app.js?v=2"></script>
+<script src="leave.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
