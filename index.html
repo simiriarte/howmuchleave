@@ -110,7 +110,7 @@
       text-decoration: underline;
       font-weight: 500;
     }
-    .empty { color: var(--soft); margin: 0; }
+    .empty { color: var(--soft); margin: 10px 0 0; }
     [hidden] { display: none !important; }
 
     /* A fish swims across the screen when she books leave */
@@ -299,6 +299,10 @@
     td.trip-name .trip-dates { color: var(--soft); font-size: 0.82rem; }
     td.trip-days { text-align: right; white-space: nowrap; font-weight: 600; }
     td.trip-del { width: 28px; text-align: right; padding-right: 0; }
+    tr.upcoming { cursor: pointer; }
+    tr.upcoming td.trip-name div:first-child { color: var(--feet); }
+    tr.upcoming:hover td { background: rgba(241, 236, 226, 0.05); }
+    .pk-star.big { width: 20px; height: 20px; display: block; margin: 0 auto; transform: rotate(-12deg); }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
 
     footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; font-size: 0.85rem; }
@@ -554,9 +558,9 @@
     <button type="button" class="link" id="pk-today">today</button>
   </div>
 </dialog>
-<script src="leave.js?v=4"></script>
+<script src="leave.js?v=5"></script>
 <script src="picker.js?v=3"></script>
 <script src="plancal.js?v=2"></script>
-<script src="app.js?v=12"></script>
+<script src="app.js?v=13"></script>
 </body>
 </html>

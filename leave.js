@@ -140,7 +140,22 @@
     return null;
   }
 
-  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextFourDayWeekend };
+  // The next holiday weekend that's exactly 3 days off with no leave
+  // (e.g. Sat to Mon for a Monday holiday). Returns { firstOff, lastOff, holiday } or null.
+  function nextThreeDayWeekend(after) {
+    for (let i = 1; i <= 400; i++) {
+      const start = addDays(after, i);
+      const end = addDays(start, 2);
+      if (!isNonDutyDay(addDays(start, -1)) && !isNonDutyDay(addDays(end, 1))
+          && isNonDutyDay(start) && isNonDutyDay(addDays(start, 1)) && isNonDutyDay(end)) {
+        const holiday = holidayName(start) || holidayName(addDays(start, 1)) || holidayName(end);
+        if (holiday) return { firstOff: start, lastOff: end, holiday };
+      }
+    }
+    return null;
+  }
+
+  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, chargedDays, monthEndsBetween, balanceOn, nextThreeDayWeekend, nextFourDayWeekend };
   if (typeof module !== "undefined") module.exports = api;
   else root.Leave = api;
 })(this);

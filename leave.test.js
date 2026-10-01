@@ -44,4 +44,8 @@ assert.strictEqual(L.holidayName("2026-12-24"), null);
 assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-01"), { firstOff: "2026-10-09", lastOff: "2026-10-12", leaveDay: "2026-10-09", holiday: "Columbus Day" });
 assert.deepStrictEqual(L.nextFourDayWeekend("2026-10-12"), { firstOff: "2026-11-26", lastOff: "2026-11-29", leaveDay: "2026-11-27", holiday: "Thanksgiving" });
 
+// Next 3-day weekend (no leave)
+assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-01"), { firstOff: "2026-10-10", lastOff: "2026-10-12", holiday: "Columbus Day" });
+assert.deepStrictEqual(L.nextThreeDayWeekend("2026-10-12"), { firstOff: "2026-12-25", lastOff: "2026-12-27", holiday: "Christmas" }, "Veterans Day (Wed) and Thanksgiving (Thu) aren't 3-day weekends");
+
 console.log("All leave tests passed");
