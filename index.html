@@ -305,6 +305,10 @@
     .book-row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
     .book-row input { flex: 1; min-width: 0; }
     .book-row button { margin: 0; flex: none; }
+    .book-row { transition: opacity 0.2s; }
+    .book-row.inactive { opacity: 0.35; }
+    .book-row.inactive button { cursor: default; }
+    .book-row.inactive button.cut:hover { transform: none; }
 
     section.booked { flex: 1; min-height: 90px; display: flex; flex-direction: column; }
     .table-wrap { flex: 1; min-height: 0; overflow-y: auto; }
@@ -556,7 +560,7 @@
         <div class="tile" id="plan-after-tile"><div class="tile-label">After</div><div class="tile-value" id="plan-after">–</div></div>
       </div>
       <p class="note"><span id="trip-result"></span> <button type="button" class="link" id="trip-clear" hidden>clear</button></p>
-      <div class="book-row" id="trip-save" hidden>
+      <div class="book-row" id="trip-save">
         <input id="trip-name" type="text" placeholder="Name of trip" aria-label="Name of trip">
         <button class="cut" id="trip-save-btn">Plan it</button>
       </div>
@@ -607,6 +611,6 @@
 <script src="leave.js?v=5"></script>
 <script src="picker.js?v=4"></script>
 <script src="plancal.js?v=3"></script>
-<script src="app.js?v=19"></script>
+<script src="app.js?v=20"></script>
 </body>
 </html>

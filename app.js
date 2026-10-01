@@ -149,12 +149,20 @@ function setPlan(uses, before, after) {
   $("plan-after").textContent = after;
 }
 
+// The name box and "plan it" button always show; they're dimmed and switched off
+// until there are days picked that actually use leave.
+function setPlanReady(ready) {
+  $("trip-save").classList.toggle("inactive", !ready);
+  $("trip-name").disabled = !ready;
+  $("trip-save-btn").disabled = !ready;
+}
+
 function renderTrip() {
   const first = $("trip-first").value;
   const last = $("trip-last").value;
   const note = $("trip-result");
   DatePicker.sync();
-  $("trip-save").hidden = true;
+  setPlanReady(false);
   $("plan-after-tile").classList.remove("warn");
   setPlan("–", "–", "–");
   $("trip-clear").hidden = !first;
@@ -174,11 +182,11 @@ function renderTrip() {
     $("plan-after-tile").classList.add("warn");
     note.textContent = `That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
   } else if (PlanCal.waitingForEnd) {
-    note.textContent = "Now tap your last day off, or book just this day.";
+    note.textContent = "Now tap your last day off, or plan just this day.";
   } else {
     note.textContent = `${shortDate(first)} to ${shortDate(last)}`;
   }
-  $("trip-save").hidden = false;
+  setPlanReady(true);
 }
 
 // "Fri Oct 9"
