@@ -59,17 +59,6 @@
       color: var(--char);
       color-scheme: light;
     }
-    /* iPhone date boxes ignore width:100% and spill out of the card without these */
-    input[type="date"] {
-      display: block;
-      min-width: 0;
-      max-width: 100%;
-      min-height: 44px;
-      -webkit-appearance: none;  /* iPhone sizes its native date box to its own text and ignores width */
-      appearance: none;
-      line-height: 1.45;
-    }
-    input[type="date"]::-webkit-date-and-time-value { text-align: left; }
     input:focus-visible, button:focus-visible { outline: 3px solid var(--feet); outline-offset: 2px; }
     .row { display: flex; gap: 10px; }
     .row > div { flex: 1; min-width: 0; }
@@ -188,10 +177,70 @@
     .tile-label { font-size: 0.8rem; color: var(--soft); }
     .tile.hero .tile-label { color: var(--char); }
     .tile-value { font-family: "Bagel Fat One", -apple-system, sans-serif; font-weight: 400; font-size: 1.6rem; line-height: 1.15; white-space: nowrap; }
-    /* "By [date]": the date reads as yellow text; an invisible date box sits on top so a tap opens the picker */
-    .date-chip { position: relative; color: var(--feet); font-weight: 600; border-bottom: 2px dotted var(--feet); white-space: nowrap; cursor: pointer; }
-    .date-chip input[type="date"] { position: absolute; inset: 0; width: 100%; height: 100%; min-height: 0; padding: 0; opacity: 0; cursor: pointer; }
-    .date-chip:focus-within { outline: 3px solid var(--feet); outline-offset: 2px; }
+    /* "By [date]": the date reads as yellow text and opens our calendar */
+    button.date-chip { font: inherit; background: none; color: var(--feet); font-weight: 600; padding: 0; margin: 0; border-bottom: 2px dotted var(--feet); white-space: nowrap; }
+
+    /* Date boxes that open our calendar (look like the other inputs) */
+    button.date-field {
+      display: block;
+      width: 100%;
+      margin: 0;
+      min-height: 44px;
+      padding: 10px 12px;
+      text-align: left;
+      font-weight: 400;
+      background: var(--hen);
+      color: var(--char);
+    }
+    button.date-field.empty { color: #6E6A60; }
+    button.date-field::after { content: "▾"; float: right; color: var(--char); }
+
+    /* ---- The calendar ---- */
+    dialog.picker { padding: 16px 16px 12px; width: min(340px, 92vw); overflow: visible; }
+    .pk-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    #pk-title { font-family: "Bagel Fat One", -apple-system, sans-serif; font-size: 1.3rem; }
+    .pk-nav { margin: 0; padding: 4px 12px 6px; font-size: 1.3rem; line-height: 1; background: var(--feet); color: var(--char); clip-path: polygon(6% 8%, 96% 0, 100% 90%, 0 100%); }
+    .pk-week, .pk-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; text-align: center; }
+    .pk-week { font-size: 0.78rem; color: var(--soft); margin-bottom: 4px; }
+    .pk-day {
+      margin: 0;
+      padding: 0;
+      aspect-ratio: 1;
+      background: none;
+      color: var(--hen);
+      font-weight: 500;
+      border: 1.5px solid transparent;
+      border-radius: 50%;
+      transition: border-color 0.15s, background 0.15s;
+    }
+    .pk-day.off { color: #9A9486; }
+    .pk-day.today { border: 1.5px dotted var(--feet); }
+    .pk-day:hover:not(:disabled) { border-color: rgba(241, 236, 226, 0.45); background: rgba(241, 236, 226, 0.06); }
+    .pk-day:disabled { opacity: 0.25; cursor: default; }
+    /* The picked day is a bubble: clear body, cream rim, a shine spot top-left */
+    .pk-day.selected {
+      color: var(--hen);
+      font-weight: 700;
+      border: 2px solid var(--hen);
+      background:
+        radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95) 0 9%, transparent 10%),
+        radial-gradient(circle at 50% 50%, rgba(58, 130, 150, 0.15) 0 55%, rgba(58, 130, 150, 0.55) 100%);
+    }
+    .pk-day.pop { animation: pop 0.45s ease-out; }
+    @keyframes pop { 0% { transform: scale(0.5); } 60% { transform: scale(1.18); } 100% { transform: scale(1); } }
+    .pk-fizz {
+      position: absolute;
+      border: 1.5px solid rgba(241, 236, 226, 0.8);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: fizz 0.6s ease-out forwards;
+    }
+    @keyframes fizz {
+      0% { transform: translate(0, 0) scale(0.6); opacity: 1; }
+      100% { transform: translate(var(--drift), -70px) scale(1.1); opacity: 0; }
+    }
+    .pk-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; color: var(--soft); }
+    @media (prefers-reduced-motion: reduce) { .pk-day.pop { animation: none; } }
     .tile.hero .tile-value, .tile.by .tile-value { font-size: 2rem; }
     .tile-value small { font-size: 0.85rem; font-weight: 500; }
 
@@ -199,7 +248,7 @@
     section.plan h2, section.booked h2 { margin-bottom: 8px; }
     .date-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
     .date-row label { width: 44px; margin: 0; flex: none; }
-    .date-row input { flex: 1; min-height: 40px; padding: 8px 10px; }
+    .date-row .date-field { flex: 1; min-height: 40px; padding: 8px 10px; }
     .tiles.small { grid-template-columns: 1fr 1fr 1fr; margin: 10px 0 0; }
     .tiles.small .tile { background: rgba(241, 236, 226, 0.07); padding: 8px 10px; }
     .tiles.small .tile-value { font-size: 1.3rem; color: var(--feet); }
@@ -334,8 +383,9 @@
         <input id="setup-balance" type="number" step="0.5" inputmode="decimal">
       </div>
       <div>
-        <label for="setup-date">As of</label>
-        <input id="setup-date" type="date">
+        <label for="setup-date-btn">As of</label>
+        <button type="button" class="date-field" id="setup-date-btn" data-date-for="setup-date" data-max="today" data-placeholder="pick the LES date">pick the LES date</button>
+        <input id="setup-date" type="hidden">
       </div>
     </div>
     <button class="cut" id="setup-save">Enter</button>
@@ -350,7 +400,7 @@
         <div class="tile-label" id="today-unit"></div>
       </div>
       <div class="tile by">
-        <div class="tile-label">By <span class="date-chip"><span id="by-text"></span> ▾<input id="by-date" type="date" aria-label="Pick a date"></span><span class="wide-only">, you'll have</span></div>
+        <div class="tile-label">By <button type="button" class="date-chip" data-date-for="by-date"><span class="dp-label"></span> ▾</button><input id="by-date" type="hidden"><span class="wide-only">, you'll have</span></div>
         <div class="tile-value" id="by-balance"></div>
         <div class="tile-label" id="by-unit"></div>
       </div>
@@ -360,12 +410,14 @@
     <section class="plan">
       <h2>Plan a trip or staycation</h2>
       <div class="date-row">
-        <label for="trip-first">From</label>
-        <input id="trip-first" type="date">
+        <label for="trip-first-btn">From</label>
+        <button type="button" class="date-field" id="trip-first-btn" data-date-for="trip-first" data-then="trip-last-btn">pick a date</button>
+        <input id="trip-first" type="hidden">
       </div>
       <div class="date-row">
-        <label for="trip-last">To</label>
-        <input id="trip-last" type="date">
+        <label for="trip-last-btn">To</label>
+        <button type="button" class="date-field" id="trip-last-btn" data-date-for="trip-last" data-min-from="trip-first">pick a date</button>
+        <input id="trip-last" type="hidden">
       </div>
       <div class="tiles small">
         <div class="tile"><div class="tile-label">Uses</div><div class="tile-value" id="plan-uses">–</div></div>
@@ -406,7 +458,22 @@
   </div>
 </main>
 
+<!-- Our own calendar (see picker.js) -->
+<dialog id="picker" class="picker" aria-label="Pick a date">
+  <div class="pk-head">
+    <button type="button" class="pk-nav" id="pk-prev" aria-label="Previous month">‹</button>
+    <div id="pk-title"></div>
+    <button type="button" class="pk-nav" id="pk-next" aria-label="Next month">›</button>
+  </div>
+  <div class="pk-week" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
+  <div class="pk-grid" id="pk-grid"></div>
+  <div class="pk-foot">
+    <span class="pk-key">dim = weekend or holiday</span>
+    <button type="button" class="link" id="pk-today">today</button>
+  </div>
+</dialog>
 <script src="leave.js?v=3"></script>
-<script src="app.js?v=6"></script>
+<script src="picker.js?v=2"></script>
+<script src="app.js?v=9"></script>
 </body>
 </html>
