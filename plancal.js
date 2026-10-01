@@ -10,7 +10,8 @@
   const last = document.getElementById("trip-last");
 
   let viewYear, viewMonth; // month on screen (0-11)
-  let waitingForEnd = false; // true between the first and second tap
+  let target = "start"; // which box the next tap fills: "start" or "end"
+  let editingStart = false; // she tapped the Leave start box to change just the start
 
   const pad = (n) => String(n).padStart(2, "0");
   const ymd = (y, m, d) => `${y}-${pad(m + 1)}-${pad(d)}`;
@@ -79,14 +80,17 @@
   }
 
   function tap(date) {
-    if (!waitingForEnd || !first.value || date < first.value) {
-      // start a new plan
-      first.value = date;
+    if (target === "end" && first.value && date >= first.value) {
       last.value = date;
-      waitingForEnd = true;
+      target = "start"; // done; the next tap starts a new plan
     } else {
-      last.value = date;
-      waitingForEnd = false;
+      // leave start (also when the tapped day is before the current start).
+      // A fresh plan resets the end; changing just the start keeps the end if it still works.
+      const keepEnd = editingStart && last.value && last.value >= date;
+      first.value = date;
+      if (!keepEnd) last.value = date;
+      target = "end";
+      editingStart = false;
     }
     last.dispatchEvent(new Event("input"));
     draw();
@@ -105,12 +109,19 @@
   window.PlanCal = {
     trips: [],
     draw,
-    get waitingForEnd() { return waitingForEnd; },
-    clear() { first.value = ""; last.value = ""; waitingForEnd = false; draw(); },
+    get target() { return target; },
+    // tapping a box chooses which date the next calendar tap changes
+    setTarget(t) {
+      if (t === "end" && !first.value) t = "start";
+      target = t;
+      editingStart = t === "start" && !!first.value;
+      last.dispatchEvent(new Event("input"));
+    },
+    clear() { first.value = ""; last.value = ""; target = "start"; editingStart = false; draw(); },
     select(a, b) {
       first.value = a;
       last.value = b;
-      waitingForEnd = false;
+      target = "start";
       viewYear = Number(a.slice(0, 4));
       viewMonth = Number(a.slice(5, 7)) - 1;
       last.dispatchEvent(new Event("input"));

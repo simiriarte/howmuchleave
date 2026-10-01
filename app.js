@@ -191,6 +191,21 @@ function setPlan(uses, before, after) {
 
 // The name box and "plan it" button always show; they're dimmed and switched off
 // until there are days picked that actually use leave.
+// Leave start / Leave end boxes: show the picked dates and which one the next tap fills
+function renderLeaveBoxes(first, last) {
+  const target = PlanCal.target;
+  const endChosen = first && last && !(target === "end" && first === last);
+  const put = (id, value) => {
+    const el = $(id);
+    el.textContent = value || "pick a day";
+    el.classList.toggle("empty", !value);
+  };
+  put("le-start-date", first ? dayDate(first) : "");
+  put("le-end-date", endChosen ? dayDate(last) : "");
+  $("le-start").classList.toggle("active", target === "start");
+  $("le-end").classList.toggle("active", target === "end");
+}
+
 function setPlanReady(ready) {
   $("trip-save").classList.toggle("inactive", !ready);
   $("trip-name").disabled = !ready;
@@ -207,6 +222,7 @@ function renderTrip() {
   setPlan("–", "–", "–");
   $("trip-clear").hidden = !first;
   note.textContent = "";
+  renderLeaveBoxes(first, last);
   if (!first || !last) return;
   if (first <= state.settings.asOf) { note.textContent = "Pick days after your LES date."; return; }
 
@@ -221,10 +237,6 @@ function renderTrip() {
   if (after < 0) {
     $("plan-after-tile").classList.add("warn");
     note.textContent = `That's ${fmtNum(-after)} more than you'll have, so it would need advance leave.`;
-  } else if (PlanCal.waitingForEnd) {
-    note.textContent = "Now tap your last day off, or plan just this day.";
-  } else {
-    note.textContent = `${shortDate(first)} to ${shortDate(last)}`;
   }
   setPlanReady(true);
 }
@@ -323,6 +335,8 @@ function renderTrips() {
 
 $("by-date").addEventListener("input", renderBy);
 $("trip-clear").addEventListener("click", () => { PlanCal.clear(); renderTrip(); });
+$("le-start").addEventListener("click", () => PlanCal.setTarget("start"));
+$("le-end").addEventListener("click", () => PlanCal.setTarget("end"));
 
 // Phones: plan | booked switch (on wide screens both show and the tabs are hidden)
 function showTab(name) {
