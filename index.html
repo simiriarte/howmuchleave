@@ -25,6 +25,7 @@
       --teal: #3A8296;      /* lighter tail teal so the fish and buttons show on the pond */
       --soft: #CFC8B8;      /* quieter cream for labels on panels */
       --line: rgba(241, 236, 226, 0.14);
+      --silver: linear-gradient(160deg, #F2F3F4 0%, #C3C8CD 45%, #8E959B 100%);  /* hook: light-to-dark grey reads as metal */
       --hook: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2024%27%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%273%27%20r%3D%272%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27/%3E%3Cpath%20d%3D%27M10%205%20V15.5%20a4.5%204.5%200%200%201%20-9%200%20V12%20M1%2012%20l3%203%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
     }
     * { box-sizing: border-box; border-radius: 0; }  /* square corners everywhere, incl. iPhone form defaults */
@@ -244,7 +245,7 @@
       right: -2px;
       width: 10px;
       height: 15px;
-      background: var(--feet);
+      background: var(--silver);
       -webkit-mask: var(--hook) center / contain no-repeat;
       mask: var(--hook) center / contain no-repeat;
     }
@@ -273,7 +274,7 @@
       0% { transform: translate(0, 0) scale(0.6); opacity: 1; }
       100% { transform: translate(var(--drift), -70px) scale(1.1); opacity: 0; }
     }
-    .pk-hook { display: inline-block; width: 8px; height: 12px; background: var(--feet); -webkit-mask: var(--hook) center / contain no-repeat; mask: var(--hook) center / contain no-repeat; vertical-align: -1px; }
+    .pk-hook { display: inline-block; width: 8px; height: 12px; background: var(--silver); -webkit-mask: var(--hook) center / contain no-repeat; mask: var(--hook) center / contain no-repeat; vertical-align: -1px; }
     .pk-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; color: var(--soft); }
     @media (prefers-reduced-motion: reduce) { .pk-day.pop { animation: none; } }
     .tile.hero .tile-value, .tile.by .tile-value { font-size: 2rem; }
