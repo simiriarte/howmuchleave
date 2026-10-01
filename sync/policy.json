@@ -1,0 +1,4 @@
+{ "Version": "2012-10-17", "Statement": [
+  { "Effect": "Allow", "Action": ["dynamodb:GetItem", "dynamodb:PutItem"], "Resource": "arn:aws:dynamodb:us-east-1:888990920336:table/howmuchleave-ponds" },
+  { "Effect": "Allow", "Action": ["logs:CreateLogGroup", "logs:CreateLogStream", "logs:PutLogEvents"], "Resource": "arn:aws:logs:us-east-1:888990920336:log-group:/aws/lambda/howmuchleave-sync:*" }
+] }

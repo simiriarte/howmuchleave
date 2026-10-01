@@ -378,6 +378,16 @@
     .ask-fish { width: 70px; display: block; margin: 0 auto 10px; animation: bob 2.4s ease-in-out infinite; }
     @keyframes bob { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-4px) rotate(3deg); } }
     #ask-msg { font-size: 1.05rem; margin: 0 0 6px; }
+    dialog.sync { width: min(360px, 90vw); }
+    dialog.sync h2 { margin: 0 0 8px; }
+    .join-form { display: flex; gap: 8px; align-items: center; margin-top: 12px; }
+    .join-form input { flex: 1; min-width: 0; font-size: 0.95rem; }
+    .join-form button { margin: 0; flex: none; }
+    .pond-code { font-size: 1.1rem; overflow-wrap: anywhere; }
+    .pond-code strong { color: var(--feet); }
+    .sync-close-row { margin: 14px 0 0 !important; }
+    .setup-join { margin: 14px 0 0 !important; }
+    @media (max-width: 520px) { .setup-join { margin: 8px 0 0 !important; } }
     .ask-buttons { display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .ask-buttons .link { font-size: 0.95rem; color: var(--soft); }
     @media (prefers-reduced-motion: reduce) { .ask-fish { animation: none; } }
@@ -444,9 +454,9 @@
       .row { flex-direction: column; gap: 0; }
       /* Safari already starts the page below the clock/battery bar; env() covers any phone that doesn't */
       main { padding-top: max(16px, env(safe-area-inset-top)); }
-      .emblem { width: 72px; margin-bottom: 22px; }
+      .emblem { width: 60px; margin-bottom: 20px; }
       h1 { font-size: 2.1rem; }
-      header { margin-bottom: 18px; }
+      header { margin-bottom: 12px; }
       section { padding: 16px; }
       #setup p { margin: 0 0 10px; }
       body.setup-mode main { padding-bottom: 16px; }
@@ -592,6 +602,7 @@
       </div>
     </div>
     <button class="cut" id="setup-save">Enter</button>
+    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your pond code</button></p>
   </section>
 
   <div id="app" hidden>
@@ -676,6 +687,7 @@
     <footer>
       <button class="link" id="open-info">how it counts</button>
       <button class="link" id="redo-setup">update LES balance</button>
+      <button class="link" id="open-sync">sync</button>
     </footer>
 
     <dialog id="info">
@@ -701,6 +713,32 @@
   </div>
 </dialog>
 
+<!-- Sync between devices with a pond code (see sync.js) -->
+<dialog id="sync-dlg" class="ask sync">
+  <svg class="ask-fish" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
+  <h2>Sync your pond</h2>
+  <div id="sync-off">
+    <p>Keep your balance and trips the same on your phone and computer.</p>
+    <div class="ask-buttons">
+      <button type="button" class="cut" id="sync-start">start syncing</button>
+      <button type="button" class="link" id="sync-join-show">I have a pond code</button>
+    </div>
+    <form id="join-form" class="join-form" hidden>
+      <input id="join-code" type="text" placeholder="coral-tuna-kelp-reef-42" aria-label="Pond code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <button type="submit" class="cut">join</button>
+    </form>
+    <p class="note" id="join-msg"></p>
+  </div>
+  <div id="sync-on" hidden>
+    <p>Your pond code. Type it on your other device to match them up.</p>
+    <p class="pond-code"><strong id="sync-code"></strong> <button type="button" class="link" id="sync-copy">copy</button></p>
+    <p class="note" id="sync-status"></p>
+    <p class="sub">Keep it to yourself. It's the key to your trips.</p>
+    <button type="button" class="link" id="sync-stop">stop syncing on this device</button>
+  </div>
+  <p class="sync-close-row"><button type="button" class="link" id="sync-close">close</button></p>
+</dialog>
+
 <!-- Our own calendar (see picker.js) -->
 <dialog id="picker" class="picker" aria-label="Pick a date">
   <div class="pk-head">
@@ -718,6 +756,7 @@
 <script src="leave.js?v=7"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=41"></script>
+<script src="app.js?v=42"></script>
+<script src="sync.js?v=1"></script>
 </body>
 </html>

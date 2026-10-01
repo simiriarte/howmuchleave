@@ -10,8 +10,11 @@ function load() {
     return { settings: null, trips: [] };
   }
 }
+// Every change is stamped with the time; if syncing is on it also goes to the pond
 function save() {
+  state.updatedAt = Date.now();
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  window.Sync?.push();
 }
 // Cute pop-up in place of the browser's confirm/alert.
 // ask("Question?", { ok: "remove", cancel: "leave it" }) resolves true/false.
