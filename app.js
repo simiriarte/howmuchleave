@@ -13,6 +13,11 @@ function load() {
 function save() {
   localStorage.setItem(STORE_KEY, JSON.stringify(state));
 }
+// Visiting the page with ?reset wipes this device's data (for testing)
+if (new URLSearchParams(location.search).has("reset")) {
+  if (confirm("Erase the balance and all booked leave on this device?")) localStorage.removeItem(STORE_KEY);
+  history.replaceState(null, "", location.pathname);
+}
 let state = load();
 
 // ---- fish ----
