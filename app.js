@@ -184,7 +184,6 @@ function renderTrips() {
   const body = $("trips");
   body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
-  $("trips-empty").hidden = trips.length > 0;
 
   // Upcoming long weekends, above her trips. Tap one to fill it in on the planner.
   const today = Leave.todayStr();
@@ -210,7 +209,7 @@ function renderTrips() {
     info.append(t1, t2);
     const days = document.createElement("td");
     days.className = "trip-days";
-    days.textContent = `${cost}d`;
+    days.textContent = cost === 0 ? "free" : `${cost} ${dayWord(cost)}`;
     const spacer = document.createElement("td");
     spacer.className = "trip-del";
     tr.append(star, info, days, spacer);
@@ -239,7 +238,7 @@ function renderTrips() {
     dates.textContent = t.firstOff === t.lastOff ? shortDate(t.firstOff) : `${shortDate(t.firstOff)} to ${shortDate(t.lastOff)}`;
     info.append(nm, dates);
     cell("trip-name", info);
-    cell("trip-days", `${used}d`);
+    cell("trip-days", `${used} ${dayWord(used)}`);
     const del = document.createElement("button");
     del.className = "link";
     del.innerHTML = '<svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="M2 2l8 8M10 2l-8 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></svg>';
