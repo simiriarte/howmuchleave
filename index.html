@@ -313,7 +313,17 @@
       #app > .tiles .tile { grid-column: span 2; }
       section.plan, section.booked { grid-column: span 2; }
       #app > footer { grid-column: 1 / -1; }
-      section.plan { display: flex; flex-direction: column; }  /* stretches to match Booked leave */
+      /* Planner stretches to match Booked leave. Even gaps between its parts;
+         the calendar takes whatever height is left, so rows grow on tall
+         windows (up to 44px) and shrink on short ones instead of spilling. */
+      section.plan { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+      section.plan > *, section.plan .tiles.small, section.plan .note, section.plan .book-row { margin: 0; }
+      .pc { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+      .pc-head { margin-bottom: 10px; }
+      .pk-week { margin-bottom: 4px; }
+      .pc-grid { flex: 1; min-height: 0; grid-auto-rows: minmax(30px, 1fr); row-gap: 4px; align-items: center; }
+      .pc-grid .pk-day { height: 100%; width: auto; max-height: 44px; aspect-ratio: 1; }
+      section.booked { min-height: 0; }
       section.plan, section.booked { padding: 20px; margin-bottom: 14px; }
       .tile { padding: 16px 18px; }
       .tile-value { font-size: 2.2rem; }
@@ -321,6 +331,19 @@
       .tile-label { font-size: 0.9rem; }
       body:not(.setup-mode) h1 { font-size: 2.4rem; }
       body:not(.setup-mode) .emblem { width: 84px; }
+    }
+
+    /* Short laptop windows: tighten everything around the calendar so it keeps full-size rows */
+    @media (min-width: 800px) and (max-height: 860px) {
+      body:not(.setup-mode) main { padding-top: 14px; }
+      body:not(.setup-mode) header { margin-bottom: 14px; }
+      body:not(.setup-mode) .emblem { width: 60px; }
+      body:not(.setup-mode) h1 { font-size: 1.9rem; }
+      #app > .tiles .tile { padding: 10px 16px; margin-bottom: 12px; }
+      .tile.hero .tile-value, .tile.by .tile-value { font-size: 2.2rem; }
+      section.plan, section.booked { padding: 14px 18px; margin-bottom: 10px; }
+      section.plan { gap: 10px; }
+      .pc-head { margin-bottom: 4px; }
     }
 
     /* Phones: stack the inputs, and tighten the top so everything fits
@@ -439,6 +462,7 @@
     <!-- Plan: tap days on the calendar, see the cost -->
     <section class="plan">
       <h2>Plan a trip or staycation</h2>
+      <div class="pc">
       <div class="pc-head">
         <button type="button" class="pk-nav" id="pc-prev" aria-label="Previous month">‹</button>
         <div id="pc-title"></div>
@@ -446,6 +470,7 @@
       </div>
       <div class="pk-week" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
       <div class="pk-grid pc-grid" id="pc-grid"></div>
+      </div>
       <input id="trip-first" type="hidden">
       <input id="trip-last" type="hidden">
       <div class="tiles small">
