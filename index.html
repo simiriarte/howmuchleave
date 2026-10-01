@@ -618,7 +618,7 @@
       </div>
     </div>
     <button class="cut" id="setup-save">Enter</button>
-    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your ocean code</button></p>
+    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your sync code</button></p>
   </section>
 
   <div id="app" hidden>
@@ -733,21 +733,21 @@
 <!-- Sync between devices with an ocean code (see sync.js) -->
 <dialog id="sync-dlg" class="ask sync">
   <svg class="ask-fish" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish"/></svg>
-  <h2>Sync your ocean</h2>
+  <h2>Sync your trips</h2>
   <div id="sync-off">
     <p>Keep your balance and trips the same on your phone and computer.</p>
     <div class="ask-buttons">
       <button type="button" class="cut" id="sync-start">start syncing</button>
-      <button type="button" class="link" id="sync-join-show">I have an ocean code</button>
+      <button type="button" class="link" id="sync-join-show">I have a code</button>
     </div>
     <form id="join-form" class="join-form" hidden>
-      <input id="join-code" type="text" placeholder="coral-tuna-kelp-reef-42" aria-label="Ocean code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <input id="join-code" type="text" placeholder="coral-tuna-kelp-reef-42" aria-label="Sync code" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false">
       <button type="submit" class="cut">join</button>
     </form>
     <p class="note" id="join-msg"></p>
   </div>
   <div id="sync-on" hidden>
-    <p>Your ocean code. Type it on your other device to match them up.</p>
+    <p>Type your code on your other device to match them up.</p>
     <p class="pond-code"><strong id="sync-code"></strong> <button type="button" class="link" id="sync-copy">copy</button></p>
     <p class="note" id="sync-status"></p>
     <p class="sub">Keep it to yourself. It's the key to your trips.</p>
@@ -774,6 +774,6 @@
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
 <script src="app.js?v=43"></script>
-<script src="sync.js?v=2"></script>
+<script src="sync.js?v=3"></script>
 </body>
 </html>

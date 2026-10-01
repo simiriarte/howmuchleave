@@ -83,7 +83,7 @@
     if (code) {
       $("sync-code").textContent = code;
       $("sync-status").textContent = pending
-        ? "Couldn't reach the ocean. It'll catch up next time you open the app."
+        ? "Couldn't connect. It'll catch up next time you open the app."
         : lastSynced ? "In sync." : "Checking...";
     }
   }
@@ -126,10 +126,10 @@
   async function join(rawCode) {
     const code = rawCode.trim().toLowerCase().replace(/\s+/g, "-");
     const msg = $("join-msg");
-    msg.textContent = "Looking for that ocean...";
+    msg.textContent = "Looking for that code...";
     try {
       const res = await fetch(`${URL_}?code=${encodeURIComponent(code)}`);
-      if (res.status === 404 || res.status === 400) { msg.textContent = "No ocean with that code. Check the spelling?"; return; }
+      if (res.status === 404 || res.status === 400) { msg.textContent = "Nothing saved under that code. Check the spelling?"; return; }
       if (!res.ok) throw new Error(res.status);
       const remote = await res.json();
       localStorage.setItem(POND_KEY, code);
@@ -139,7 +139,7 @@
       dlg.close();
       render();
     } catch {
-      msg.textContent = "Couldn't reach the ocean. Check the internet and try again.";
+      msg.textContent = "Couldn't connect. Check the internet and try again.";
     }
   }
 
