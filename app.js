@@ -62,12 +62,33 @@ function fishIcon(className, withSuitcase = false) {
   svg.append(use);
   return svg;
 }
-// A fish swims across the screen; with a suitcase when it's off on a trip
-function swimFish(withSuitcase = false) {
-  const f = fishIcon("swimmer", withSuitcase);
-  f.style.top = `${20 + Math.random() * 50}vh`;
-  f.addEventListener("animationend", () => f.remove());
-  document.body.append(f);
+// Colour combos for swimming fish, all from the painting's palette
+// (buff hen, yellow feet, salmon speckles, white hen, black hen, comb red, tail teal)
+const FISH_COLOURS = [
+  {},
+  { body: "#E2CB3A", patch: "#E08A1E", fin: "#3A8296", tail: "#B83A3C", pec: "#F1ECE2" },
+  { body: "#C6896A", patch: "#A86A4E", fin: "#E2CB3A", tail: "#3A8296", pec: "#DDB27E" },
+  { body: "#F1ECE2", patch: "#CFC8B8", fin: "#B83A3C", tail: "#34333A", pec: "#E2CB3A", belly: "#FFFFFF" },
+  { body: "#E08A1E", patch: "#B83A3C", fin: "#34333A", tail: "#E2CB3A", pec: "#F1ECE2" },
+  { body: "#5A5960", patch: "#3F3E44", fin: "#B83A3C", tail: "#3A8296", pec: "#E2CB3A", belly: "#CFC8B8" },
+  { body: "#A7AC87", patch: "#7E8466", fin: "#E2CB3A", tail: "#3A8296", pec: "#F1ECE2" },
+];
+
+// A fish glides across the screen at an even pace, bobbing gently.
+// With a suitcase when it's off on a trip; random painting colours unless told otherwise.
+function swimFish(withSuitcase = false, { size = 90, seconds = 9, top = null, colours = null } = {}) {
+  const box = document.createElement("div");
+  box.className = "swimmer";
+  box.style.top = `${top ?? 20 + Math.random() * 50}vh`;
+  box.style.width = `${size}px`;
+  box.style.animationDuration = `${seconds}s`;
+  const svg = fishIcon("", withSuitcase);
+  svg.style.animationDelay = `-${Math.random() * 2.6}s`; // bob out of step with the others
+  const c = colours || FISH_COLOURS[Math.floor(Math.random() * FISH_COLOURS.length)];
+  for (const [k, v] of Object.entries(c)) svg.style.setProperty(`--fish-${k}`, v);
+  box.append(svg);
+  box.addEventListener("animationend", (e) => { if (e.target === box) box.remove(); });
+  document.body.append(box);
 }
 
 // Bubbles drift up from the bottom, a few at a time
@@ -90,14 +111,11 @@ function swimSchool() {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const count = 9 + Math.floor(Math.random() * 5);
   for (let i = 0; i < count; i++) {
-    setTimeout(() => {
-      const f = fishIcon("swimmer", Math.random() < 0.18);
-      f.style.top = `${8 + Math.random() * 78}vh`;
-      f.style.width = `${38 + Math.random() * 70}px`;
-      f.style.animationDuration = `${2.4 + Math.random() * 2.6}s`;
-      f.addEventListener("animationend", () => f.remove());
-      document.body.append(f);
-    }, i * (90 + Math.random() * 160));
+    setTimeout(() => swimFish(Math.random() < 0.18, {
+      top: 8 + Math.random() * 78,
+      size: 38 + Math.random() * 70,
+      seconds: 8 + Math.random() * 6,
+    }), i * (250 + Math.random() * 450));
   }
 }
 document.getElementById("fish-btn").addEventListener("click", (e) => {
