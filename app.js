@@ -199,7 +199,7 @@ function renderTrips() {
     tr.setAttribute("aria-label", `${title}: ${w.holiday}, ${shortDate(w.firstOff)} to ${shortDate(w.lastOff)}, ${cost} days of leave. Plan it.`);
     const star = document.createElement("td");
     star.className = "fish-cell";
-    star.innerHTML = '<span class="pk-star big" aria-hidden="true"></span>';
+    star.innerHTML = '<span class="pk-hook big" aria-hidden="true"></span>';
     const info = document.createElement("td");
     info.className = "trip-name";
     const t1 = document.createElement("div");
@@ -282,6 +282,19 @@ $("trip-save-btn").addEventListener("click", () => {
   render();
   swimFish();
 });
+
+// Every 20 to 45 seconds the seahorse peeks out from behind the planner
+function seahorsePeek() {
+  const h = document.querySelector(".seahorse");
+  if (h && !document.hidden && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    h.parentElement.style.top = `${20 + Math.random() * 55}%`;
+    h.classList.remove("peek");
+    void h.offsetWidth; // restart the animation
+    h.classList.add("peek");
+  }
+  setTimeout(seahorsePeek, 20000 + Math.random() * 25000);
+}
+setTimeout(seahorsePeek, 6000);
 
 greet();
 render();

@@ -25,6 +25,7 @@
       --teal: #3A8296;      /* lighter tail teal so the fish and buttons show on the pond */
       --soft: #CFC8B8;      /* quieter cream for labels on panels */
       --line: rgba(241, 236, 226, 0.14);
+      --hook: url("data:image/svg+xml,%3Csvg%20xmlns%3D%27http%3A//www.w3.org/2000/svg%27%20viewBox%3D%270%200%2016%2024%27%3E%3Ccircle%20cx%3D%2710%27%20cy%3D%273%27%20r%3D%272%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.8%27/%3E%3Cpath%20d%3D%27M10%205%20V15.5%20a4.5%204.5%200%200%201%20-9%200%20V12%20M1%2012%20l3%203%27%20fill%3D%27none%27%20stroke%3D%27black%27%20stroke-width%3D%271.9%27%20stroke-linecap%3D%27round%27%20stroke-linejoin%3D%27round%27/%3E%3C/svg%3E");
     }
     * { box-sizing: border-box; border-radius: 0; }  /* square corners everywhere, incl. iPhone form defaults */
     body {
@@ -112,6 +113,24 @@
     }
     .empty { color: var(--soft); margin: 10px 0 0; }
     [hidden] { display: none !important; }
+
+    /* The seahorse hides just past the planner's left edge: a small window sits
+       outside the box, and the seahorse slides into it from the box side, so it
+       looks like it's peeking out from behind. */
+    section.plan { position: relative; }
+    .seahorse-wrap { display: none; position: absolute; right: 100%; top: 40%; width: 64px; height: 92px; overflow: hidden; pointer-events: none; }
+    .seahorse { position: absolute; left: 12px; top: 6px; width: 46px; transform: translateX(64px); }
+    .seahorse.peek { animation: peek 4.2s ease-in-out; }
+    @keyframes peek {
+      0%   { transform: translateX(64px) rotate(0); }
+      22%  { transform: translateX(0) rotate(-6deg); }
+      38%  { transform: translateX(0) translateY(-5px) rotate(-2deg); }
+      54%  { transform: translateX(0) translateY(2px) rotate(-7deg); }
+      70%  { transform: translateX(2px) rotate(-4deg); }
+      100% { transform: translateX(64px) rotate(0); }
+    }
+    @media (min-width: 800px) { .seahorse-wrap { display: block; } }
+    @media (prefers-reduced-motion: reduce) { .seahorse-wrap { display: none !important; } }
 
     /* A fish swims across the screen when she books leave */
     .swimmer { position: fixed; left: 100vw; width: 90px; pointer-events: none; z-index: 10; animation: swim 3.2s ease-in-out forwards; }
@@ -216,18 +235,18 @@
       transition: border-color 0.15s, background 0.15s;
     }
     .pk-day.off { color: #9A9486; }
-    /* Holidays get a little cut-paper starfish in the corner */
+    /* Holidays get a little fish hook in the corner */
     .pk-day { position: relative; }
     .pk-day.holiday::after {
       content: "";
       position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 16px;
-      height: 16px;
-      background: var(--salmon);
-      clip-path: polygon(50% 0%, 61% 36%, 98% 36%, 68% 58%, 79% 94%, 50% 72%, 21% 94%, 32% 58%, 2% 36%, 39% 36%);
-      transform: rotate(-12deg);
+      top: -6px;
+      right: -2px;
+      width: 10px;
+      height: 15px;
+      background: var(--feet);
+      -webkit-mask: var(--hook) center / contain no-repeat;
+      mask: var(--hook) center / contain no-repeat;
     }
     .pk-day.today { border: 1.5px dotted var(--feet); }
     .pk-day:hover:not(:disabled) { border-color: rgba(241, 236, 226, 0.45); background: rgba(241, 236, 226, 0.06); }
@@ -254,7 +273,7 @@
       0% { transform: translate(0, 0) scale(0.6); opacity: 1; }
       100% { transform: translate(var(--drift), -70px) scale(1.1); opacity: 0; }
     }
-    .pk-star { display: inline-block; width: 11px; height: 11px; background: var(--salmon); clip-path: polygon(50% 0%, 61% 36%, 98% 36%, 68% 58%, 79% 94%, 50% 72%, 21% 94%, 32% 58%, 2% 36%, 39% 36%); vertical-align: -1px; }
+    .pk-hook { display: inline-block; width: 8px; height: 12px; background: var(--feet); -webkit-mask: var(--hook) center / contain no-repeat; mask: var(--hook) center / contain no-repeat; vertical-align: -1px; }
     .pk-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; font-size: 0.8rem; color: var(--soft); }
     @media (prefers-reduced-motion: reduce) { .pk-day.pop { animation: none; } }
     .tile.hero .tile-value, .tile.by .tile-value { font-size: 2rem; }
@@ -302,7 +321,7 @@
     tr.upcoming { cursor: pointer; }
     tr.upcoming td.trip-name div:first-child { color: var(--feet); }
     tr.upcoming:hover td { background: rgba(241, 236, 226, 0.05); }
-    .pk-star.big { width: 20px; height: 20px; display: block; margin: 0 auto; transform: rotate(-12deg); }
+    .pk-hook.big { width: 14px; height: 21px; display: block; margin: 0 auto; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
 
     footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; font-size: 0.85rem; }
@@ -493,6 +512,21 @@
 
     <!-- Plan: tap days on the calendar, see the cost -->
     <section class="plan">
+      <!-- Seahorse that peeks out from behind this box now and then (see app.js) -->
+      <div class="seahorse-wrap" aria-hidden="true"><svg class="seahorse" viewBox="0 0 60 100">
+        <polygon points="44,36 56,40 54,53 46,50" fill="#3A8296"/>
+        <polygon points="30,70 40,66 44,79 37,91 26,95 17,88 20,79 28,82 33,78" fill="#E08A1E"/>
+        <polygon points="2,22 16,17 18,26 4,27" fill="#DDB27E"/>
+        <polygon points="26,6 28,0 31,7" fill="#B83A3C"/>
+        <polygon points="31,7 35,2 36,10" fill="#B83A3C"/>
+        <polygon points="14,12 26,6 36,10 39,22 31,30 16,28" fill="#E08A1E"/>
+        <polygon points="30,28 39,22 45,34 47,52 41,66 30,71 24,58 26,42" fill="#E08A1E"/>
+        <polygon points="25,40 31,36 33,52 29,64 24,58" fill="#DDB27E"/>
+        <polygon points="33,40 39,44 37,50 33,47" fill="#C6896A" opacity=".8"/>
+        <polygon points="34,55 40,58 38,63 34,61" fill="#C6896A" opacity=".8"/>
+        <circle cx="25" cy="16" r="2.8" fill="#F1ECE2"/>
+        <circle cx="24.4" cy="16" r="1.4" fill="#34333A"/>
+      </svg></div>
       <h2>Plan a trip or staycation</h2>
       <div class="pc">
       <div class="pc-head">
@@ -554,13 +588,13 @@
   <div class="pk-week" aria-hidden="true"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>
   <div class="pk-grid" id="pk-grid"></div>
   <div class="pk-foot">
-    <span class="pk-key">dim = weekend, <span class="pk-star" aria-hidden="true"></span> = holiday</span>
+    <span class="pk-key">dim = weekend, <span class="pk-hook" aria-hidden="true"></span> = holiday</span>
     <button type="button" class="link" id="pk-today">today</button>
   </div>
 </dialog>
 <script src="leave.js?v=5"></script>
 <script src="picker.js?v=3"></script>
 <script src="plancal.js?v=2"></script>
-<script src="app.js?v=13"></script>
+<script src="app.js?v=15"></script>
 </body>
 </html>
