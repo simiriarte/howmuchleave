@@ -196,6 +196,10 @@
     /* sits in front of the Potential Trips box but behind the front seaweed blades */
     .resident { position: absolute; left: min(calc(50% + 362px), calc(100% - 128px)); bottom: 50px; width: 54px; animation: rest 4.6s ease-in-out infinite alternate; }
     @keyframes rest { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-9px) rotate(3deg); } }
+    /* tap the resident and its friend behind the planner peeks out */
+    .resident { pointer-events: auto; cursor: pointer; }
+    .resident.nudge { animation: nudge 0.6s ease-in-out, rest 4.6s ease-in-out 0.6s infinite alternate; }
+    @keyframes nudge { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-14deg) translateY(-6px); } 60% { transform: rotate(9deg); } }
     @media (prefers-reduced-motion: reduce) { .resident { animation: none; } }
     .sea-front { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
     @media (min-width: 800px) { body:not(.setup-mode) .sea-front { display: block; } }
@@ -822,7 +826,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=46"></script>
+<script src="app.js?v=47"></script>
 <script src="sync.js?v=4"></script>
 </body>
 </html>

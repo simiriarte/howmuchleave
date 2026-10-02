@@ -505,18 +505,29 @@ $("trip-save-btn").addEventListener("click", () => {
   swimFish(true);
 });
 
-// Every 20 to 45 seconds the seahorse peeks out from behind the planner
-function seahorsePeek() {
+// The seahorse peeks out from behind the planner: on its own every 20 to 45
+// seconds, and whenever she taps the resident seahorse in the bottom-right corner.
+function peekOnce() {
   const h = document.querySelector(".seahorse");
-  if (h && !document.hidden && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    h.parentElement.style.top = `${20 + Math.random() * 55}%`;
-    h.classList.remove("peek");
-    void h.offsetWidth; // restart the animation
-    h.classList.add("peek");
-  }
-  setTimeout(seahorsePeek, 20000 + Math.random() * 25000);
+  if (!h || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  h.parentElement.style.top = `${20 + Math.random() * 55}%`;
+  h.classList.remove("peek");
+  void h.offsetWidth; // restart the animation
+  h.classList.add("peek");
 }
-setTimeout(seahorsePeek, 6000);
+function seahorseTimer() {
+  if (!document.hidden) peekOnce();
+  setTimeout(seahorseTimer, 20000 + Math.random() * 25000);
+}
+setTimeout(seahorseTimer, 6000);
+
+document.querySelector(".resident").addEventListener("click", (e) => {
+  const r = e.currentTarget;
+  r.classList.remove("nudge");
+  void r.getBoundingClientRect(); // restart its little wiggle
+  r.classList.add("nudge");
+  peekOnce();
+});
 
 greet();
 render();
