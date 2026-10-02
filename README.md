@@ -4,6 +4,14 @@ A small leave calculator for Abbey: how much leave she has today, how much she'l
 
 Built as a birthday gift, October 2026.
 
+## Where it lives
+
+- **https://howmuchleave.com** (GitHub Pages custom domain; `CNAME` file in the repo, https enforced).
+  `www.` and the old `simiriarte.github.io/howmuchleave` both redirect here.
+- Domain registered 2026-10-01 on AWS Route 53 (account `888990920336`), auto-renews yearly (~$16 + ~$0.50/mo DNS),
+  privacy protection on, contact = Simone Iriarte / simiriarte@gmail.com / 200 N Vineyard Blvd mailbox.
+- DNS (hosted zone `Z057997339PVZ6LYMJH0I`): apex A/AAAA to GitHub Pages, `www` CNAME to `simiriarte.github.io`.
+
 ## Leave rules it follows (Air Force, DAFI 36-3003)
 
 - Earns 2.5 days per month, regardless of rank.
@@ -30,6 +38,6 @@ a tiny private store on AWS and the newest copy wins when the app is opened or r
   - DynamoDB table `howmuchleave-ponds` (pay per request)
   - Lambda `howmuchleave-sync` (code in `sync/index.mjs`), capped at 5 concurrent runs
   - IAM role `howmuchleave-sync-role` (Get/Put on that one table + its own logs)
-  - Function URL with CORS limited to `https://simiriarte.github.io` (and localhost for testing)
+  - Function URL with CORS limited to `https://howmuchleave.com`, `https://www.howmuchleave.com`, `https://simiriarte.github.io` (and localhost for testing)
 - Redeploy the function: `cd sync && zip -q fn.zip index.mjs && aws lambda update-function-code --function-name howmuchleave-sync --zip-file fileb://fn.zip`
 - The ocean code is the only key. Anyone who has it can see the trips, so keep it private.
