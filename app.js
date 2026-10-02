@@ -411,26 +411,30 @@ function whaleEats(row, done) {
   if (matchMedia("(prefers-reduced-motion: reduce)").matches || !row) return done();
   const r = row.getBoundingClientRect();
   const vw = window.innerWidth;
-  const w = Math.min(230, Math.max(160, vw * 0.22));
+  const w = 4 * Math.min(230, Math.max(160, vw * 0.22)); // a BIG whale
+  const h = w * 96 / 170;
   const whale = document.createElement("div");
-  whale.className = "whale";
+  whale.className = "whale facing-right";
   whale.innerHTML = WHALE_SVG;
   whale.style.width = `${w}px`;
-  whale.style.top = `${r.top + r.height / 2 - w * 0.31}px`;
+  whale.style.left = `${-w}px`;
+  whale.style.top = `${r.top + r.height / 2 - h * 0.53}px`; // mouth level with the row
   document.body.append(whale);
-  const seconds = 3.4;
-  const travel = vw + w + 40;
-  whale.animate([{ transform: "translateX(0)" }, { transform: `translateX(-${travel}px)` }], { duration: seconds * 1000, easing: "linear", fill: "forwards" });
-  // when its mouth (left edge) reaches the middle of the row, gulp
-  const atRow = ((vw - (r.left + r.width * 0.55)) / travel) * seconds * 1000;
-  setTimeout(() => whale.classList.add("open"), Math.max(0, atRow - 450));
-  setTimeout(() => {
+  // facing right, its mouth is ~93% of the way across; bring the mouth to the row
+  const goal = r.left + r.width * 0.45;
+  const inX = goal + w * 0.07;
+  const swim = (from, to, ms, easing) => whale.animate([{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }], { duration: ms, easing, fill: "forwards" });
+  swim(0, inX, 1500, "ease-out");                                   // swim in from the left
+  setTimeout(() => whale.classList.add("open"), 900);                // mouth opens on the way
+  setTimeout(() => {                                                // gulp
     for (const td of row.children) {
-      td.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(-60px,0) scale(0.2)", opacity: 0 }], { duration: 320, easing: "ease-in", fill: "forwards" });
+      td.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(-40px,0) scale(0.2)", opacity: 0 }], { duration: 320, easing: "ease-in", fill: "forwards" });
     }
-  }, Math.max(0, atRow - 120));
-  setTimeout(() => { whale.classList.remove("open"); whale.classList.add("chomp"); done(); }, Math.max(0, atRow + 260));
-  setTimeout(() => whale.remove(), seconds * 1000 + 100);
+  }, 1350);
+  setTimeout(() => { whale.classList.remove("open"); whale.classList.add("chomp"); }, 1700);
+  setTimeout(() => { done(); whale.classList.remove("facing-right"); }, 2300); // trip gone; turn around
+  setTimeout(() => swim(inX, 0, 1500, "ease-in"), 2600);            // back where it came from
+  setTimeout(() => whale.remove(), 4200);
 }
 
 // ---- Share my days off ----

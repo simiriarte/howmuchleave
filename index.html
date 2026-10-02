@@ -156,8 +156,9 @@
     @media (prefers-reduced-motion: reduce) { .seahorse-wrap { display: none !important; } }
 
     /* The whale that eats cancelled trips */
-    .whale { position: fixed; left: 100vw; z-index: 20; pointer-events: none; }
-    .whale svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .whale { position: fixed; z-index: 20; pointer-events: none; }
+    .whale svg { display: block; width: 100%; height: auto; overflow: visible; transition: transform 0.35s ease-in-out; }
+    .whale.facing-right svg { transform: scaleX(-1); }  /* the drawing faces left; mirror it to come in from the left */
     .whale .jaw { transform-origin: 22px 54px; transition: transform 0.25s ease-out; }
     .whale .mouth { opacity: 0; transition: opacity 0.2s; }
     .whale.open .jaw { transform: rotate(16deg); }
@@ -850,7 +851,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=50"></script>
+<script src="app.js?v=51"></script>
 <script src="sync.js?v=4"></script>
 </body>
 </html>
