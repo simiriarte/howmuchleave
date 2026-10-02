@@ -1,11 +1,38 @@
-// Screen logic. Everything is saved on this device only (localStorage).
+// Screen logic. Everything is saved on this device (localStorage), and synced if she turns that on.
 
 const STORE_KEY = "howmuchleave.v1";
 const $ = (id) => document.getElementById(id);
 
+// If something unexpected breaks (e.g. on a locked-down work computer), show it on
+// screen so it can be screenshotted, instead of failing silently.
+window.addEventListener("error", (e) => {
+  const bar = document.getElementById("oops");
+  if (!bar) return;
+  bar.textContent = `Something went wrong: ${e.message}. A screenshot of this helps fix it.`;
+  bar.hidden = false;
+});
+
+// Some browsers (often work/government computers) don't let websites save anything.
+// Then we keep everything in memory for as long as the tab is open, instead of breaking.
+const store = (() => {
+  try {
+    localStorage.setItem("__hml_test", "1");
+    localStorage.removeItem("__hml_test");
+    return localStorage;
+  } catch {
+    const mem = new Map();
+    window.NO_STORAGE = true;
+    return {
+      getItem: (k) => (mem.has(k) ? mem.get(k) : null),
+      setItem: (k, v) => mem.set(k, String(v)),
+      removeItem: (k) => mem.delete(k),
+    };
+  }
+})();
+
 function load() {
   try {
-    return JSON.parse(localStorage.getItem(STORE_KEY)) || { settings: null, trips: [] };
+    return JSON.parse(store.getItem(STORE_KEY)) || { settings: null, trips: [] };
   } catch {
     return { settings: null, trips: [] };
   }
@@ -13,7 +40,7 @@ function load() {
 // Every change is stamped with the time; if syncing is on it also goes to the ocean
 function save() {
   state.updatedAt = Date.now();
-  localStorage.setItem(STORE_KEY, JSON.stringify(state));
+  store.setItem(STORE_KEY, JSON.stringify(state));
   window.Sync?.push();
 }
 // Cute pop-up in place of the browser's confirm/alert.
@@ -48,7 +75,7 @@ function ask(message, { ok = "ok", cancel = null, suitcase = false } = {}) {
 if (new URLSearchParams(location.search).has("reset")) {
   history.replaceState(null, "", location.pathname);
   ask("Erase the balance and all trips on this device?", { ok: "erase", cancel: "leave it" }).then((yes) => {
-    if (yes) { localStorage.removeItem(STORE_KEY); location.reload(); }
+    if (yes) { store.removeItem(STORE_KEY); location.reload(); }
   });
 }
 let state = load();
@@ -197,6 +224,7 @@ $("name-btn").addEventListener("click", () => {
 
 // ---- setup ----
 function showSetup() {
+  $("no-storage-note").hidden = !window.NO_STORAGE;
   document.body.classList.add("setup-mode");
   $("setup").hidden = false;
   $("app").hidden = true;

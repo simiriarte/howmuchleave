@@ -23,7 +23,7 @@
     return `${pick()}-${pick()}-${pick()}-${pick()}-${n}`;
   }
 
-  const getCode = () => localStorage.getItem(POND_KEY);
+  const getCode = () => store.getItem(POND_KEY);
   let lastSynced = null;
   let pending = false; // a save that hasn't reached AWS yet (offline etc.)
 
@@ -61,7 +61,7 @@
       const remote = await res.json();
       if ((remote.updatedAt || 0) > (state.updatedAt || 0)) {
         state = { ...remote.data, updatedAt: remote.updatedAt };
-        localStorage.setItem(STORE_KEY, JSON.stringify(state));
+        store.setItem(STORE_KEY, JSON.stringify(state));
         render();
       }
       lastSynced = Date.now();
@@ -100,9 +100,9 @@
   $("sync-close").addEventListener("click", () => dlg.close());
 
   $("sync-start").addEventListener("click", async () => {
-    localStorage.setItem(POND_KEY, newCode());
+    store.setItem(POND_KEY, newCode());
     state.updatedAt = Date.now();
-    localStorage.setItem(STORE_KEY, JSON.stringify(state));
+    store.setItem(STORE_KEY, JSON.stringify(state));
     renderStatus();
     await push();
   });
@@ -118,7 +118,7 @@
   $("sync-stop").addEventListener("click", async () => {
     const yes = await ask("Stop syncing on this device? Your trips stay here and on your other devices.", { ok: "stop", cancel: "keep syncing" });
     if (!yes) return;
-    localStorage.removeItem(POND_KEY);
+    store.removeItem(POND_KEY);
     openSync();
   });
 
@@ -132,9 +132,9 @@
       if (res.status === 404 || res.status === 400) { msg.textContent = "Nothing saved under that code. Check the spelling?"; return; }
       if (!res.ok) throw new Error(res.status);
       const remote = await res.json();
-      localStorage.setItem(POND_KEY, code);
+      store.setItem(POND_KEY, code);
       state = { ...remote.data, updatedAt: remote.updatedAt };
-      localStorage.setItem(STORE_KEY, JSON.stringify(state));
+      store.setItem(STORE_KEY, JSON.stringify(state));
       lastSynced = Date.now();
       dlg.close();
       render();

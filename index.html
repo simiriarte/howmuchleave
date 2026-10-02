@@ -416,6 +416,8 @@
     .picking button.lw-row, .picking #trips tr { cursor: pointer; }
     .picking td.trip-del button { visibility: hidden; }
     button.share-btn[disabled] { color: var(--soft); opacity: 0.5; cursor: default; text-decoration: none; }
+    .no-storage { color: var(--feet); font-size: 0.9rem; }
+    .oops { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; margin: 0; padding: 10px 14px; background: var(--comb); color: var(--hen); font-size: 0.85rem; }
     .trips-empty { margin: 2px 0 0; color: var(--soft); font-style: italic; }
     td.trip-days { font-weight: 500; }
     .t-uses { font-weight: 700; }
@@ -673,6 +675,7 @@
   <svg class="weed" style="left:calc(50% + 385px);width:44px;height:260px;animation-duration:6.8s;animation-delay:-3s" fill="#4A6F28"><use href="#weed-a"/></svg>
   <svg class="weed" style="left:calc(50% + 430px);width:28px;height:150px;animation-duration:4.6s;animation-delay:-1.6s" fill="#3B5A22"><use href="#weed-b"/></svg>
 </div>
+<p class="oops" id="oops" role="alert" hidden></p>
 <main>
   <header>
     <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish-trip" width="120" height="96"/></svg></button>
@@ -684,6 +687,7 @@
   <!-- One-time setup: the starting number from her LES -->
   <section id="setup" hidden>
     <h2>Set your starting point</h2>
+    <p class="no-storage" id="no-storage-note" hidden>This browser won't let websites save, so it forgets when you close it. If you've set up on another device, use your sync code below to bring your trips in.</p>
     <p>Open your latest LES in myPay and find the leave section. Enter the <strong>CR BAL</strong> (current balance) and the date that LES runs through, usually the last day of the month.</p>
     <p class="sub">You only do this once. After that, this adds 2.5 days every month and takes off any leave you book.</p>
     <div class="row">
@@ -855,7 +859,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=56"></script>
-<script src="sync.js?v=4"></script>
+<script src="app.js?v=57"></script>
+<script src="sync.js?v=5"></script>
 </body>
 </html>
