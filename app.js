@@ -403,7 +403,13 @@ const WHALE_SVG = `<svg viewBox="0 0 170 96" aria-hidden="true">
     <polygon points="34,62 38,61 44,78 40,78" fill="#CFC8B8"/><polygon points="50,64 54,63 58,80 54,80" fill="#CFC8B8"/><polygon points="66,66 70,65 72,81 68,81" fill="#CFC8B8"/></g>
   <polygon class="mouth" points="12,46 52,50 52,56 16,56" fill="#34333A"/>
   <polygon points="74,62 92,86 98,64" fill="#2C6A7E"/>
-  <circle cx="62" cy="1" r="2.6" fill="#F1ECE2" opacity=".85"/><circle cx="55" cy="-5" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="68" cy="-6" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="61" cy="-11" r="1.4" fill="#F1ECE2" opacity=".55"/>
+  <circle cx="86" cy="2" r="2.6" fill="#F1ECE2" opacity=".85"/><circle cx="80" cy="-4" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="92" cy="-5" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="86" cy="-10" r="1.4" fill="#F1ECE2" opacity=".55"/>
+  <!-- straw hat, tilted on its head -->
+  <polygon points="22,22 74,5 77,10 25,27" fill="#E2C27A"/>
+  <polygon points="34,18 35,3 57,-4 62,10" fill="#E8CD86"/>
+  <polygon points="34.6,14 61,6.5 62,10 34.9,17.5" fill="#B83A3C"/>
+  <polygon points="41,4 42,13 43,13 42,4" fill="#C9A35A" opacity=".7"/><polygon points="49,1 50.5,11 51.5,11 50,1" fill="#C9A35A" opacity=".7"/>
+  <polygon points="30,22 68,10 68.5,11 30.5,23" fill="#C9A35A" opacity=".6"/>
   <circle cx="40" cy="32" r="4" fill="#F1ECE2"/><circle cx="39" cy="32" r="2" fill="#34333A"/>
 </svg>`;
 
