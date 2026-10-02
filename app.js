@@ -302,6 +302,7 @@ function renderLeaveBoxes(first, last) {
 }
 
 function setPlanReady(ready) {
+  if (ready) hideAdded();
   $("trip-save").classList.toggle("inactive", !ready);
   $("trip-name").disabled = !ready;
   $("trip-save-btn").disabled = !ready;
@@ -611,8 +612,25 @@ $("trip-save-btn").addEventListener("click", () => {
   PlanCal.clear();
   $("trip-name").value = "";
   render();
+  showAdded();
   swimFish(true);
 });
+
+// "Added to days off" in green where the name box was, for a couple of seconds
+let addedTimer = null;
+function showAdded() {
+  $("trip-name").hidden = true;
+  $("added-msg").hidden = false;
+  $("trip-save").classList.add("just-added");
+  clearTimeout(addedTimer);
+  addedTimer = setTimeout(hideAdded, 2600);
+}
+function hideAdded() {
+  clearTimeout(addedTimer);
+  $("trip-name").hidden = false;
+  $("added-msg").hidden = true;
+  $("trip-save").classList.remove("just-added");
+}
 
 // The seahorse peeks out from behind the planner: on its own every 20 to 45
 // seconds, and whenever she taps the resident seahorse in the bottom-right corner.

@@ -361,6 +361,10 @@
     .book-row button { margin: 0; flex: none; }
     .book-row { transition: opacity 0.2s; }
     .book-row.inactive { opacity: 0.35; }
+    /* right after planning: green confirmation where the name box was */
+    .added-msg { flex: 1; margin: 0; padding: 10px 0; color: #9CC86A; font-weight: 700; }
+    .book-row.just-added { opacity: 1; }
+    .book-row.just-added button { opacity: 0.35; }
     .book-row.inactive button { cursor: default; }
     .book-row.inactive button.cut:hover { transform: none; }
 
@@ -418,8 +422,8 @@
     .t-sep { color: var(--soft); }
     /* Her birthday: a tiny fish in the corner of Oct 2 */
     /* Her birthday: a little cake in place of the number */
-    .pk-day .bday-cake { width: 72%; height: 72%; display: block; margin: auto; pointer-events: none; }
-    .pk-day.birthday { display: flex; align-items: center; justify-content: center; }
+    /* the cake sits inside the day without adding any height of its own, so rows can still shrink */
+    .pk-day .bday-cake { position: absolute; inset: 14%; width: 72%; height: 72%; pointer-events: none; }
     td.trip-del button { text-decoration: none; color: var(--soft); padding: 4px; }
 
     footer { display: flex; justify-content: center; gap: 22px; padding: 2px 0 0; font-size: 0.85rem; }
@@ -748,6 +752,7 @@
       <p class="note" id="trip-result"></p>
       <div class="book-row" id="trip-save">
         <input id="trip-name" type="text" placeholder="Name of trip" aria-label="Name of trip">
+        <p class="added-msg" id="added-msg" role="status" hidden>Added to days off</p>
         <button class="cut" id="trip-save-btn">Plan it</button>
       </div>
     </section>
@@ -850,7 +855,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=55"></script>
+<script src="app.js?v=56"></script>
 <script src="sync.js?v=4"></script>
 </body>
 </html>
