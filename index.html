@@ -193,6 +193,10 @@
       75%  { transform: translate(8px, -84vh); }
       100% { transform: translate(0, -112vh); opacity: 0; }
     }
+    /* sits in front of the Potential Trips box but behind the front seaweed blades */
+    .resident { position: absolute; left: min(calc(50% + 362px), calc(100% - 128px)); bottom: 50px; width: 54px; animation: rest 4.6s ease-in-out infinite alternate; }
+    @keyframes rest { from { transform: translateY(0) rotate(-3deg); } to { transform: translateY(-9px) rotate(3deg); } }
+    @media (prefers-reduced-motion: reduce) { .resident { animation: none; } }
     .sea-front { display: none; position: fixed; inset: 0; pointer-events: none; z-index: 2; overflow: hidden; }
     @media (min-width: 800px) { body:not(.setup-mode) .sea-front { display: block; } }
     @media (prefers-reduced-motion: reduce) {
@@ -551,6 +555,21 @@
     <circle cx="19" cy="31" r="3.4" fill="#F1ECE2"/>
     <circle cx="18.4" cy="31" r="1.7" fill="#34333A"/>
   </symbol>
+  <!-- Cut-paper seahorse (faces left) -->
+  <symbol id="seahorse" viewBox="0 0 60 100">
+        <polygon points="44,36 56,40 54,53 46,50" fill="#3A8296"/>
+        <polygon points="30,70 40,66 44,79 37,91 26,95 17,88 20,79 28,82 33,78" fill="#E08A1E"/>
+        <polygon points="2,22 16,17 18,26 4,27" fill="#DDB27E"/>
+        <polygon points="26,6 28,0 31,7" fill="#B83A3C"/>
+        <polygon points="31,7 35,2 36,10" fill="#B83A3C"/>
+        <polygon points="14,12 26,6 36,10 39,22 31,30 16,28" fill="#E08A1E"/>
+        <polygon points="30,28 39,22 45,34 47,52 41,66 30,71 24,58 26,42" fill="#E08A1E"/>
+        <polygon points="25,40 31,36 33,52 29,64 24,58" fill="#DDB27E"/>
+        <polygon points="33,40 39,44 37,50 33,47" fill="#C6896A" opacity=".8"/>
+        <polygon points="34,55 40,58 38,63 34,61" fill="#C6896A" opacity=".8"/>
+        <circle cx="25" cy="16" r="2.8" fill="#F1ECE2"/>
+        <circle cx="24.4" cy="16" r="1.4" fill="#34333A"/>
+  </symbol>
   <!-- Birthday cake: shows in place of the number on Oct 2 -->
   <symbol id="cake" viewBox="0 0 20 20">
     <polygon points="10,0.4 11.4,2.6 10,3.6 8.6,2.6" fill="#E2CB3A"/>
@@ -619,6 +638,8 @@
 </div>
 <!-- A few blades in front of the Booked leave box (wide screens only); clicks pass through -->
 <div class="sea-front" aria-hidden="true">
+  <!-- Resident seahorse, resting in the bottom-right corner among the front seaweed -->
+  <svg class="resident" viewBox="0 0 60 100"><use href="#seahorse"/></svg>
   <svg class="weed" style="left:calc(50% + 175px);width:40px;height:230px;animation-duration:6.4s;animation-delay:-1s" fill="#3B5A22"><use href="#weed-a"/></svg>
   <svg class="weed" style="left:calc(50% + 215px);width:30px;height:160px;animation-duration:4.9s;animation-delay:-2.2s" fill="#4A6F28"><use href="#weed-b"/></svg>
   <svg class="weed" style="left:calc(50% + 300px);width:34px;height:200px;animation-duration:5.6s;animation-delay:-0.4s" fill="#2E4A1C"><use href="#weed-b"/></svg>
@@ -678,20 +699,7 @@
     <!-- Plan: tap days on the calendar, see the cost -->
     <section class="plan">
       <!-- Seahorse that peeks out from behind this box now and then (see app.js) -->
-      <div class="seahorse-wrap" aria-hidden="true"><svg class="seahorse" viewBox="0 0 60 100">
-        <polygon points="44,36 56,40 54,53 46,50" fill="#3A8296"/>
-        <polygon points="30,70 40,66 44,79 37,91 26,95 17,88 20,79 28,82 33,78" fill="#E08A1E"/>
-        <polygon points="2,22 16,17 18,26 4,27" fill="#DDB27E"/>
-        <polygon points="26,6 28,0 31,7" fill="#B83A3C"/>
-        <polygon points="31,7 35,2 36,10" fill="#B83A3C"/>
-        <polygon points="14,12 26,6 36,10 39,22 31,30 16,28" fill="#E08A1E"/>
-        <polygon points="30,28 39,22 45,34 47,52 41,66 30,71 24,58 26,42" fill="#E08A1E"/>
-        <polygon points="25,40 31,36 33,52 29,64 24,58" fill="#DDB27E"/>
-        <polygon points="33,40 39,44 37,50 33,47" fill="#C6896A" opacity=".8"/>
-        <polygon points="34,55 40,58 38,63 34,61" fill="#C6896A" opacity=".8"/>
-        <circle cx="25" cy="16" r="2.8" fill="#F1ECE2"/>
-        <circle cx="24.4" cy="16" r="1.4" fill="#34333A"/>
-      </svg></div>
+      <div class="seahorse-wrap" aria-hidden="true"><svg class="seahorse" viewBox="0 0 60 100"><use href="#seahorse"/></svg></div>
       <h2>Plan a trip or staycation</h2>
       <!-- Leave start / Leave end, like a flight search; the highlighted box is what the next tap fills -->
       <div class="le-fields">
