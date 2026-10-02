@@ -349,11 +349,47 @@ function renderLongWeekend() {
   }
 }
 
+// ---- Share my days off ----
+// The whole stretch she's free for a trip: stretch out over any weekends/holidays
+// touching it, since that's what family wants to know.
+function freeSpan(t) {
+  let a = t.firstOff, b = t.lastOff;
+  while (Leave.isNonDutyDay(Leave.addDays(a, -1))) a = Leave.addDays(a, -1);
+  while (Leave.isNonDutyDay(Leave.addDays(b, 1))) b = Leave.addDays(b, 1);
+  return [a, b];
+}
+function upcomingTrips() {
+  const today = Leave.todayStr();
+  return [...state.trips].filter((t) => t.lastOff >= today).sort((x, y) => x.firstOff.localeCompare(y.firstOff));
+}
+function daysOffText() {
+  const lines = upcomingTrips().map((t) => {
+    const [a, b] = freeSpan(t);
+    const dates = a === b ? dayDate(a) : `${dayDate(a)} to ${dayDate(b)}`;
+    return `• ${dates}${t.name ? ` (${t.name})` : ""}`;
+  });
+  return `My days off:\n${lines.join("\n")}`;
+}
+async function shareDaysOff() {
+  const text = daysOffText();
+  if (navigator.share) {
+    try { await navigator.share({ text }); return; }
+    catch (e) { if (e.name === "AbortError") return; } // she closed the share sheet
+  }
+  try {
+    await navigator.clipboard.writeText(text);
+    ask("Copied. Paste it into a text.", { ok: "got it" });
+  } catch {
+    ask(text, { ok: "done" }); // no clipboard: show it so she can copy by hand
+  }
+}
+
 function renderTrips() {
   const body = $("trips");
   body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
   $("trips-empty").hidden = trips.length > 0;
+  $("share-trips").disabled = upcomingTrips().length === 0;
 
   for (const t of trips) {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
@@ -418,6 +454,7 @@ function showTab(name) {
 $("tab-plan").addEventListener("click", () => showTab("plan"));
 $("tab-booked").addEventListener("click", () => showTab("booked"));
 showTab("plan");
+$("share-trips").addEventListener("click", shareDaysOff);
 $("open-info").addEventListener("click", () => $("info").showModal());
 $("trip-last").addEventListener("input", renderTrip);
 $("trip-save-btn").addEventListener("click", () => {

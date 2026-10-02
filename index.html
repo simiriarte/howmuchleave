@@ -372,6 +372,10 @@
     .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
     .booked-title { margin-top: 4px; }
     .uol { font-weight: 700; margin-top: 2px; }
+    .trips-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+    button.share-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--feet); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+    button.share-btn:hover { text-decoration: underline; }
+    button.share-btn[disabled] { color: var(--soft); opacity: 0.5; cursor: default; text-decoration: none; }
     .trips-empty { margin: 2px 0 0; color: var(--soft); font-style: italic; }
     td.trip-days { font-weight: 500; }
     .t-uses { font-weight: 700; }
@@ -694,7 +698,13 @@
     <section class="booked">
       <h2>Next 3 Long Weekends</h2>
       <div id="long-weekend"></div>
-      <h2 class="booked-title">Potential Trips</h2>
+      <div class="trips-head">
+        <h2 class="booked-title">Potential Trips</h2>
+        <button type="button" class="link share-btn" id="share-trips" aria-label="Share my days off">
+          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 10V2M4.5 5.5L8 2l3.5 3.5M3 9v5h10V9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+          share
+        </button>
+      </div>
       <div class="table-wrap">
         <table>
           <tbody id="trips"></tbody>
@@ -777,7 +787,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=44"></script>
+<script src="app.js?v=45"></script>
 <script src="sync.js?v=3"></script>
 </body>
 </html>
