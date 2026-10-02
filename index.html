@@ -60,6 +60,7 @@
     /* The header fish is a button: tap it and a school of fish swims by */
     button.fish-btn { display: block; margin: 0; padding: 0; background: none; cursor: pointer; flex: none; }
     button.fish-btn:hover .emblem { transform: rotate(-6deg); }
+    body.setup-mode button.fish-btn { margin: 0 auto; }  /* setup screen: fish centered above the heading */
     .emblem { transition: transform 0.2s; }
     button.fish-btn.wiggle .emblem { animation: wiggle 0.5s ease-in-out; }
     @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 50% { transform: rotate(10deg); } 75% { transform: rotate(-6deg); } }
@@ -164,6 +165,7 @@
        Seaweed colours are dark enough that cream text stays readable on top of them. */
     main { position: relative; z-index: 1; }
     body.setup-mode main { padding-bottom: 24px; }
+    @media (min-width: 521px) { body.setup-mode main { padding-top: clamp(24px, 9vh, 100px); } }
     .sea { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .weed {
       position: absolute;
@@ -407,7 +409,8 @@
     .pond-code { font-size: 1.1rem; overflow-wrap: anywhere; }
     .pond-code strong { color: var(--feet); }
     .sync-close-row { margin: 14px 0 0 !important; }
-    .setup-join { margin: 14px 0 0 !important; }
+    .setup-join { margin: 14px 0 0 !important; text-align: center; }
+    .setup-join .link { color: var(--hen); }
     @media (max-width: 520px) { .setup-join { margin: 8px 0 0 !important; } }
     .ask-buttons { display: flex; flex-direction: column; align-items: center; gap: 10px; }
     .ask-buttons .link { font-size: 0.95rem; color: var(--soft); }
@@ -623,7 +626,7 @@
       </div>
     </div>
     <button class="cut" id="setup-save">Enter</button>
-    <p class="sub setup-join"><button type="button" class="link" id="setup-join">Already set up on another device? Use your sync code</button></p>
+    <p class="sub setup-join">Already set up on another device?<br><button type="button" class="link" id="setup-join">Use your sync code</button></p>
   </section>
 
   <div id="app" hidden>
