@@ -376,9 +376,10 @@
     .uol { font-weight: 700; margin-top: 2px; }
     /* Editable name in the greeting */
     button.name-btn { display: inline-flex; align-items: center; gap: 0.12em; margin: 0; padding: 0; background: none; color: inherit; font: inherit; cursor: text; }
-    .pencil { width: 0.42em; height: 0.42em; color: var(--soft); opacity: 0; transition: opacity 0.15s; }
-    button.name-btn:hover .pencil, button.name-btn:focus-visible .pencil { opacity: 0.85; }
-    @media (hover: none) { .pencil { opacity: 0.45; } }  /* phones: no hover, so keep a faint pencil */
+    /* a little cut-paper pencil: yellow body, wood tip, silver band, salmon eraser */
+    .pencil { width: 0.5em; height: 0.5em; opacity: 0; transition: opacity 0.15s, transform 0.15s; }
+    button.name-btn:hover .pencil, button.name-btn:focus-visible .pencil { opacity: 1; transform: rotate(-8deg); }
+    @media (hover: none) { .pencil { opacity: 0.7; } }  /* phones: no hover, so keep the pencil showing */
     input.name-input { font: inherit; color: var(--hen); background: rgba(241, 236, 226, 0.1); border: 0; padding: 0 0.12em; margin: 0; min-width: 2ch; outline: 2px solid rgba(241, 236, 226, 0.4); outline-offset: 2px; }
     .trips-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
     button.share-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--feet); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
@@ -612,7 +613,7 @@
   <header>
     <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish-trip" width="120" height="96"/></svg></button>
     <!-- The name is editable: click it (or the little pencil) and type -->
-    <h1 id="hello"><span id="hello-prefix">Hi</span> <button type="button" class="name-btn" id="name-btn" aria-label="Change the name"><span id="hello-name">Abbey</span><svg class="pencil" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l1-3.5L11 2.5l2.5 2.5L6.5 12 3 13z M9.5 4l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button></h1>
+    <h1 id="hello"><span id="hello-prefix">Hi</span> <button type="button" class="name-btn" id="name-btn" aria-label="Change the name"><span id="hello-name">Abbey</span><svg class="pencil" viewBox="0 0 16 16" aria-hidden="true"><g transform="rotate(-45 8 8)"><polygon points="0.6,8 4.6,6.1 4.6,9.9" fill="#DDB27E"/><polygon points="0.6,8 2.1,7.3 2.1,8.7" fill="#34333A"/><rect x="4.6" y="6.1" width="7.4" height="3.8" fill="#E2CB3A"/><rect x="4.6" y="7.6" width="7.4" height="0.8" fill="#C9A82E"/><rect x="12" y="6.1" width="1.3" height="3.8" fill="#C3C8CD"/><rect x="13.3" y="6.1" width="2.2" height="3.8" fill="#C6896A"/></g></svg></button></h1>
     <p class="sub" id="hello-sub">How much leave do you have?</p>
   </header>
 
