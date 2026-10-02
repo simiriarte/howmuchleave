@@ -55,14 +55,17 @@
       const hol = Leave.dayOffName(date);
       if (hol) { b.classList.add("holiday"); b.title = hol; b.setAttribute("aria-label", `${label(date)}, ${hol}`); }
       if (date.slice(5) === "10-02") {
-        const f = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-        f.setAttribute("viewBox", "0 0 120 64");
-        f.setAttribute("class", "bday");
-        f.setAttribute("aria-hidden", "true");
+        // her birthday: a cake instead of the number
+        b.textContent = "";
+        b.classList.add("birthday");
+        const cake = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        cake.setAttribute("viewBox", "0 0 20 20");
+        cake.setAttribute("class", "bday-cake");
+        cake.setAttribute("aria-hidden", "true");
         const u = document.createElementNS("http://www.w3.org/2000/svg", "use");
-        u.setAttribute("href", "#fish");
-        f.append(u);
-        b.append(f);
+        u.setAttribute("href", "#cake");
+        cake.append(u);
+        b.append(cake);
         b.title = "Abbey's birthday";
         b.setAttribute("aria-label", `${label(date)}, Abbey's birthday`);
       }
