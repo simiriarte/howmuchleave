@@ -67,4 +67,15 @@ for (let d = "2026-01-01"; d <= "2028-12-31"; d = L.addDays(d, 1)) {
   if (L.holidayName(d)) assert.ok(opm[d], `${d} is not on OPM's list`);
 }
 
+// 60-day carryover cap on Oct 1 (use or lose)
+const high = { balance: 58, asOf: "2026-07-31" };
+assert.strictEqual(L.balanceOn("2026-09-30", high, []), 63, "58 + Aug + Sep");
+assert.strictEqual(L.balanceOn("2026-10-01", high, []), 60, "over 60 is lost on Oct 1");
+assert.strictEqual(L.balanceOn("2026-10-31", high, []), 62.5, "then keeps accruing");
+const usedSome = [{ id: "s", firstOff: "2026-09-14", lastOff: "2026-09-18" }];
+assert.strictEqual(L.balanceOn("2026-10-01", high, usedSome), 58, "using 5 in Sept keeps it under the cap");
+assert.deepStrictEqual(L.useOrLose("2026-08-15", high, []), { days: 3, fyEnd: "2026-09-30" });
+assert.strictEqual(L.useOrLose("2026-08-15", high, usedSome), null);
+assert.strictEqual(L.useOrLose("2026-10-01", { balance: 12.5, asOf: "2026-09-30" }, []), null, "12.5 + 12 months = 42.5, nothing lost");
+
 console.log("All leave tests passed");

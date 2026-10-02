@@ -208,6 +208,10 @@ function render() {
   const now = Leave.balanceOn(today, settings, takenTrips());
   $("today-balance").textContent = fmtNum(now);
   $("today-unit").textContent = `${dayWord(now)} of leave`;
+  // Use or lose: only shows when she's on track to have more than 60 on Sep 30
+  const lose = Leave.useOrLose(today, settings, takenTrips());
+  $("use-or-lose").hidden = !lose;
+  if (lose) $("use-or-lose").textContent = `Use or lose: ${fmtNum(lose.days)} by ${shortDate(lose.fyEnd)}`;
   // "By [date]" starts on the next month-end, so she sees her next +2.5
   if (!$("by-date").value) $("by-date").value = nextMonthEnd(today);
   renderBy();
@@ -293,7 +297,12 @@ function renderTrip() {
     note.textContent = "All weekend or holiday, so it's free.";
     return;
   }
-  if (after < 0) {
+  if (after < -Leave.MAX_ADVANCE) {
+    $("plan-after-tile").classList.add("warn");
+    $("plan-after-label").textContent = "Past the advance limit";
+    note.dataset.kind = "warn";
+    note.textContent = `That's more than ${Leave.MAX_ADVANCE} days of advance leave, which usually isn't allowed.`;
+  } else if (after < 0) {
     $("plan-after-tile").classList.add("warn");
     $("plan-after-label").textContent = "Needs advance leave";
     note.dataset.kind = "warn";

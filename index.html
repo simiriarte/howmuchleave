@@ -371,6 +371,7 @@
     .lw-line { color: var(--soft); font-size: 0.88rem; font-style: italic; }
     .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
     .booked-title { margin-top: 4px; }
+    .uol { font-weight: 700; margin-top: 2px; }
     .trips-empty { margin: 2px 0 0; color: var(--soft); font-style: italic; }
     td.trip-days { font-weight: 500; }
     .t-uses { font-weight: 700; }
@@ -628,6 +629,7 @@
         <div class="tile-label">Today, you have</div>
         <div class="tile-value" id="today-balance"></div>
         <div class="tile-label" id="today-unit"></div>
+        <div class="tile-label uol" id="use-or-lose" hidden></div>
       </div>
       <div class="tile by">
         <div class="tile-label">By <button type="button" class="date-chip" data-date-for="by-date"><span class="dp-label"></span> ▾</button><input id="by-date" type="hidden"><span class="wide-only">, you'll have</span></div>
@@ -711,6 +713,8 @@
       <h2>How it counts</h2>
       <p>Weekends and holidays at the start or end of your time off are free. Ones in the middle count.</p>
       <p>The Friday after Thanksgiving counts as a day off (family day). Other base family days aren't included, so time off next to one may cost a day less.</p>
+      <p>You can carry up to 60 days into the new fiscal year. Anything over 60 on Sep 30 is lost on Oct 1 (use or lose), and the numbers here already take that off. Special Leave Accrual isn't included.</p>
+      <p>Advance leave can take you up to 30 days below zero.</p>
       <p>Potential trips don't change your balances. Each one shows what it uses and what you'd have left right after it, on its own. Once a trip's dates have passed, those days count as taken.</p>
       <p>This is an estimate. LeaveWeb and your LES are the official numbers.</p>
       <p id="les-note"></p>
@@ -770,10 +774,10 @@
     <button type="button" class="link" id="pk-today">today</button>
   </div>
 </dialog>
-<script src="leave.js?v=7"></script>
+<script src="leave.js?v=8"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=43"></script>
+<script src="app.js?v=44"></script>
 <script src="sync.js?v=3"></script>
 </body>
 </html>

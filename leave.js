@@ -3,6 +3,8 @@
 
 (function (root) {
   const ACCRUAL_PER_MONTH = 2.5;
+  const MAX_CARRYOVER = 60; // anything over 60 on Sep 30 is lost on Oct 1 (use or lose)
+  const MAX_ADVANCE = 30;   // how far below zero advance leave can go
 
   // ---- date helpers (all in UTC so no daylight-saving or time-zone surprises) ----
   function toDate(s) {
@@ -115,18 +117,34 @@
     return count;
   }
 
-  // Balance on a date: the LES number, plus 2.5 at every month end since,
-  // minus any booked leave days after the LES date up to that date.
+  // Balance on a date, walking day by day from the LES date: 2.5 is added at each
+  // month end, leave days come off as they're used, and on every Oct 1 anything
+  // over 60 is lost (the fiscal-year carryover cap).
   function balanceOn(date, settings, trips, skipTripId) {
     if (date < settings.asOf) return null;
-    let balance = settings.balance + ACCRUAL_PER_MONTH * monthEndsBetween(settings.asOf, date);
+    const used = new Map();
     for (const t of trips) {
       if (t.id === skipTripId) continue;
       for (const d of chargedDays(t.firstOff, t.lastOff)) {
-        if (d > settings.asOf && d <= date) balance -= 1;
+        if (d > settings.asOf && d <= date) used.set(d, (used.get(d) || 0) + 1);
       }
     }
+    let balance = settings.balance;
+    for (let d = addDays(settings.asOf, 1); d <= date; d = addDays(d, 1)) {
+      if (d.slice(5) === "10-01") balance = Math.min(balance, MAX_CARRYOVER);
+      balance -= used.get(d) || 0;
+      if (addDays(d, 1).slice(8) === "01") balance += ACCRUAL_PER_MONTH; // last day of the month
+    }
     return balance;
+  }
+
+  // Use or lose: how much would be over 60 at the end of this fiscal year (Sep 30).
+  // Returns { days, fyEnd } when some would be lost, otherwise null.
+  function useOrLose(today, settings, trips) {
+    const y = Number(today.slice(0, 4)) + (today.slice(5) >= "10-01" ? 1 : 0);
+    const fyEnd = `${y}-09-30`;
+    const bal = balanceOn(fyEnd, settings, trips);
+    return bal !== null && bal > MAX_CARRYOVER ? { days: bal - MAX_CARRYOVER, fyEnd } : null;
   }
 
   // The next `count` long weekends: 3 or more days off in a row that include a
@@ -149,7 +167,7 @@
     return found;
   }
 
-  const api = { ACCRUAL_PER_MONTH, addDays, todayStr, isNonDutyDay, holidayName, familyDayName, dayOffName, chargedDays, monthEndsBetween, balanceOn, nextLongWeekends };
+  const api = { ACCRUAL_PER_MONTH, MAX_CARRYOVER, MAX_ADVANCE, useOrLose, addDays, todayStr, isNonDutyDay, holidayName, familyDayName, dayOffName, chargedDays, monthEndsBetween, balanceOn, nextLongWeekends };
   if (typeof module !== "undefined") module.exports = api;
   else root.Leave = api;
 })(this);

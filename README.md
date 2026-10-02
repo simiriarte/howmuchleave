@@ -9,6 +9,8 @@ Built as a birthday gift, October 2026.
 - Earns 2.5 days per month, regardless of rank.
 - Every calendar day from the first day off through the last day off counts, weekends and holidays included.
 - Weekends and holidays at the very start or very end of a trip don't count. So Mon–Fri off costs 5 days, but Fri + Mon off costs 4, because Sat and Sun fall in between.
+- On every Oct 1, anything over 60 days is lost (fiscal-year carryover cap); the Today tile warns "use or lose" when she's on track to go over 60 by Sep 30. Special Leave Accrual isn't modeled.
+- Advance leave can go to 30 days below zero; past that the planner says so.
 - The Friday after Thanksgiving is treated as a day off (her unit's family day). Other base family days aren't known to the app.
 - Federal holiday dates are checked against OPM's official list in `leave.test.js`.
 - The official number is always the one on her LES / LeaveWeb. This app gives an estimate.
