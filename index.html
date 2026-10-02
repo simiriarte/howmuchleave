@@ -457,7 +457,7 @@
       .pc { width: 100%; max-width: 340px; align-self: center; }
       .pc-grid { flex: 0 1 auto; min-height: 0; grid-auto-rows: minmax(0, 40px); row-gap: 2px; }
       .pc-grid .pk-day { height: 100%; width: auto; max-height: 36px; aspect-ratio: 1; align-self: center; }
-      .pc-head { flex: none; }
+      .pc-head { flex: none; margin-bottom: 20px; }  /* breathing room between the month and the days */
       .le-fields { flex: none; margin-bottom: 4px; }
       section.booked { min-height: 0; }
       section.plan, section.booked { padding: 20px; margin-bottom: 14px; }
@@ -479,7 +479,7 @@
       .tile.hero .tile-value, .tile.by .tile-value { font-size: 2.2rem; }
       section.plan, section.booked { padding: 14px 18px; margin-bottom: 10px; }
       section.plan { gap: 10px; }
-      .pc-head { margin-bottom: 4px; }
+      .pc-head { margin-bottom: 12px; }
     }
 
     /* Phones: stack the inputs, and tighten the top so everything fits
@@ -507,7 +507,7 @@
       #app:not([hidden]) { min-height: auto; }
       section.plan > *, section.plan .tiles.small, section.plan .note, section.plan .book-row { margin: 0; }
       .pc { flex: 1 1 0; min-height: auto; display: flex; flex-direction: column; justify-content: center; }
-      .pc-head { flex: none; margin-bottom: 6px; }
+      .pc-head { flex: none; margin-bottom: 12px; }
       .pk-week { margin-bottom: 2px; }
       /* starts at its smallest comfortable size (26px rows) and grows into free space, up to 270px */
       .pc-grid { flex: 1 1 0; min-height: auto; max-height: 270px; grid-auto-rows: minmax(26px, 1fr); gap: 2px; }
