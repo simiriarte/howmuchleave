@@ -28,7 +28,7 @@
   let pending = false; // a save that hasn't reached AWS yet (offline etc.)
 
   function payload() {
-    return { settings: state.settings, trips: state.trips };
+    return { settings: state.settings, trips: state.trips, name: state.name };
   }
 
   async function push() {

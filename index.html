@@ -374,6 +374,12 @@
     .pk-hook.big { width: 14px; height: 21px; flex: none; margin: 2px 8px 0; }
     .booked-title { margin-top: 4px; }
     .uol { font-weight: 700; margin-top: 2px; }
+    /* Editable name in the greeting */
+    button.name-btn { display: inline-flex; align-items: center; gap: 0.12em; margin: 0; padding: 0; background: none; color: inherit; font: inherit; cursor: text; }
+    .pencil { width: 0.42em; height: 0.42em; color: var(--soft); opacity: 0; transition: opacity 0.15s; }
+    button.name-btn:hover .pencil, button.name-btn:focus-visible .pencil { opacity: 0.85; }
+    @media (hover: none) { .pencil { opacity: 0.45; } }  /* phones: no hover, so keep a faint pencil */
+    input.name-input { font: inherit; color: var(--hen); background: rgba(241, 236, 226, 0.1); border: 0; padding: 0 0.12em; margin: 0; min-width: 2ch; outline: 2px solid rgba(241, 236, 226, 0.4); outline-offset: 2px; }
     .trips-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
     button.share-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--feet); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
     button.share-btn:hover { text-decoration: underline; }
@@ -605,7 +611,8 @@
 <main>
   <header>
     <button type="button" class="fish-btn" id="fish-btn" aria-label="Let the fish out"><svg class="emblem" viewBox="0 0 120 64" aria-hidden="true"><use href="#fish-trip" width="120" height="96"/></svg></button>
-    <h1 id="hello">Hi Abbey</h1>
+    <!-- The name is editable: click it (or the little pencil) and type -->
+    <h1 id="hello"><span id="hello-prefix">Hi</span> <button type="button" class="name-btn" id="name-btn" aria-label="Change the name"><span id="hello-name">Abbey</span><svg class="pencil" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 13l1-3.5L11 2.5l2.5 2.5L6.5 12 3 13z M9.5 4l2.5 2.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></svg></button></h1>
     <p class="sub" id="hello-sub">How much leave do you have?</p>
   </header>
 
@@ -790,7 +797,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=5"></script>
 <script src="plancal.js?v=7"></script>
-<script src="app.js?v=45"></script>
-<script src="sync.js?v=3"></script>
+<script src="app.js?v=46"></script>
+<script src="sync.js?v=4"></script>
 </body>
 </html>

@@ -154,13 +154,46 @@ function nextMonthEnd(today) {
 }
 
 // ---- greeting ----
+// Greeting with her name (editable; saved and synced with everything else)
+const nameOf = () => (state.name || "Abbey");
 function greet() {
   const today = Leave.todayStr();
-  if (today.slice(5) === "10-02") {
-    $("hello").textContent = "Happy birthday, Abbey";
-    $("hello-sub").textContent = "No more guessing how much leave you have. Love you.";
-  }
+  const birthday = today.slice(5) === "10-02";
+  $("hello-prefix").textContent = birthday ? "Happy birthday," : "Hi";
+  $("hello-name").textContent = nameOf();
+  if (birthday) $("hello-sub").textContent = "No more guessing how much leave you have. Love you.";
 }
+
+// Click the name (or its pencil) to change it in place.
+// Enter or clicking away saves; Escape cancels; an empty name keeps the old one.
+$("name-btn").addEventListener("click", () => {
+  const btn = $("name-btn");
+  const input = document.createElement("input");
+  input.className = "name-input";
+  input.value = nameOf();
+  input.maxLength = 24;
+  input.setAttribute("aria-label", "Name");
+  const fit = () => { input.style.width = `${Math.max(2, input.value.length) + 0.6}ch`; };
+  fit();
+  btn.replaceWith(input);
+  input.focus();
+  input.select();
+  let done = false;
+  const finish = (keep) => {
+    if (done) return;
+    done = true;
+    const value = input.value.trim();
+    if (keep && value && value !== nameOf()) { state.name = value; save(); }
+    input.replaceWith(btn);
+    greet();
+  };
+  input.addEventListener("input", fit);
+  input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") { e.preventDefault(); finish(true); }
+    if (e.key === "Escape") { e.preventDefault(); finish(false); }
+  });
+  input.addEventListener("blur", () => finish(true));
+});
 
 // ---- setup ----
 function showSetup() {
@@ -197,6 +230,7 @@ function shortDate(s) {
 }
 
 function render() {
+  greet();
   if (!state.settings) return showSetup();
   document.body.classList.remove("setup-mode");
   $("setup").hidden = true;
