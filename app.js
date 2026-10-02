@@ -424,15 +424,15 @@ function whaleEats(row, done) {
   const goal = r.left + r.width * 0.5;
   const inX = goal - w * 0.07 - vw;
   const move = (from, to, ms, easing) => whale.animate([{ transform: `translateX(${from}px)` }, { transform: `translateX(${to}px)` }], { duration: ms, easing, fill: "forwards" });
-  move(0, inX, 450, "cubic-bezier(.2,.9,.3,1.15)");                 // pop in (slight overshoot)
+  move(0, inX, 1000, "cubic-bezier(.2,.9,.3,1.15)");                // glide in (slight overshoot)
   setTimeout(() => {                                                 // gulp
     for (const td of row.children) {
-      td.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(40px,0) scale(0.2)", opacity: 0 }], { duration: 260, easing: "ease-in", fill: "forwards" });
+      td.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(40px,0) scale(0.2)", opacity: 0 }], { duration: 450, easing: "ease-in", fill: "forwards" });
     }
-  }, 330);
-  setTimeout(() => { whale.classList.remove("open"); whale.classList.add("chomp"); }, 560);
-  setTimeout(() => { done(); move(inX, 0, 550, "cubic-bezier(.5,0,.8,.4)"); }, 950); // back out, no turning
-  setTimeout(() => whale.remove(), 1600);
+  }, 800);
+  setTimeout(() => { whale.classList.remove("open"); whale.classList.add("chomp"); }, 1250);
+  setTimeout(() => { done(); move(inX, 0, 1100, "cubic-bezier(.5,0,.8,.4)"); }, 2000); // back out, no turning
+  setTimeout(() => whale.remove(), 3200);
 }
 
 // ---- Share my days off ----
