@@ -392,6 +392,15 @@
     .trips-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
     button.share-btn { display: inline-flex; align-items: center; gap: 5px; color: var(--feet); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
     button.share-btn:hover { text-decoration: underline; }
+    .share-controls { display: inline-flex; align-items: baseline; gap: 14px; }
+    button.share-cancel { color: var(--soft); font-size: 0.9rem; }
+    /* share mode: a checkbox on each row */
+    .check { flex: none; width: 18px; height: 18px; border: 2px solid var(--soft); display: inline-block; position: relative; vertical-align: middle; }
+    .check.on { background: var(--feet); border-color: var(--feet); }
+    .check.on::after { content: ""; position: absolute; left: 4px; top: 0px; width: 5px; height: 10px; border: solid var(--char); border-width: 0 2.5px 2.5px 0; transform: rotate(45deg); }
+    td.check-cell { width: 26px; padding-left: 0; }
+    .picking button.lw-row, .picking #trips tr { cursor: pointer; }
+    .picking td.trip-del button { visibility: hidden; }
     button.share-btn[disabled] { color: var(--soft); opacity: 0.5; cursor: default; text-decoration: none; }
     .trips-empty { margin: 2px 0 0; color: var(--soft); font-style: italic; }
     td.trip-days { font-weight: 500; }
@@ -735,15 +744,20 @@
 
     <!-- Long weekends + potential trips; the trip table scrolls inside itself if it gets long -->
     <section class="booked">
-      <h2>Next 3 Long Weekends</h2>
-      <div id="long-weekend"></div>
+      <!-- share lives on the whole box: tap it, check what to send, then send -->
       <div class="trips-head">
-        <h2 class="booked-title">Potential Trips</h2>
-        <button type="button" class="link share-btn" id="share-trips" aria-label="Share my days off">
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 10V2M4.5 5.5L8 2l3.5 3.5M3 9v5h10V9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
-          share
-        </button>
+        <h2>Next 3 Long Weekends</h2>
+        <span class="share-controls">
+          <button type="button" class="link share-btn" id="share-trips" aria-label="Share days off">
+            <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 10V2M4.5 5.5L8 2l3.5 3.5M3 9v5h10V9" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"/></svg>
+            share
+          </button>
+          <button type="button" class="link share-cancel" id="share-cancel" hidden>cancel</button>
+          <button type="button" class="link share-btn" id="share-send" hidden>send</button>
+        </span>
       </div>
+      <div id="long-weekend"></div>
+      <h2 class="booked-title">Potential Trips</h2>
       <div class="table-wrap">
         <table>
           <tbody id="trips"></tbody>
@@ -826,7 +840,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=47"></script>
+<script src="app.js?v=48"></script>
 <script src="sync.js?v=4"></script>
 </body>
 </html>

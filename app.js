@@ -377,8 +377,17 @@ function renderLongWeekend() {
     l.className = "lw-line";
     l.textContent = r.line;
     text.append(t, l);
+    const key = `lw:${r.plan.firstOff}`;
+    if (shareMode) {
+      btn.append(checkBox(picked.has(key)));
+      btn.setAttribute("aria-pressed", String(picked.has(key)));
+      btn.setAttribute("aria-label", `${r.title}, ${r.line}. ${picked.has(key) ? "Will be shared" : "Not shared"}.`);
+    }
     btn.append(hook, text);
-    btn.addEventListener("click", () => { PlanCal.select(r.plan.firstOff, r.plan.lastOff); showTab("plan"); });
+    btn.addEventListener("click", () => {
+      if (shareMode) return togglePick(key);
+      PlanCal.select(r.plan.firstOff, r.plan.lastOff); showTab("plan");
+    });
     box.append(btn);
   }
 }
@@ -404,8 +413,48 @@ function daysOffText() {
   });
   return `My days off:\n${lines.join("\n")}`;
 }
-async function shareDaysOff() {
-  const text = daysOffText();
+// Share mode: the whole right box gets checkboxes; she picks what to send.
+let shareMode = false;
+const picked = new Set(); // "lw:<first day>" and "trip:<id>"
+function startShare() {
+  shareMode = true;
+  picked.clear();
+  for (const t of upcomingTrips()) picked.add(`trip:${t.id}`); // trips start checked
+  render();
+}
+function endShare() { shareMode = false; picked.clear(); render(); }
+function togglePick(key) {
+  if (picked.has(key)) picked.delete(key); else picked.add(key);
+  render();
+}
+function renderShareBar() {
+  $("share-trips").hidden = shareMode;
+  $("share-cancel").hidden = !shareMode;
+  $("share-send").hidden = !shareMode;
+  $("share-send").textContent = `send (${picked.size})`;
+  $("share-send").disabled = picked.size === 0;
+  document.querySelector("section.booked").classList.toggle("picking", shareMode);
+}
+function pickedText() {
+  const items = [];
+  for (const w of Leave.nextLongWeekends(Leave.todayStr(), 3)) {
+    if (picked.has(`lw:${w.firstOff}`)) items.push({ start: w.firstOff, end: w.lastOff, label: w.holiday });
+  }
+  for (const t of upcomingTrips()) {
+    if (picked.has(`trip:${t.id}`)) { const [a, b] = freeSpan(t); items.push({ start: a, end: b, label: t.name }); }
+  }
+  items.sort((x, y) => x.start.localeCompare(y.start));
+  const lines = items.map((i) => `• ${i.start === i.end ? dayDate(i.start) : `${dayDate(i.start)} to ${dayDate(i.end)}`}${i.label ? ` (${i.label})` : ""}`);
+  return `My days off:\n${lines.join("\n")}`;
+}
+function checkBox(on) {
+  const c = document.createElement("span");
+  c.className = `check${on ? " on" : ""}`;
+  c.setAttribute("aria-hidden", "true");
+  return c;
+}
+
+async function shareDaysOff(text = daysOffText()) {
   if (navigator.share) {
     try { await navigator.share({ text }); return; }
     catch (e) { if (e.name === "AbortError") return; } // she closed the share sheet
@@ -423,7 +472,7 @@ function renderTrips() {
   body.innerHTML = "";
   const trips = [...state.trips].sort((a, b) => a.firstOff.localeCompare(b.firstOff));
   $("trips-empty").hidden = trips.length > 0;
-  $("share-trips").disabled = upcomingTrips().length === 0;
+  renderShareBar();
 
   for (const t of trips) {
     const used = Leave.chargedDays(t.firstOff, t.lastOff).length;
@@ -435,6 +484,12 @@ function renderTrips() {
       else td.append(content);
       tr.append(td);
     };
+    const key = `trip:${t.id}`;
+    const shareable = t.lastOff >= Leave.todayStr();
+    if (shareMode) {
+      cell("check-cell", shareable ? checkBox(picked.has(key)) : "");
+      if (shareable) tr.addEventListener("click", () => togglePick(key));
+    }
     cell("fish-cell", suitcaseIcon());
     const info = document.createElement("div");
     const nm = document.createElement("div");
@@ -488,7 +543,9 @@ function showTab(name) {
 $("tab-plan").addEventListener("click", () => showTab("plan"));
 $("tab-booked").addEventListener("click", () => showTab("booked"));
 showTab("plan");
-$("share-trips").addEventListener("click", shareDaysOff);
+$("share-trips").addEventListener("click", startShare);
+$("share-cancel").addEventListener("click", endShare);
+$("share-send").addEventListener("click", async () => { const text = pickedText(); endShare(); await shareDaysOff(text); });
 $("open-info").addEventListener("click", () => $("info").showModal());
 $("trip-last").addEventListener("input", renderTrip);
 $("trip-save-btn").addEventListener("click", () => {
