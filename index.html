@@ -452,7 +452,10 @@
       /* Calendar rows share the space that's left: up to 40px each when there's
          room, smaller when the window is short, so it never spills into the
          boxes above or the tiles below. Days stay round and at most 36px. */
-      .pc-grid { flex: 0 1 260px; min-height: 0; grid-auto-rows: minmax(0, 1fr); row-gap: 2px; }
+      /* compact, centred calendar: rows up to 40px, never stretched to fill the box;
+         only shrinks on a short window */
+      .pc { width: 100%; max-width: 340px; align-self: center; }
+      .pc-grid { flex: 0 1 auto; min-height: 0; grid-auto-rows: minmax(0, 40px); row-gap: 2px; }
       .pc-grid .pk-day { height: 100%; width: auto; max-height: 36px; aspect-ratio: 1; align-self: center; }
       .pc-head { flex: none; }
       .le-fields { flex: none; margin-bottom: 4px; }
