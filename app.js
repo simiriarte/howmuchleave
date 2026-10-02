@@ -392,6 +392,47 @@ function renderLongWeekend() {
   }
 }
 
+// ---- The whale ----
+// Cancelling a trip: a whale swims in from the right at the row's height, opens
+// its mouth, gulps the row, chomps, and swims off left. Then `done` runs.
+const WHALE_SVG = `<svg viewBox="0 0 170 96" aria-hidden="true">
+  <polygon points="146,44 168,22 163,46 168,72" fill="#2C6A7E"/>
+  <polygon points="16,40 30,20 62,9 104,9 134,20 150,38 152,54 140,68 108,78 60,80 32,72 22,58" fill="#3A8296"/>
+  <polygon points="80,10 104,9 122,16 96,22" fill="#4E97AA"/>
+  <g class="jaw"><polygon points="18,52 58,60 98,64 80,82 40,80 22,66" fill="#F1ECE2"/>
+    <polygon points="34,62 38,61 44,78 40,78" fill="#CFC8B8"/><polygon points="50,64 54,63 58,80 54,80" fill="#CFC8B8"/><polygon points="66,66 70,65 72,81 68,81" fill="#CFC8B8"/></g>
+  <polygon class="mouth" points="12,46 52,50 52,56 16,56" fill="#34333A"/>
+  <polygon points="74,62 92,86 98,64" fill="#2C6A7E"/>
+  <circle cx="62" cy="1" r="2.6" fill="#F1ECE2" opacity=".85"/><circle cx="55" cy="-5" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="68" cy="-6" r="1.8" fill="#F1ECE2" opacity=".7"/><circle cx="61" cy="-11" r="1.4" fill="#F1ECE2" opacity=".55"/>
+  <circle cx="40" cy="32" r="4" fill="#F1ECE2"/><circle cx="39" cy="32" r="2" fill="#34333A"/>
+</svg>`;
+
+function whaleEats(row, done) {
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches || !row) return done();
+  const r = row.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const w = Math.min(230, Math.max(160, vw * 0.22));
+  const whale = document.createElement("div");
+  whale.className = "whale";
+  whale.innerHTML = WHALE_SVG;
+  whale.style.width = `${w}px`;
+  whale.style.top = `${r.top + r.height / 2 - w * 0.31}px`;
+  document.body.append(whale);
+  const seconds = 3.4;
+  const travel = vw + w + 40;
+  whale.animate([{ transform: "translateX(0)" }, { transform: `translateX(-${travel}px)` }], { duration: seconds * 1000, easing: "linear", fill: "forwards" });
+  // when its mouth (left edge) reaches the middle of the row, gulp
+  const atRow = ((vw - (r.left + r.width * 0.55)) / travel) * seconds * 1000;
+  setTimeout(() => whale.classList.add("open"), Math.max(0, atRow - 450));
+  setTimeout(() => {
+    for (const td of row.children) {
+      td.animate([{ transform: "translate(0,0) scale(1)", opacity: 1 }, { transform: "translate(-60px,0) scale(0.2)", opacity: 0 }], { duration: 320, easing: "ease-in", fill: "forwards" });
+    }
+  }, Math.max(0, atRow - 120));
+  setTimeout(() => { whale.classList.remove("open"); whale.classList.add("chomp"); done(); }, Math.max(0, atRow + 260));
+  setTimeout(() => whale.remove(), seconds * 1000 + 100);
+}
+
 // ---- Share my days off ----
 // The whole stretch she's free for a trip: stretch out over any weekends/holidays
 // touching it, since that's what family wants to know.
@@ -519,10 +560,11 @@ function renderTrips() {
     del.setAttribute("aria-label", `Remove ${t.name || "this leave"}`);
     del.addEventListener("click", async () => {
       if (!(await ask("Cancel this trip?", { ok: "cancel", cancel: "leave it", suitcase: true }))) return;
-      state.trips = state.trips.filter((x) => x.id !== t.id);
-      save();
-      render();
-      swimFish(true);
+      whaleEats(tr, () => {
+        state.trips = state.trips.filter((x) => x.id !== t.id);
+        save();
+        render();
+      });
     });
     cell("trip-del", del);
     body.append(tr);

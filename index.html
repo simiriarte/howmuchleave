@@ -155,6 +155,16 @@
     @media (min-width: 800px) { .seahorse-wrap { display: block; } }
     @media (prefers-reduced-motion: reduce) { .seahorse-wrap { display: none !important; } }
 
+    /* The whale that eats cancelled trips */
+    .whale { position: fixed; left: 100vw; z-index: 20; pointer-events: none; }
+    .whale svg { display: block; width: 100%; height: auto; overflow: visible; }
+    .whale .jaw { transform-origin: 22px 54px; transition: transform 0.25s ease-out; }
+    .whale .mouth { opacity: 0; transition: opacity 0.2s; }
+    .whale.open .jaw { transform: rotate(16deg); }
+    .whale.open .mouth { opacity: 1; }
+    .whale.chomp .jaw { animation: chomp 0.35s ease-in-out 2; }
+    @keyframes chomp { 50% { transform: rotate(8deg); } }
+
     /* A fish swims across the screen when she books leave */
     .swimmer { position: fixed; left: 100vw; width: 90px; pointer-events: none; z-index: 10; animation: swim 9s linear forwards; }
     .swimmer svg { display: block; width: 100%; height: auto; animation: bob-swim 2.6s ease-in-out infinite alternate; }
@@ -840,7 +850,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=48"></script>
+<script src="app.js?v=50"></script>
 <script src="sync.js?v=4"></script>
 </body>
 </html>
