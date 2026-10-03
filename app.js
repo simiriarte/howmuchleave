@@ -229,13 +229,26 @@ function showSetup() {
   $("setup").hidden = false;
   $("app").hidden = true;
   if (state.settings) {
-    $("setup-balance").value = state.settings.balance;
+    setNegative(state.settings.balance < 0);
+    $("setup-balance").value = Math.abs(state.settings.balance);
     $("setup-date").value = state.settings.asOf;
   }
   DatePicker.sync();
 }
+// The − button next to the balance box (phone number pads have no minus key)
+function setNegative(on) {
+  $("sign-btn").setAttribute("aria-pressed", String(on));
+  $("sign-btn").closest(".balance-wrap").classList.toggle("negative", on);
+}
+$("sign-btn").addEventListener("click", () => {
+  setNegative($("sign-btn").getAttribute("aria-pressed") !== "true");
+});
+
 $("setup-save").addEventListener("click", () => {
-  const balance = parseFloat($("setup-balance").value);
+  const typed = parseFloat($("setup-balance").value);
+  const negative = $("sign-btn").getAttribute("aria-pressed") === "true";
+  // typing "-0.5" directly works too; the − button just makes it negative
+  const balance = negative ? -Math.abs(typed) : typed;
   const asOf = $("setup-date").value;
   if (Number.isNaN(balance) || !asOf) {
     ask("Fill in both the balance and the date.", { ok: "got it" });

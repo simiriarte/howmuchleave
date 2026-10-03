@@ -416,6 +416,11 @@
     .picking button.lw-row, .picking #trips tr { cursor: pointer; }
     .picking td.trip-del button { visibility: hidden; }
     button.share-btn[disabled] { color: var(--soft); opacity: 0.5; cursor: default; text-decoration: none; }
+    .balance-wrap { display: flex; gap: 6px; }
+    .balance-wrap input { flex: 1; min-width: 0; }
+    button.sign-btn { margin: 0; flex: none; width: 44px; padding: 0; font-size: 1.4rem; font-weight: 700; line-height: 1; background: var(--hen); color: #8E897C; }
+    button.sign-btn[aria-pressed="true"] { background: var(--comb); color: var(--hen); }
+    .balance-wrap.negative input { color: var(--comb); font-weight: 700; }
     .no-storage { color: var(--feet); font-size: 0.9rem; }
     .oops { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; margin: 0; padding: 10px 14px; background: var(--comb); color: var(--hen); font-size: 0.85rem; }
     .trips-empty { margin: 2px 0 0; color: var(--soft); font-style: italic; }
@@ -693,7 +698,11 @@
     <div class="row">
       <div>
         <label for="setup-balance">Leave balance</label>
-        <input id="setup-balance" type="number" step="0.5" inputmode="decimal">
+        <!-- phone number pads have no minus key, so a − button marks the balance negative -->
+        <div class="balance-wrap">
+          <button type="button" class="sign-btn" id="sign-btn" aria-pressed="false" aria-label="Negative balance" title="Negative balance">&minus;</button>
+          <input id="setup-balance" type="number" step="0.5" inputmode="decimal">
+        </div>
       </div>
       <div>
         <label for="setup-date-btn">As of</label>
@@ -859,7 +868,7 @@
 <script src="leave.js?v=8"></script>
 <script src="picker.js?v=6"></script>
 <script src="plancal.js?v=8"></script>
-<script src="app.js?v=57"></script>
+<script src="app.js?v=58"></script>
 <script src="sync.js?v=5"></script>
 </body>
 </html>
