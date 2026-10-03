@@ -188,7 +188,7 @@ function greet() {
   const birthday = today.slice(5) === "10-02";
   $("hello-prefix").textContent = birthday ? "Happy birthday," : "Hi";
   $("hello-name").textContent = nameOf();
-  if (birthday) $("hello-sub").textContent = "No more guessing how much leave you have. Love you.";
+  if (birthday) $("hello-sub").textContent = "No more doing leave math on Post-its. Love you.";
 }
 
 // Click the name (or its pencil) to change it in place.
